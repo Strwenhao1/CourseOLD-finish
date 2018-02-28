@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.coursemis.R;
+import com.coursemis.view.myView.TitleView;
 
 /**
 * @author nebo
@@ -23,24 +24,41 @@ public class ClassActivities extends Activity  implements OnClickListener{
 	
 	public ImageView img_back;
 	public TextView tv_class_signin,tv_random_question;
+	private TitleView mTitleView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		initView() ;
+		initData() ;
+	}
+
+	private void initData() {
+		setListener();
+		mTitleView.setTitle("课堂活动");
+		mTitleView.setLeftButton("返回", new TitleView.OnLeftButtonClickListener() {
+			@Override
+			public void onClick(View button) {
+				ClassActivities.this.finish();
+			}
+		});
+	}
+
+	private void initView() {
 		setContentView(R.layout.activity_class_activities);
 		img_back=(ImageView) this.findViewById(R.id.title_left_imageview);
 		tv_class_signin=(TextView) this.findViewById(R.id.class_signin);
 		tv_random_question=(TextView) this.findViewById(R.id.random_question);
-		
-		
-		setListener();
+		mTitleView = (TitleView) findViewById(R.id.class_title);
+
 	}
 
-	
+
 	/*
 	 *给view注册监听事件 
 	 */
 	public  void setListener() {
-		img_back.setOnClickListener(this);	
+		//img_back.setOnClickListener(this);
 		tv_class_signin.setOnClickListener(this);
 		tv_random_question.setOnClickListener(this);
 	}
@@ -48,9 +66,6 @@ public class ClassActivities extends Activity  implements OnClickListener{
 
 	public void onClick(View v) {
 		switch(v.getId()){
-			case R.id.title_left_imageview:
-			    finish();
-				break;
 			case R.id.class_signin:
 				Intent i = new Intent(ClassActivities.this, TMentionNameActivity.class);//
 				Bundle bundle = new Bundle(); 

@@ -105,8 +105,8 @@ public class StudentMainActivity extends Activity{
 		student_checkHomework=(Button)findViewById(R.id.student_checkhomework);
 		button_coursetable = (Button) findViewById(R.id.coursetablemanage);
 		button_evaluate = (Button) findViewById(R.id.courseevaluate_stu);
-		
-		
+
+
 		//开始/停止按钮 
 				mStartBtn.setOnClickListener( new OnClickListener() {
 					@Override

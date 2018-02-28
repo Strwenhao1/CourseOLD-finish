@@ -4,51 +4,106 @@ import java.util.ArrayList;
 
 import com.coursemis.R;
 import com.coursemis.util.P;
+import com.coursemis.view.myView.TitleView;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
-public class TCourseSignInActivity extends Activity{
-	
-	private Intent intent =null;
-	ArrayList<String> list=null;
-	private ListView lv=null;
-	
-	public void ButtonOnclick_tcoursesignin__back(View view)
-	{
-		finish();
-	}
-	
-	protected void onCreate(Bundle savedInstanceState) {
-		intent=getIntent();
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_tcoursesigninactivity);
-		ArrayList<String> list_temp= new ArrayList<String>();
-		list=intent.getStringArrayListExtra("studentCourseSignInInfo");
-		
-		for(int i =1;i<list.size();i++)
-		{
-			String temp =list.get(i);
-			String temp1 = temp.substring(0, temp.indexOf(" "));//
-			String temp2 = temp.substring(temp.indexOf(" ")+1,temp.length());
-			String temp3 = temp2.substring(0,temp2.indexOf(" "));//
-			String temp4 = temp2.substring(temp2.indexOf(" ")+1,temp2.length());
-			String temp5 = temp4.substring(0,temp4.indexOf(" "));//
-			String temp6 = temp4.substring(temp4.indexOf(" ")+1,temp4.length());//
-			list_temp.add("学号:"+temp1+"姓名:"+temp3+"已到次数:"+temp5+"总次数:"+temp6);
-			
-		}
-		lv = (ListView) findViewById(R.id.t_coursesignListview);        
-	        ArrayAdapter<String> a = new ArrayAdapter<String>(this,
-	         	R.layout.listview_item_1, list);
-	        lv.setAdapter(a);
-	        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		
-	}
+public class TCourseSignInActivity extends Activity {
+
+    private Intent intent = null;
+    ArrayList<String> list = null;
+    private RecyclerView lv = null;
+    private TitleView mTitleView;
+
+    public void ButtonOnclick_tcoursesignin__back(View view) {
+        finish();
+    }
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView() ;
+        initData() ;
+    }
+
+    private void initData() {
+        intent = getIntent();
+        list = intent.getStringArrayListExtra("studentCourseSignInInfo");
+        lv.setLayoutManager(new LinearLayoutManager(TCourseSignInActivity.this)) ;
+        lv.setAdapter(new MyAdapter());
+        mTitleView.setTitle("课堂签到");
+        mTitleView.setLeftButton("返回", new TitleView.OnLeftButtonClickListener() {
+            @Override
+            public void onClick(View button) {
+                TCourseSignInActivity.this.finish();
+            }
+        });
+    }
+
+    private void initView() {
+        setContentView(R.layout.activity_tcoursesigninactivity);
+        lv = (RecyclerView) findViewById(R.id.t_coursesignListview);
+        mTitleView = (TitleView) findViewById(R.id.course_signin_title);
+    }
+
+    private class MyAdapter extends RecyclerView.Adapter {
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View inflate = LayoutInflater.from(TCourseSignInActivity.this).inflate(R.layout.item_course_signin, parent, false);
+            return new MyViewHolder(inflate );
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            String temp = list.get(position);
+            String[]temps = temp.split("_") ;
+            Log.e("temp",temp.split("_").length+"" ) ;
+            String number = temps[0] ;
+            Log.e("number",number) ;
+            String name = temps[1] ;
+            Log.e("name",name) ;
+            String time = temps[2] ;
+            Log.e("time",time) ;
+            String totaltime = temps[3] ;
+            Log.e("totaltime",totaltime) ;
+            MyViewHolder myViewHolder = (MyViewHolder) holder;
+            myViewHolder.name.setText(name);
+            myViewHolder.number.setText(number);
+            myViewHolder.time.setText(time);
+            myViewHolder.totalTime.setText(totaltime);
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+
+        class MyViewHolder extends RecyclerView.ViewHolder{
+            public TextView number ;
+            public TextView name ;
+            public TextView time ;
+            public TextView totalTime ;
+            public MyViewHolder(View itemView) {
+                super(itemView);
+                //itemView = View.inflate(TCourseSignInActivity.this,R.layout.item_course_signin,null) ;
+                number = (TextView) itemView.findViewById(R.id.student_number);
+                name = (TextView) itemView.findViewById(R.id.student_name);
+                time = (TextView) itemView.findViewById(R.id.signin_time);
+                totalTime = (TextView) itemView.findViewById(R.id.signin_total_time);
+            }
+        }
+    }
 
 }

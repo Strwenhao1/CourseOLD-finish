@@ -247,6 +247,10 @@
                 <action android:name="com.baidu.location.service_v2.2"></action>
             </intent-filter>
         </service>
+
+        <!--绘图-->
+        <activity android:name=".view.activity.BarChartActivity"/>
+        <activity android:name=".util.LineChartActivity"/>
     </application>
 
 </manifest>

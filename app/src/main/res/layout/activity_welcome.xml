@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="70dip"
         android:orientation="horizontal"
-        android:padding="10dip" >
+        android:padding="10dip">
 
         <Button
             android:id="@+id/classActivities"
@@ -35,7 +35,7 @@
             android:scaleType="centerCrop"
             android:text="学生签到"
             android:textColor="#E8F2FE"
-            android:textSize="18sp"  />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout

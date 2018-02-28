@@ -69,8 +69,6 @@ public class TStartSignInActivity extends Activity{
 	private Vibrator mVibrator01 =null;
 	private LocationClient mLocClient;
 	public static String TAG = "LocTestDemo";
-//	private String latitude=null;
-//	private String longitude =null;
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tstartsigninactivity);
@@ -92,8 +90,17 @@ public class TStartSignInActivity extends Activity{
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				if(courseInfo==null||courseWeek==null||courseTime==null||(signInHour==0&&signInMinute==0)||LocationData.latitude==0.0||LocationData.longitude==0||LocationData.radius==0.0f  )
-				{
+				if(courseInfo==null||courseWeek==null||courseTime==null
+						||(signInHour==0&&signInMinute==0)
+						||LocationData.latitude==0.0||LocationData.longitude==0
+						/*||LocationData.radius==0.0f  */) {
+					Log.e("测试签到信息",(courseInfo==null)+"..."
+							+(courseWeek==null)+"..."
+							+(courseTime==null)+"..."
+							+(signInHour==0&&signInMinute==0)+"..."
+							+(LocationData.latitude==0.0)+"..."
+							+(LocationData.longitude==0)+"..."
+							+(LocationData.radius==0.0)) ;
 					Toast.makeText(TStartSignInActivity.this,"签到信息没有设置完整!", Toast.LENGTH_SHORT).show();
 				}else
 				{
@@ -142,6 +149,7 @@ public class TStartSignInActivity extends Activity{
 					mLocClient.stop();
 					mIsStart = false;
 					mStartBtn.setText("定位开始");
+					mTv.setText("定位完成");
 				} 
 				Log.d(TAG, "... mStartBtn onClick... pid="+Process.myPid()+" count="+count++);
 			}
@@ -188,7 +196,7 @@ public class TStartSignInActivity extends Activity{
 							public void onSuccess(int arg0, JSONObject arg1) {
 								JSONArray object = arg1.optJSONArray("result");
 								P.p(object.toString()+1111);
-								
+								Log.e("选择课程",arg1.toString()) ;
 								if(object.length()==0){
 									Toast.makeText(TStartSignInActivity.this,"您还没教授任何课程!", Toast.LENGTH_SHORT).show();
 								}else{
@@ -238,7 +246,7 @@ public class TStartSignInActivity extends Activity{
 						public void onSuccess(int arg0, JSONObject arg1) {
 							JSONObject object = arg1.optJSONArray("result").optJSONObject(0);
 							P.p(object.toString()+"1111");
-							
+							Log.e("课程周数",arg1.toString()) ;
 							if(object.length()==0){
 								Toast.makeText(TStartSignInActivity.this,"查询失败!", Toast.LENGTH_SHORT).show();
 							}else{
@@ -366,7 +374,7 @@ public class TStartSignInActivity extends Activity{
      		 @Override
      	  	 public void onTimeSet(TimePicker view,
      	  			 int hourOfDay, int minute) {
-     			textView_1.setText("您设置了 "+hourOfDay+" 小时"+" "+minute+" 分钟");
+     			textView_1.setText(noticeInfo1+"\r\n"+noticeInfo2+"\r\n"+noticeInfo3+"\r\n"+"您设置了 "+hourOfDay+" 小时"+" "+minute+" 分钟");
      			signInHour=hourOfDay;
      			signInMinute=minute;
      			P.p("minute"+minute);
@@ -478,26 +486,25 @@ public class TStartSignInActivity extends Activity{
 				noticeInfo1="选择"+uriData.toString().substring(uriData.toString().indexOf(" ")+1,uriData.toString().length())+"课程";
 				textView_1.setText(noticeInfo1);
 			}
-				;break;
+			break;
 		case SubActivity.SUBACTIVITY_2:
-			if(resultCode==RESULT_OK)
-			{
+			if(resultCode==RESULT_OK) {
 				noticeInfo2=null;
 				Uri uriData=data.getData();
 				courseWeek=uriData.toString();
 				courseTime=null;
 				noticeInfo2="选择课程第"+uriData.toString()+"周";
 				textView_1.setText(noticeInfo1+"\r\n"+noticeInfo2); 
-			};break;
+			}break;
 		case SubActivity.SUBACTIVITY_3:
-			if(resultCode==RESULT_OK)
-			{
+			if(resultCode==RESULT_OK) {
 				noticeInfo3=null;
 				Uri uriData=data.getData();
 				courseTime=uriData.toString();
 				noticeInfo3="时间"+uriData.toString().substring(2,uriData.toString().length());
 				textView_1.setText(noticeInfo1+"\r\n"+noticeInfo2+"\r\n"+noticeInfo3); 
-			};break;
+			}
+			break;
 		
 		}
 		

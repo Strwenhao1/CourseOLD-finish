@@ -50,11 +50,11 @@ public class TSignInService extends Service {
 	 */
 	public void signInServiceInfo(ArrayList<String> list,JSONObject arg1)
 	{
-		list.add(0, "学号"+"			"+"姓名"+"			"+" 已到次数"+"			"+"总点到次数");
+		list.add(0, "学号"+"_"+"姓名"+"_"+" 已到次数"+"_"+"总点到次数");
 		for(int i=1;i<=arg1.optJSONArray("result").length();i++){
 			JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i-1);
 			P.p(object_temp.toString()+2222);
-			list.add(i, (object_temp.optInt("SNumber")+"    				"+object_temp.optString("SName")+"    				"+object_temp.optString("SCPointNum")+"    						"+object_temp.optString("ScPointTotalNum")));
+			list.add(i, (object_temp.optInt("SNumber")+"_"+object_temp.optString("SName")+"_"+object_temp.optString("SCPointNum")+"_"+object_temp.optString("ScPointTotalNum")));
 			}
 	}
 	
