@@ -11,6 +11,8 @@ import com.coursemis.R;
 import com.coursemis.model.Student;
 import com.coursemis.util.DialogUtil;
 import com.coursemis.util.HttpUtil;
+import com.coursemis.util.SubActivity;
+import com.coursemis.view.myView.TitleView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -28,13 +30,11 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class StudentCourseActivity extends Activity {
 	public Context context;
 	private ListView listView_studentList;
-	private Button back;
-	private TextView top_title;
-	private Button button_student_add;
 	private List<String> studentNames = new ArrayList<String>();
 	private List<String> studentNums = new ArrayList<String>();
 	private int courseid;
@@ -43,97 +43,99 @@ public class StudentCourseActivity extends Activity {
 	private List<Map<String,Object>> listItems = new ArrayList<Map<String,Object>>();
 	
 	private AsyncHttpClient client;
-	
+	private TitleView mTitleView;
+	private MyAdapter mAdapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_student_course);
-		
-		this.context = this;
-		client = new AsyncHttpClient();
-		
-		Intent intent = getIntent();
-		courseid = intent.getExtras().getInt("courseid");
-		
-		listView_studentList = (ListView) findViewById(R.id.studentList);
-		//返回按钮
-				back=(Button)findViewById(R.id.reback_btn);
-				
-				back.setOnClickListener(new OnClickListener() {
+		initView() ;
+		initData() ;
+		initInternetData() ;
+		initTitle() ;
 
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						StudentCourseActivity.this.finish();
-					}
-					
-				});
-				
-				top_title = (TextView)findViewById(R.id.title);
-				top_title.setText("      课程学生管理           ");
-		button_student_add = (Button) findViewById(R.id.add_btn);
-		
+
+	}
+
+	private void initInternetData() {
 		RequestParams params = new RequestParams();
 		params.put("courseid", courseid+"");
 		params.put("action", "student_course");///
-		
+
 		client.post(HttpUtil.server_student_course, params,
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int arg0, JSONObject arg1) {
 						// TODO Auto-generated method stub
 						List<Student> studentList = new ArrayList<Student>();
-						
+						studentid_temp.clear();
+						studentNames.clear();
+						studentNums.clear();
+						listItems.clear();
 						for(int i=0;i<arg1.optJSONArray("result").length();i++){
 							JSONObject object = arg1.optJSONArray("result").optJSONObject(i);
-							
 							Student student = new Student();
 							student.setSId(object.optInt("SId"));
 							studentid_temp.add(student.getSId());
 							student.setSNum(object.optString("SNum"));
 							student.setSName(object.optString("SName"));
-							
 							studentNames.add(student.getSName());
 							studentNums.add(student.getSNum());
-							
-							//
 							Map<String,Object> listItem = new HashMap<String,Object>();
 							listItem.put("name", student.getSName());
 							listItem.put("num", student.getSNum());
 							listItems.add(listItem);
-					
+
 							studentList.add(student);
 						}
-						
-						MyAdapter adapter = new MyAdapter(context); 
-						listView_studentList.setAdapter(adapter);
-						
+
+						if (mAdapter!=null){
+							mAdapter.notifyDataSetChanged();
+						}else {
+							mAdapter = new MyAdapter(context);
+							listView_studentList.setAdapter(mAdapter);
+						}
+
 						super.onSuccess(arg0, arg1);
 					}
 
 				});
-		
-		
-//		listView_studentList.setAdapter(new ArrayAdapter<String>(
-//				context,
-//				android.R.layout.simple_expandable_list_item_1,
-//				studentNames));
-		
-		button_student_add.setOnClickListener(new OnClickListener(){
+	}
 
+	private void initData() {
+		this.context = this;
+		client = new AsyncHttpClient();
+
+		Intent intent = getIntent();
+		courseid = intent.getExtras().getInt("courseid");
+	}
+
+	private void initTitle() {
+		mTitleView.setTitle("课程学生管理");
+		mTitleView.setLeftButton("返回", new TitleView.OnLeftButtonClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick(View button) {
+				StudentCourseActivity.this.finish();
+			}
+		});
+		mTitleView.setRightButton("添加", new TitleView.OnRightButtonClickListener() {
+			@Override
+			public void onClick(View button) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(StudentCourseActivity.this,StudentOfCourseAddActivity.class);
-				Bundle bundle = new Bundle(); 
+				Bundle bundle = new Bundle();
 				bundle.putInt("courseid", courseid);
 				i.putExtras(bundle);
-				StudentCourseActivity.this.startActivity(i);
+				StudentCourseActivity.this.startActivityForResult(i, SubActivity.SUCCESS);
 			}
-			
 		});
-		
-		
+	}
+
+	private void initView() {
+		setContentView(R.layout.activity_student_course);
+		listView_studentList = (ListView) findViewById(R.id.studentList);
+		mTitleView = (TitleView) findViewById(R.id.student_course_title);
+
 	}
 
 	public class MyAdapter extends BaseAdapter {  
@@ -213,8 +215,9 @@ public class StudentCourseActivity extends Activity {
 							public void onSuccess(int arg0, JSONObject arg1) {
 								// TODO Auto-generated method stub
 								String delStudent_msg = arg1.optString("result");
-								DialogUtil.showDialog(context, delStudent_msg, true);
-								
+								//DialogUtil.showDialog(context, delStudent_msg, true);
+								Toast.makeText(context,"删除成功",Toast.LENGTH_SHORT).show();
+								initInternetData();
 								super.onSuccess(arg0, arg1);
 							}
 
@@ -238,4 +241,11 @@ public class StudentCourseActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == SubActivity.SUCCESS){
+			Toast.makeText(context,"成功",Toast.LENGTH_SHORT).show();
+			initInternetData();
+		}
+	}
 }

@@ -250,7 +250,8 @@
 
         <!--绘图-->
         <activity android:name=".view.activity.BarChartActivity"/>
-        <activity android:name=".util.LineChartActivity"/>
+        <activity android:name=".view.activity.LineChartActivity"/>
+        <activity android:name=".view.activity.PieChartActivity"/>
     </application>
 
 </manifest>

@@ -1,33 +1,33 @@
 package com.coursemis.view.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONObject;
-
-import com.coursemis.R;
-import com.coursemis.model.Course;
-import com.coursemis.model.Teacher;
-import com.coursemis.util.HttpUtil;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
-import android.os.Bundle;
+import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
 
-public class TabMessageActivity extends TabActivity  {
+import com.coursemis.R;
+import com.coursemis.model.Course;
+import com.coursemis.model.Teacher;
+import com.coursemis.util.HttpUtil;
+import com.coursemis.view.myView.TitleView;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TabMessageActivity extends Activity {
 	public Context context;///
     private AsyncHttpClient client;
     
@@ -35,7 +35,7 @@ public class TabMessageActivity extends TabActivity  {
 	SharedPreferences.Editor editor;
     
 	 //声明TabHost对象
-    private TabHost tabhost;
+    //private TabHost tabhost;
     private ListView listView;  
     private ListView listView_courseList;
     
@@ -51,15 +51,16 @@ public class TabMessageActivity extends TabActivity  {
 
     private final static int Student=0;
     private final static int Teacher=1;
-    
-    @Override
+	private TitleView mTitleView;
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
       //  HiddenMenu(); //隐藏标题栏
         
         setContentView(R.layout.activity_tab_message);
         //获取TabHost对象
-        tabhost=getTabHost();
+        //tabhost=getTabHost();
         /*
          * 为TabHost添加标签
          * 新建一个标签newTabSpec
@@ -67,8 +68,10 @@ public class TabMessageActivity extends TabActivity  {
          * 设置内容
          */
         init();
+
+		initTitle() ;
         
-        tabhost.setOnTabChangedListener(new OnTabChangeListener() {
+        /*tabhost.setOnTabChangedListener(new OnTabChangeListener() {
         	
 		   @Override
 		   public void onTabChanged(String tabId) {
@@ -77,21 +80,33 @@ public class TabMessageActivity extends TabActivity  {
 		    }
 		    
 		   }
-		  });    
+		  });    */
    }
 
-    
-    /*******/
+	private void initTitle() {
+		mTitleView = (TitleView) findViewById(R.id.tab_message_title);
+		mTitleView.setTitle("短信管理");
+		mTitleView.setLeftButton("返回", new TitleView.OnLeftButtonClickListener() {
+			@Override
+			public void onClick(View button) {
+				TabMessageActivity.this.finish();
+			}
+		});
+
+	}
+
+
+	/*******/
     //初始化
 	void init()
     {
 		
    	 	Loading_data();
    	 	
-   	    tabhost.addTab(tabhost.newTabSpec("1")
+   	    /*tabhost.addTab(tabhost.newTabSpec("1")
    	          .setIndicator("教师",getResources().getDrawable(android.R.drawable.alert_light_frame))
    	          .setContent(R.id.teacher));
-   	    
+   	    */
    	    load();		//读取老师所有的课程
     
     }

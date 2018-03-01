@@ -6,7 +6,7 @@ import java.util.List;
 import org.json.JSONObject;
 
 import com.coursemis.R;
-import com.coursemis.adapter.CourseAdapter;
+import com.coursemis.adapter.EvaluateChooseAdapter;
 import com.coursemis.model.Course;
 import com.coursemis.util.HttpUtil;
 import com.coursemis.view.myView.TitleView;
@@ -18,8 +18,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 
 /**
@@ -33,7 +31,7 @@ public class EvaluateChooseActivity extends Activity {
     private ListView lv_course_teacher;
     private AsyncHttpClient client;
     private int teacherid;
-    private CourseAdapter courseAdapter;
+    private EvaluateChooseAdapter evaluateChooseAdapter;
     private List<Course> courseList = new ArrayList<Course>();
     private TitleView mTitleView;
 
@@ -56,10 +54,10 @@ public class EvaluateChooseActivity extends Activity {
         Intent intent = getIntent();
         teacherid = intent.getExtras().getInt("teacherid");
 
-        if (courseAdapter == null) {
-            courseAdapter = new CourseAdapter(this, courseList, teacherid);
+        if (evaluateChooseAdapter == null) {
+            evaluateChooseAdapter = new EvaluateChooseAdapter(this, courseList, teacherid);
         }
-        lv_course_teacher.setAdapter(courseAdapter);
+        lv_course_teacher.setAdapter(evaluateChooseAdapter);
         RequestParams params = new RequestParams();
         params.put("tid", teacherid + "");
         client.post(HttpUtil.server_teacher_course, params,
@@ -75,7 +73,7 @@ public class EvaluateChooseActivity extends Activity {
                             course.setCName(object.optString("CName"));
                             courseList.add(course);
                         }
-                        courseAdapter.notifyDataSetChanged();
+                        evaluateChooseAdapter.notifyDataSetChanged();
                     }
                 });
 

@@ -7,8 +7,12 @@
     android:background="#f1eef5"
     tools:context=".view.activity.CourseEditActivity" >
 
-    <include layout="@layout/top"/>
-    
+    <!--<include layout="@layout/top"/>
+    -->
+    <com.coursemis.view.myView.TitleView
+        android:id="@+id/course_edit_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.coursemis.view.myView.TitleView>
     <LinearLayout  
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,7 +69,8 @@
             style="@style/EditText"
             android:layout_marginLeft="10dp"
             android:paddingLeft="10dp"
-            android:ems="10" >
+            android:ems="10"
+            android:editable="false">
 
             <requestFocus
                 android:layout_width="wrap_content"

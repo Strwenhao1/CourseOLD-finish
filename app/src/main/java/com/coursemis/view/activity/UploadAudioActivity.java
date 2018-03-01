@@ -17,6 +17,7 @@ import java.util.Map;
 import com.coursemis.R;
 
 import com.coursemis.util.HttpUtil;
+import com.coursemis.view.myView.TitleView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.coursemis.util.HttpDownloader;
 import com.coursemis.thread.FormFile;
@@ -76,12 +77,10 @@ public class UploadAudioActivity extends Activity {
 
 		} 
 		 
-		}; 
-	
-	
-	
-	
-	
+		};
+	private TitleView mTitleView;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -115,7 +114,21 @@ public class UploadAudioActivity extends Activity {
 			}
 			
 		});
-	
+
+
+		initTitle() ;
+
+	}
+
+	private void initTitle() {
+		mTitleView = (TitleView) findViewById(R.id.upload_audio_title);
+		mTitleView.setTitle("资源共享");
+		mTitleView.setLeftButton("返回", new TitleView.OnLeftButtonClickListener() {
+			@Override
+			public void onClick(View button) {
+				UploadAudioActivity.this.finish();
+			}
+		});
 	}
 
 	@Override

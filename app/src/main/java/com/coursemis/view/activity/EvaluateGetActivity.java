@@ -17,9 +17,7 @@ import android.widget.Toast;
 
 import com.coursemis.R;
 import com.coursemis.model.Chart;
-import com.coursemis.util.PieChartActivity;
 import com.coursemis.util.HttpUtil;
-import com.coursemis.util.LineChartActivity;
 import com.coursemis.view.myView.TitleView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -80,7 +78,7 @@ public class EvaluateGetActivity extends Activity {
         // teacherid = intent.getExtras().getInt("teacherid");
         courseid = intent.getExtras().getInt("courseid");
         //初始化Title
-        mTitleView.setTitle("课程反馈");
+        mTitleView.setTitle(courseid+"");
         mTitleView.setLeftButton("返回", new TitleView.OnLeftButtonClickListener() {
             @Override
             public void onClick(View button) {
@@ -246,9 +244,14 @@ public class EvaluateGetActivity extends Activity {
                                     personnum[i] = object
                                             .optInt("personnum");
                                 }
-                                Intent achartIntent = new PieChartActivity()
+                                /*Intent achartIntent = new PieChartActivity()
                                         .execute(context, personnum);
-                                startActivity(achartIntent);
+                                startActivity(achartIntent);*/
+                                Intent intent = new Intent(EvaluateGetActivity.this,PieChartActivity.class) ;
+                                Chart chart = new Chart() ;
+                                chart.setPersonnum(personnum);
+                                intent.putExtra("chart",chart) ;
+                                startActivity(intent);
                                 super.onSuccess(arg0, arg1);
                             }
 

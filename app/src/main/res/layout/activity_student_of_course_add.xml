@@ -6,7 +6,11 @@
     android:background="#f1eef5"
     android:orientation="vertical" 
     tools:context=".view.activity.StudentOfCourseAddActivity">
-    <include layout="@layout/top"/>
+    <!--<include layout="@layout/top"/>-->
+    <com.coursemis.view.myView.TitleView
+        android:id="@+id/student_of_course_add_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.coursemis.view.myView.TitleView>
     <LinearLayout  
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10px"
             android:layout_weight="0.78"
-            android:background="@drawable/login_edit_normal" />
+            android:background="@drawable/login_edit_normal"
+            android:enabled="false"/>
 
     </LinearLayout>
     <LinearLayout

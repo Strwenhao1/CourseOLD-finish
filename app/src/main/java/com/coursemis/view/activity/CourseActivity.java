@@ -8,10 +8,13 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.coursemis.R;
+import com.coursemis.adapter.CourseAdapter;
 import com.coursemis.model.Course;
 import com.coursemis.model.Teacher;
 import com.coursemis.util.DialogUtil;
 import com.coursemis.util.HttpUtil;
+import com.coursemis.util.SubActivity;
+import com.coursemis.view.myView.TitleView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -23,6 +26,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -32,13 +37,14 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CourseActivity extends Activity {
 	public Context context;///
 	
-	private Button back;
-	private TextView top_title;
-	private Button button_add;
+	//private Button back;
+	//private TextView top_title;
+	//private Button button_add;
 	
 	private List<String> courseNames = new ArrayList<String>();
 	private int teacherid;
@@ -51,30 +57,28 @@ public class CourseActivity extends Activity {
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
 	
-	private List<Map<String, Object>> listItems;  
-    
-	
+	private List<Map<String, Object>> listItems;
+	private TitleView mTitleView;
+	private RecyclerView mListView;
+	private CourseAdapter mCourseAdapter;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_course);
-		
-		
-		
-		this.context = this;
-		client = new AsyncHttpClient();
-		
-		preferences = getSharedPreferences("courseMis", 0);
-		editor = preferences.edit();
-		
-		teacherid = preferences.getInt("teacherid", 0);//0为默认值
-		
+
+		initView() ;
+		initData() ;
+		initTitle() ;
+		initList() ;
+
+
 		/*Intent intent = getIntent();
 		teacherid = intent.getExtras().getInt("teacherid");*/
 		
 		
 		//返回按钮
-				back=(Button)findViewById(R.id.reback_btn);
+				/*back=(Button)findViewById(R.id.reback_btn);
 				
 				back.setOnClickListener(new OnClickListener() {
 
@@ -85,61 +89,14 @@ public class CourseActivity extends Activity {
 					}
 					
 				});
-				
-				top_title = (TextView)findViewById(R.id.title);
+				*/
+				/*top_title = (TextView)findViewById(R.id.title);
 				top_title.setText("         课程管理            ");
+		*/
+		//button_add = (Button) findViewById(R.id.add_btn);
 		
-		button_add = (Button) findViewById(R.id.add_btn);
-		
-		RequestParams params = new RequestParams();
-		params.put("teacherid", teacherid+"");
-		params.put("action", "course_teacher");///
-		
-		client.post(HttpUtil.server_course_teacher, params,
-				new JsonHttpResponseHandler() {
-					@Override
-					public void onSuccess(int arg0, JSONObject arg1) {
-						// TODO Auto-generated method stub
-						
-						List<Course> courseList = new ArrayList<Course>();
-						for(int i=0;i<arg1.optJSONArray("result").length();i++){
-							JSONObject object = arg1.optJSONArray("result").optJSONObject(i);
-							
-							Course course = new Course();
-							course.setCId(object.optInt("CId"));
-							courseid_temp.add(course.getCId());
-							course.setCName(object.optString("CName").toString());
-							courseNames.add(course.getCName());
-							course.setCNum(object.optString("CNum"));
-							
-							//某课程学生数为0则加入List，用于广播显示课程学生为0的课程
-							if(object.optBoolean("Flag_Empty_Student")){
-								courseid_empty_student.add(object.optInt("CId"));
-							}
-							
-							
-							//Teacher
-							Teacher teacher = new Teacher();
-							teacher.setTId(object.optJSONObject("teacher").optInt("TId"));
-							
-							course.setCFlag(object.optBoolean("CFlag"));
-							course.setCPointTotalNum(object.optInt("CPointTotalNum"));
-							courseList.add(course);
-						}
-						
-						initTeamsSequence();
-						
-						//如果学生数为0的课程存在，就进行广播
-						if(courseid_empty_student.size()>0){
-							broadcast(); 
-						}
-						
-						super.onSuccess(arg0, arg1);
-					}
 
-				});
-		
-		button_add.setOnClickListener(new OnClickListener(){
+		/*button_add.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -152,11 +109,158 @@ public class CourseActivity extends Activity {
 			}
 			
 		});
-		
+		*/
 		
 	}
-	
-	
+
+	private void initTitle() {
+		mTitleView.setTitle("课程管理");
+		mTitleView.setLeftButton("返回", new TitleView.OnLeftButtonClickListener() {
+			@Override
+			public void onClick(View button) {
+				CourseActivity.this.finish();
+			}
+		});
+		mTitleView.setRightButton("添加", new TitleView.OnRightButtonClickListener() {
+			@Override
+			public void onClick(View button) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(CourseActivity.this,CourseAddActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putInt("teacherid", teacherid);
+				i.putExtras(bundle);
+				CourseActivity.this.startActivityForResult(i, SubActivity.SUCCESS);
+				//CourseActivity.this.startActivity(i);
+			}
+		});
+	}
+
+	public void initList() {
+		getInternetData() ;
+		RequestParams params = new RequestParams();
+		params.put("teacherid", teacherid+"");
+		params.put("action", "course_teacher");///
+
+		client.post(HttpUtil.server_course_teacher, params,
+				new JsonHttpResponseHandler() {
+					@Override
+					public void onSuccess(int arg0, JSONObject arg1) {
+						// TODO Auto-generated method stub
+
+						List<Course> courseList = new ArrayList<Course>();
+						for(int i=0;i<arg1.optJSONArray("result").length();i++){
+							JSONObject object = arg1.optJSONArray("result").optJSONObject(i);
+
+							Course course = new Course();
+							course.setCId(object.optInt("CId"));
+							courseid_temp.add(course.getCId());
+							course.setCName(object.optString("CName").toString());
+							courseNames.add(course.getCName());
+							course.setCNum(object.optString("CNum"));
+
+							//某课程学生数为0则加入List，用于广播显示课程学生为0的课程
+							if(object.optBoolean("Flag_Empty_Student")){
+								courseid_empty_student.add(object.optInt("CId"));
+							}
+
+
+							//Teacher
+							Teacher teacher = new Teacher();
+							teacher.setTId(object.optJSONObject("teacher").optInt("TId"));
+
+							course.setCFlag(object.optBoolean("CFlag"));
+							course.setCPointTotalNum(object.optInt("CPointTotalNum"));
+							courseList.add(course);
+						}
+
+						//initTeamsSequence();
+						//设置列表的数据
+						setListData(courseList) ;
+						//如果学生数为0的课程存在，就进行广播
+						if(courseid_empty_student.size()>0){
+							broadcast();
+						}
+
+						super.onSuccess(arg0, arg1);
+					}
+
+				});
+
+	}
+
+	private void getInternetData() {
+		RequestParams params = new RequestParams();
+		params.put("teacherid", teacherid+"");
+		params.put("action", "course_teacher");///
+
+		client.post(HttpUtil.server_course_teacher, params,
+				new JsonHttpResponseHandler() {
+					@Override
+					public void onSuccess(int arg0, JSONObject arg1) {
+						// TODO Auto-generated method stub
+
+						List<Course> courseList = new ArrayList<Course>();
+						for(int i=0;i<arg1.optJSONArray("result").length();i++){
+							JSONObject object = arg1.optJSONArray("result").optJSONObject(i);
+
+							Course course = new Course();
+							course.setCId(object.optInt("CId"));
+							courseid_temp.add(course.getCId());
+							course.setCName(object.optString("CName").toString());
+							courseNames.add(course.getCName());
+							course.setCNum(object.optString("CNum"));
+
+							//某课程学生数为0则加入List，用于广播显示课程学生为0的课程
+							if(object.optBoolean("Flag_Empty_Student")){
+								courseid_empty_student.add(object.optInt("CId"));
+							}
+
+
+							//Teacher
+							Teacher teacher = new Teacher();
+							teacher.setTId(object.optJSONObject("teacher").optInt("TId"));
+
+							course.setCFlag(object.optBoolean("CFlag"));
+							course.setCPointTotalNum(object.optInt("CPointTotalNum"));
+							courseList.add(course);
+						}
+
+						//initTeamsSequence();
+						//设置列表的数据
+						setListData(courseList) ;
+						//如果学生数为0的课程存在，就进行广播
+						if(courseid_empty_student.size()>0){
+							broadcast();
+						}
+
+						super.onSuccess(arg0, arg1);
+					}
+
+				});
+
+	}
+
+	private void setListData(List<Course> courseList) {
+		mListView.setLayoutManager(new LinearLayoutManager(CourseActivity.this));
+		mCourseAdapter = new CourseAdapter(CourseActivity.this,courseList,teacherid);
+		mListView.setAdapter(mCourseAdapter);
+	}
+
+	private void initData() {
+		this.context = this;
+		client = new AsyncHttpClient();
+		preferences = getSharedPreferences("courseMis", 0);
+		editor = preferences.edit();
+		teacherid = preferences.getInt("teacherid", 0);//0为默认值
+	}
+
+	private void initView() {
+		setContentView(R.layout.activity_course);
+		mTitleView = (TitleView) findViewById(R.id.course_title);
+		mListView = (RecyclerView) findViewById(R.id.course_list);
+	}
+
+
 	public class MyAdapter extends BaseAdapter {  
 		  
         private LayoutInflater mInflater;  
@@ -297,7 +401,7 @@ public class CourseActivity extends Activity {
         public Button viewBtn;  
     }  
 
-	private void initTeamsSequence() {
+	/*private void initTeamsSequence() {
 
 		ListView view = (ListView) super.findViewById(R.id.courseList);
 		 
@@ -311,7 +415,7 @@ public class CourseActivity extends Activity {
 		}
 		MyAdapter adapter = new MyAdapter(this); 
         view.setAdapter(adapter);
-	}
+	}*/
 	
 	
 	//显示一条广播
@@ -332,4 +436,13 @@ public class CourseActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == SubActivity.SUCCESS){
+			//成功
+			Toast.makeText(context,"返回成功",Toast.LENGTH_SHORT).show();
+			//mCourseAdapter.refreshData();
+			initList();
+		}
+	}
 }

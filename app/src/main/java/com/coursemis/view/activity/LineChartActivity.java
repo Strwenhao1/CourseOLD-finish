@@ -1,4 +1,4 @@
-package com.coursemis.util;
+package com.coursemis.view.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,7 +9,6 @@ import android.view.View;
 
 import com.coursemis.R;
 import com.coursemis.model.Chart;
-import com.coursemis.view.activity.TChartActivity;
 import com.coursemis.view.myView.TitleView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
