@@ -261,7 +261,7 @@ public class CourseActivity extends Activity {
 	}
 
 
-	public class MyAdapter extends BaseAdapter {  
+	/*public class MyAdapter extends BaseAdapter {
 		  
         private LayoutInflater mInflater;  
   
@@ -287,8 +287,8 @@ public class CourseActivity extends Activity {
             return 0;  
         }  
 
-        //****************************************第二种方法，高手一般都用此种方法,具体原因，我还不清楚,有待研究  
-	 public View getView(int position, View convertView, ViewGroup parent) {  
+        /*//****************************************第二种方法，高手一般都用此种方法,具体原因，我还不清楚,有待研究
+	 public View getView(int position, View convertView, ViewGroup parent) {
 	       ViewHolder holder = null;  
 	       MyListener myListener=null;
 	       MyListener2 myListener2=null;
@@ -322,8 +322,8 @@ public class CourseActivity extends Activity {
 	         
 	      return convertView;  
 	  }  
-	}  
- 
+	}  */
+
 	private class MyListener implements OnClickListener{  
 	      int mPosition;  
 	      public MyListener(int inPosition){  

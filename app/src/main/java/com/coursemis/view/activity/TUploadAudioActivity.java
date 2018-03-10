@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
@@ -21,11 +24,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coursemis.R;
+import com.coursemis.adapter.RadioListAdapter;
 import com.coursemis.thread.FormFile;
 import com.coursemis.thread.UploadThread;
 import com.coursemis.util.FileUtil;
@@ -72,12 +79,14 @@ public class TUploadAudioActivity extends Activity {
 
     };
     private TitleView mTitleView;
+    private Button mDownload;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload_audio);
+        setContentView(R.layout.activity_t_upload_audio);
+        mDownload = (Button) findViewById(R.id.uploadaudio__down);
         intent = getIntent();
         mediainfolist = intent.getStringArrayListExtra("mediainfolist");
         upa = (ListView) findViewById(R.id.uploadaudio_listview);
@@ -100,12 +109,29 @@ public class TUploadAudioActivity extends Activity {
             public void onItemClick(AdapterView<?> arg0, View arg1, final int arg2,
                                     long arg3) {
                 // TODO Auto-generated method stub
-                String temp_string = mediainfolist.get(arg2);
-                sminfo = temp_string;
-
+                sminfo = mediainfolist.get(arg2);
+                //判断本地是否存在文件
+                File file = new File(getExternalFilesDir(null).getAbsolutePath()+"/"+sminfo) ;
+                if (file.exists()){
+                    //已经存在
+                    //修改按钮
+                    mDownload.setText("已下载");
+                    mDownload.setTextColor(Color.GRAY);
+                    mDownload.setEnabled(false);
+                }else {
+                    //已经存在
+                    //修改按钮
+                    mDownload.setText("下载");
+                    mDownload.setTextColor(Color.WHITE);
+                    mDownload.setEnabled(true);
+                }
             }
 
         });
+
+        //使用RecyclerView做的实现
+        /*upa.setLayoutManager(new LinearLayoutManager(this));
+        upa.setAdapter(new RadioListAdapter(this,mediainfolist));*/
 
 
         initTitle();
@@ -135,51 +161,86 @@ public class TUploadAudioActivity extends Activity {
         if (sminfo == null) {
             Toast.makeText(TUploadAudioActivity.this, "您没有选择哪份作业", Toast.LENGTH_SHORT).show();
         } else {
-            final String smname = sminfo.substring(sminfo.indexOf(":") + 1, sminfo.length());
-            Log.v("看下媒体文件的名字", smname);
+            String url = HttpUtil.server + "/mediaShared/" + sminfo;
+            HttpDownloader.download(this, url, null, new HttpDownloader.DownloadListener() {
+                @Override
+                public void done() {
+                    Toast.makeText(TUploadAudioActivity.this,"下载成功",Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mDownload.setText("已下载");
+                            mDownload.setTextColor(Color.GRAY);
+                            mDownload.setEnabled(false);
+                        }
+                    });
+                }
 
-
-            final String address = HttpUtil.server + "/mediaShared" + "/" + smname;
-
-            try {
-                new Thread() {
-
-                    @Override
-
-                    public void run() {
-                        String url = HttpUtil.server + "/mediaShared/" + smname;
-                        HttpDownloader downloader = new HttpDownloader();
-                        String result = downloader.download(url, "CourseMisMedia/");
-
-
-                        //执行完毕后给handler发送一个空消息
-
-                        handler.sendEmptyMessage(0);
-
-                    }
-
-                }.start();
-
-//				
-//				//二进制数据生成位图
-
-//				
-
-            } catch (Exception e) {
-                Log.e("NetActivity", e.toString());
-
-                Toast.makeText(TUploadAudioActivity.this, "下载出错", Toast.LENGTH_SHORT).show();
-            }
+                @Override
+                public void fail() {
+                    Toast.makeText(TUploadAudioActivity.this,"下载失败",Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
     }
 
 
     public void ButtonOnclick_uploadaudio_broadcast(View view) {
-        Intent intent = new Intent();// intent可以过滤音频文件
-        intent.setType("audio/*");//获取音频文件
+        /*Intent intent = new Intent();// intent可以过滤音频文件
+        intent.setType("audio*//*");//获取音频文件
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 24);
+        startActivityForResult(intent, 24);*/
+        //判断是否选中资源
+        if (sminfo==null){
+            Toast.makeText(this,"您没有选择哪份作业",Toast.LENGTH_SHORT).show();
+        }else if (new File(getExternalFilesDir(null).getAbsolutePath()+"/"+sminfo).exists()){
+            //文件已经存在，直接播放
+            Intent intent1 = new Intent(TUploadAudioActivity.this, AudioPlayerActivity.class);
+            intent1.putExtra("videoPath", getExternalFilesDir(null).getAbsolutePath()+"/"+sminfo);
+            startActivity(intent1);
+        }else {
+            //文件没有下载，弹出对话框，判断是否要下载
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setMessage("是否要下载该资源并播放")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //下载资源并播放
+                            String urlStr = HttpUtil.server + "/mediaShared/" + sminfo;
+                            HttpDownloader.download(TUploadAudioActivity.this, urlStr, null, new HttpDownloader.DownloadListener() {
+                                @Override
+                                public void done() {
+                                    //修改UI
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mDownload.setText("已下载");
+                                            mDownload.setTextColor(Color.GRAY);
+                                            mDownload.setEnabled(false);
+                                        }
+                                    });
+                                    //播放
+                                    Intent intent1 = new Intent(TUploadAudioActivity.this, AudioPlayerActivity.class);
+                                    intent1.putExtra("videoPath", getExternalFilesDir(null).getAbsolutePath()+"/"+sminfo);
+                                    startActivity(intent1);
+                                }
+
+                                @Override
+                                public void fail() {
+                                    Toast.makeText(TUploadAudioActivity.this,"出现了点问题",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).create() ;
+            dialog.show();
+        }
     }
 
 
@@ -195,31 +256,23 @@ public class TUploadAudioActivity extends Activity {
     }
 
     public void ButtonOnclick_recordUpload(View view) {
-        Dialog dialog = new AlertDialog.Builder(this).setTitle("录音")
-                .setMessage("录音并上传..")
+        final TextView textView = new TextView(this);
+        textView.setText("录音并上传");
+        textView.setTextSize(20);
+        textView.setTextColor(Color.WHITE);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        Dialog dialog = builder.setTitle("录音")
+                .setView(textView)
                 .setPositiveButton("开始录音", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            Field field = dialog.getClass().getSuperclass().getDeclaredField("mShowing");
-                            field.setAccessible(true);
-                            field.set(dialog, false);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        File sdPath = Environment.getExternalStorageDirectory();
-                        String path = sdPath.getPath() + "/CourseMisRecord";
-                        File dir = new File(path);
-                        if (!dir.exists()) {
-                            dir.mkdirs();
-                        }
-
-
+                        setMShowing(dialog, false);
+                        textView.setText("正在录音...");
                         SharedPreferences sharedata = getSharedPreferences("data", 0);
                         //Toast.makeText(UploadAudioActivity.this, ""+sharedata.getString("userID",null), 1000);
                         String temp = sharedata.getString("userID", null);
                         Log.v("2121", temp);
                         id = Integer.parseInt(sharedata.getString("userID", null));
-                        File file = new File("/sdcard/CourseMisRecord/" + "id" + new DateFormat().format("yyyyMMdd_HHmmss", Calendar.getInstance(Locale.CHINA)) + ".mp3");
+                        File file = new File(getExternalFilesDir(null).getAbsolutePath() + "/id" + new DateFormat().format("yyyyMMdd_HHmmss", Calendar.getInstance(Locale.CHINA)) + ".mp3");
 
                         Toast.makeText(getApplicationContext(), "正在录音，录音文件在" + file.getAbsolutePath(), Toast.LENGTH_LONG)
                                 .show();
@@ -252,7 +305,7 @@ public class TUploadAudioActivity extends Activity {
 
 
                     }
-                }).setNegativeButton("停止录音", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("结束录音", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -268,13 +321,8 @@ public class TUploadAudioActivity extends Activity {
                             mr.stop();
                             mr.release();
                             mr = null;
-                            SharedPreferences sharedata = getSharedPreferences("data", 0);
-                            id = Integer.parseInt(sharedata.getString("userID", null));
-                            File file = new File(soundPath);
-
-
-                            Toast.makeText(getApplicationContext(), "录音完毕,请等待上传...", Toast.LENGTH_LONG).show();
-                            uploadFile(file);
+                            //显示对话框，判断是否要上传
+                            showUploadDialog();
                         }
                     }
                 }).create();
@@ -282,11 +330,58 @@ public class TUploadAudioActivity extends Activity {
         dialog.show();
     }
 
+    private void showUploadDialog() {
+
+        final EditText editText = new EditText(this);
+        editText.setHint("请输入文件名");
+        Dialog builder = new AlertDialog.Builder(this).setView(editText).setPositiveButton("上传", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //判断文件名是否为空
+                if (editText.getText().toString() == null || editText.getText().toString().equals("")) {
+                    //文件名为空
+                    Toast.makeText(TUploadAudioActivity.this, "请输入文件名", Toast.LENGTH_SHORT).show();
+                    setMShowing(dialog, false);
+                } else {
+                    //修改文件名
+                    //判断文件是否存在
+                    File newFile = new File(getExternalFilesDir(null).getAbsolutePath() + "/" + editText.getText().toString() + ".mp3");
+                    if (newFile.exists()) {
+                        //文件已经存在
+                        Toast.makeText(TUploadAudioActivity.this, "文件名已经存在", Toast.LENGTH_SHORT).show();
+                        setMShowing(dialog,false);
+                    } else {
+                        File file = new File(soundPath);
+
+                        file.renameTo(newFile);
+                        file.delete();
+                        SharedPreferences sharedata = getSharedPreferences("data", 0);
+                        id = Integer.parseInt(sharedata.getString("userID", null));
+                        Toast.makeText(getApplicationContext(), "录音完毕,请等待上传...", Toast.LENGTH_LONG).show();
+                        uploadFile(newFile);
+                        setMShowing(dialog, true);
+                    }
+
+                }
+
+            }
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //删除文件
+                File file = new File(soundPath);
+                if (file.exists()) {
+                    file.delete();
+                }
+                setMShowing(dialog, true);
+            }
+        }).create();
+        builder.show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-
-
             case 22:
                 if (data != null) {
 
@@ -297,9 +392,8 @@ public class TUploadAudioActivity extends Activity {
                         //String[] pojo = {MediaStore.Audio.Media.DATA};
                         //Cursor cursor = managedQuery(uri, pojo, null, null, null);
                         if (uri != null) {
-                            String path = FileUtil.getRealFilePath(TUploadAudioActivity.this,uri) ;
-                            if (path.endsWith(".mp3") || path.endsWith(".mp4") || path.endsWith("amr"))
-                            {
+                            String path = FileUtil.getRealFilePath(TUploadAudioActivity.this, uri);
+                            if (path.endsWith(".mp3") || path.endsWith(".mp4") || path.endsWith("amr")) {
                                 soundPath = path;
                                 SharedPreferences sharedata = getSharedPreferences("courseMis", 0);
                                 id = Integer.parseInt(sharedata.getString("userID", null));
@@ -308,11 +402,11 @@ public class TUploadAudioActivity extends Activity {
 
 
                             } else {
-                                Log.e("错误","1") ;
+                                Log.e("错误", "1");
                                 alert();
                             }
                         } else {
-                            Log.e("错误","2") ;
+                            Log.e("错误", "2");
                             alert();
                         }
                     } catch (Exception e) {
@@ -389,22 +483,20 @@ public class TUploadAudioActivity extends Activity {
         dialog.show();
     }
 
-    private void keepDialog(DialogInterface dialog) {
+    /**
+     * 设置AlertDialog是否dismiss
+     */
+    private void setMShowing(DialogInterface dialog, boolean mShowing) {
         try {
-            dialog.getClass().getSuperclass().getDeclaredField("mShowing").setAccessible(true);
-            dialog.getClass().getSuperclass().getDeclaredField("mShowing").set(dialog, false);
-//				field.setAccessible(true);
-//				field.set(dialog, false);
-        } catch (Exception e) {
+            Field field = dialog.getClass().getSuperclass()
+                    .getDeclaredField("mShowing");
+            field.setAccessible(true);
+            field.set(dialog, mShowing);
+        } catch (NoSuchFieldException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void distoryDialog(DialogInterface dialog) {
-        try {
-            dialog.getClass().getSuperclass().getDeclaredField("mShowing").setAccessible(true);
-            dialog.getClass().getSuperclass().getDeclaredField("mShowing").set(dialog, true);
-        } catch (Exception e) {
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
     }
