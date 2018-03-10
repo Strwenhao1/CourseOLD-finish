@@ -117,7 +117,7 @@
             <Button
                 android:id="@+id/login"
                 android:layout_width="120.0px"
-                android:layout_height="60.0px"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/TextView02"
                 android:layout_marginRight="12.0dip"

@@ -115,12 +115,14 @@ public class EvaluateGetActivity extends Activity {
 
         // 构建 listView 的适配器
         adapter = new SimpleAdapter(this, list,
-                android.R.layout.simple_list_item_2, // SDK 库中提供的一个包含两个 TextView
+                //android.R.layout.simple_list_item_2, // SDK 库中提供的一个包含两个 TextView
                 // 的 layout
+                R.layout.text_list_item_2,
                 new String[]{"name", "desc"}, // maps 中的两个 key
-                new int[]{android.R.id.text1, android.R.id.text2} // 两个
+                //new int[]{android.R.id.text1, android.R.id.text2} // 两个
                 // TextView
                 // 的 id
+                new int[] {R.id.text1,R.id.text2}
         );
         xingList.setAdapter(adapter);
         xingList.setOnItemClickListener(new MyOnItemClickListener());

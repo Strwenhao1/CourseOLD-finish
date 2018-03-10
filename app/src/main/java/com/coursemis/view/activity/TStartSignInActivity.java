@@ -92,7 +92,7 @@ public class TStartSignInActivity extends Activity{
 				// TODO Auto-generated method stub
 				if(courseInfo==null||courseWeek==null||courseTime==null
 						||(signInHour==0&&signInMinute==0)
-						||LocationData.latitude==0.0||LocationData.longitude==0
+						/*||LocationData.latitude==0.0||LocationData.longitude==0*/
 						/*||LocationData.radius==0.0f  */) {
 					Log.e("测试签到信息",(courseInfo==null)+"..."
 							+(courseWeek==null)+"..."
@@ -110,7 +110,8 @@ public class TStartSignInActivity extends Activity{
 					params.put("signInMinute", signInMinute+"");
 					params.put("latitude", LocationData.latitude+"");
 					params.put("longitude", LocationData.longitude+"");
-					
+					//将教师Id上传上去
+					params.put("tid",tid);
 					client.post(HttpUtil.server_teacher_SignIn, params,
 							new JsonHttpResponseHandler() {
 

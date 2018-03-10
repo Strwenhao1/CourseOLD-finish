@@ -5,6 +5,7 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -176,9 +177,8 @@ public class TabMessageActivity extends Activity {
     			teacher_Information[i]=course[i].getCName();
 	    	}
     		  //创建一个ArrayAdapter  
-    		listView.setAdapter(new ArrayAdapter<String>(this,  
-  	                 android.R.layout.simple_list_item_1, teacher_Information));   
-  	      
+    		listView.setAdapter(new ArrayAdapter<String>(this,
+					R.layout.text_list_item_1, teacher_Information));
   	         //listView注册一个元素点击事件监听器  
   	        listView.setOnItemClickListener(
   	        		new AdapterView.OnItemClickListener() {  

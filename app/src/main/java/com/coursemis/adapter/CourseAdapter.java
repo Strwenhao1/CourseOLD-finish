@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.coursemis.R;
@@ -99,11 +100,11 @@ public class CourseAdapter extends RecyclerView.Adapter {
 
         public TextView courseName;
         public Button delete;
-        public Button courseDetail;
+        public ImageView courseDetail;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            courseDetail = (Button) itemView.findViewById(R.id.adapter_course_detail);
+            courseDetail = (ImageView) itemView.findViewById(R.id.adapter_course_detail);
             delete = (Button) itemView.findViewById(R.id.adapter_course_del);
             courseName = (TextView) itemView.findViewById(R.id.adapter_course_name);
         }

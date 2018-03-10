@@ -17,7 +17,10 @@ import com.loopj.android.http.RequestParams;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 /**
@@ -31,7 +34,7 @@ public class EvaluateChooseActivity extends Activity {
     private ListView lv_course_teacher;
     private AsyncHttpClient client;
     private int teacherid;
-    private EvaluateChooseAdapter evaluateChooseAdapter;
+    //private EvaluateChooseAdapter evaluateChooseAdapter;
     private List<Course> courseList = new ArrayList<Course>();
     private TitleView mTitleView;
 
@@ -54,10 +57,11 @@ public class EvaluateChooseActivity extends Activity {
         Intent intent = getIntent();
         teacherid = intent.getExtras().getInt("teacherid");
 
-        if (evaluateChooseAdapter == null) {
+        /*if (evaluateChooseAdapter == null) {
             evaluateChooseAdapter = new EvaluateChooseAdapter(this, courseList, teacherid);
-        }
-        lv_course_teacher.setAdapter(evaluateChooseAdapter);
+        }*/
+
+        //lv_course_teacher.setAdapter(evaluateChooseAdapter);
         RequestParams params = new RequestParams();
         params.put("tid", teacherid + "");
         client.post(HttpUtil.server_teacher_course, params,
@@ -73,7 +77,29 @@ public class EvaluateChooseActivity extends Activity {
                             course.setCName(object.optString("CName"));
                             courseList.add(course);
                         }
-                        evaluateChooseAdapter.notifyDataSetChanged();
+                        String [] arr = new String[courseList.size()] ;
+                        Log.e("测试",""+courseList.size()) ;
+                        for (int i = 0 ; i<courseList.size();i++){
+                            arr[i] = courseList.get(i).getCName() ;
+                            Log.e("测试",arr[i]) ;
+                        }
+                        final ArrayAdapter<String> arrayAdapter =
+                                new ArrayAdapter<String>(EvaluateChooseActivity.this,
+                                        R.layout.text_list_item_1,arr) ;
+                        lv_course_teacher.setAdapter(arrayAdapter);
+                        lv_course_teacher.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent intent=new Intent(EvaluateChooseActivity.this,EvaluateGetActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("teacherid", teacherid);
+                                bundle.putInt("courseid", courseList.get(position).getCId());
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+                        });
+                        //arrayAdapter.notifyDataSetChanged();
+                        //evaluateChooseAdapter.notifyDataSetChanged();
                     }
                 });
 

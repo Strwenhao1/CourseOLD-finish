@@ -313,7 +313,7 @@ public class WelcomeActivity extends Activity {
 
                         if (object.length() == 0) {
                             Toast.makeText(WelcomeActivity.this, "当前没有任何资源共享!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(WelcomeActivity.this, UploadAudioActivity.class);
+                            Intent intent = new Intent(WelcomeActivity.this, TUploadAudioActivity.class);
                             intent.putStringArrayListExtra("mediainfolist", new ArrayList<String>());
                             startActivity(intent);
                         } else {
@@ -321,10 +321,10 @@ public class WelcomeActivity extends Activity {
                             for (int i = 0; i < arg1.optJSONArray("result").length(); i++) {
                                 JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i);
                                 P.p(object_temp.toString() + 2222);
-                                list.add(i, ("    多媒体文件:" + object_temp.optString("smname")));
+                                list.add(i, object_temp.optString("smname"));
                             }
 
-                            Intent intent = new Intent(WelcomeActivity.this, UploadAudioActivity.class);
+                            Intent intent = new Intent(WelcomeActivity.this, TUploadAudioActivity.class);
                             intent.putStringArrayListExtra("mediainfolist", list);
                             startActivity(intent);
                         }
