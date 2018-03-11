@@ -110,7 +110,7 @@ public class HomeworkSelectAdapter extends RecyclerView.Adapter {
             tid = Integer.parseInt(sharedata.getString("userID", null));
             params.put("tid", tid + "");
             params.put("courseinfo", uriString);
-            Log.e("点击", "点击");
+            Log.e("点击", tid+"...."+uriString);
             client.post(HttpUtil.server_teacher_homework_select, params,
                     new JsonHttpResponseHandler() {
 

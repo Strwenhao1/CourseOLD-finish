@@ -15,6 +15,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.coursemis.service.TSignInService;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.app.Activity;
@@ -126,7 +127,7 @@ public class WelcomeActivity extends Activity {
                                         list.add(i, (object_temp.optInt("CId") + " " + (object_temp.optString("CName"))));
                                     }
 
-                                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    /*LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                     ListView lv = new ListView(WelcomeActivity.this);
                                     ArrayAdapter<String> a = new ArrayAdapter<String>(WelcomeActivity.this,
                                             R.layout.listview_item_1, list);
@@ -136,9 +137,52 @@ public class WelcomeActivity extends Activity {
                                     listViewLayout.addView(lv, lp);
                                     final AlertDialog dialog = new AlertDialog.Builder(WelcomeActivity.this)
                                             .setTitle("选择课程").setView(listViewLayout)//在这里把写好的这个listview的布局加载dialog中
-                                            .create();
+                                            .create();*/
+                                    String[] objects = list.toArray(new String[list.size()]);
+                                    AlertDialog dialog = new AlertDialog.Builder(WelcomeActivity.this)
+                                            .setTitle("选择课程")
+                                            .setItems(objects, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    final Intent serviceIntent = new Intent(WelcomeActivity.this, TSignInService.class);
+                                                    bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
+                                                    courseInfo = list.get(which);
+                                                    P.p("1212121");
+                                                    RequestParams params = new RequestParams();
+                                                    params.put("courseInfo", courseInfo);
+                                                    client.post(HttpUtil.server_teacher_StudentCourse, params,
+                                                            new JsonHttpResponseHandler() {
+                                                                @Override
+                                                                public void onSuccess(int arg0, JSONObject arg1) {
+                                                                    JSONArray object = arg1.optJSONArray("result");
 
-                                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                                    if (object.length() == 0) {
+                                                                        Toast.makeText(WelcomeActivity.this, "你这门课没有学生选修!", Toast.LENGTH_SHORT).show();
+                                                                    } else {
+                                                                        ArrayList<String> list = new ArrayList<String>();
+                                                                        tss.signInServiceInfo(list, arg1);
+                                                    /*	list.add(0, "学号"+"    "+" 姓名"+"    "+" 已到次数"+"    "+"总点到次数");
+														for(int i=1;i<=arg1.optJSONArray("result").length();i++){
+															JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i-1);
+															P.p(object_temp.toString()+2222);
+															list.add(i, (object_temp.optInt("SNumber")+"    "+object_temp.optString("SName")+"    "+object_temp.optString("SCPointNum")+"    "+object_temp.optString("ScPointTotalNum")));
+															}*/
+
+                                                                        Intent intent = new Intent(WelcomeActivity.this, TCourseSignInActivity.class);
+                                                                        intent.putStringArrayListExtra("studentCourseSignInInfo", list);
+                                                                        P.p("!@#$%^&*@#$%^&*#$%^&");
+                                                                        startActivity(intent);
+                                                                    }
+                                                                    super.onSuccess(arg0, arg1);
+                                                                }
+                                                            });
+
+                                                    dialog.dismiss();
+                                                }
+                                            }).create() ;
+                                    dialog.show();
+
+                                    /*lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                                             final Intent serviceIntent = new Intent(WelcomeActivity.this, TSignInService.class);
@@ -158,12 +202,12 @@ public class WelcomeActivity extends Activity {
                                                             } else {
                                                                 ArrayList<String> list = new ArrayList<String>();
                                                                 tss.signInServiceInfo(list, arg1);
-                                                    /*	list.add(0, "学号"+"    "+" 姓名"+"    "+" 已到次数"+"    "+"总点到次数");
+                                                    *//*	list.add(0, "学号"+"    "+" 姓名"+"    "+" 已到次数"+"    "+"总点到次数");
 														for(int i=1;i<=arg1.optJSONArray("result").length();i++){
 															JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i-1);
 															P.p(object_temp.toString()+2222);
 															list.add(i, (object_temp.optInt("SNumber")+"    "+object_temp.optString("SName")+"    "+object_temp.optString("SCPointNum")+"    "+object_temp.optString("ScPointTotalNum")));
-															}*/
+															}*//*
 
                                                                 Intent intent = new Intent(WelcomeActivity.this, TCourseSignInActivity.class);
                                                                 intent.putStringArrayListExtra("studentCourseSignInInfo", list);
@@ -178,7 +222,7 @@ public class WelcomeActivity extends Activity {
                                         }
                                     });
 
-                                    dialog.show();
+                                    dialog.show();*/
                                 }
 
                                 super.onSuccess(arg0, arg1);

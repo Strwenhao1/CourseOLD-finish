@@ -18,4 +18,10 @@
     <declare-styleable name="AppTheme">
         <attr name="textAppearanceFinish" format="reference" />
     </declare-styleable>
+    <declare-styleable name="SignInItemView">
+        <attr name="signInClassName" format="string" />
+        <attr name="signInResultName" format="string"/>
+        <attr name="signInClassColor" format="color" />
+        <attr name="signInResultColor" format="color"/>
+    </declare-styleable>
 </resources>

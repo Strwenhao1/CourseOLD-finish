@@ -1,42 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?> 
-	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-	    android:orientation="vertical" 
-	    android:layout_width="fill_parent" 
-	    android:layout_height="fill_parent" 
-	    >
-	    <LinearLayout
-	         android:orientation="vertical"
-	         android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentBottom="true">
-	    <Button   
-	    android:layout_width="fill_parent"  
-	    android:layout_height="wrap_content"  
-	    android:text="选择图片" 
-	    android:id="@+id/selectImage" 
-	     android:background="@drawable/select"
-	    /> 
-	    <Button   
-	    android:layout_width="fill_parent"  
-	    android:layout_height="wrap_content"  
-	    android:text="拍照" 
-	    android:id="@+id/takeImage" 
-	     android:background="@drawable/select"
-	    />
-	    <Button   
-	    android:layout_width="fill_parent"  
-	    android:layout_height="wrap_content"  
-	    android:text="上传图片" 
-	    android:id="@+id/uploadImage" 
-	     android:background="@drawable/select"
-	    /> 
-	    </LinearLayout>
-	    
-	    
-	     <ImageView   
-	    android:layout_width="wrap_content"  
-	    android:layout_height="wrap_content"  
-	    android:id="@+id/imageView" 
-	    android:text="这是ImageView"
-	    /> 
-	</RelativeLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+
+    <Button
+        android:id="@+id/uploadImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/select"
+        android:text="上传图片"
+        android:layout_alignParentBottom="true"/>
+
+    <Button
+        android:id="@+id/takeImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/select"
+        android:text="拍照"
+        android:layout_above="@id/uploadImage"/>
+
+    <Button
+        android:id="@+id/selectImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/select"
+        android:text="选择图片"
+        android:layout_above="@id/takeImage"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/iv_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/selectImage"></android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

@@ -1,26 +1,5 @@
 package com.coursemis.view.activity;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.BMapManager;
-import com.coursemis.view.myView.TitleView;
-import com.coursemis.R;
-import com.coursemis.model.LocationData;
-import com.coursemis.util.HttpUtil;
-import com.coursemis.util.P;
-import com.coursemis.util.SubActivity;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -41,6 +20,27 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.coursemis.R;
+import com.coursemis.model.LocationData;
+import com.coursemis.util.HttpUtil;
+import com.coursemis.util.P;
+import com.coursemis.util.SubActivity;
+import com.coursemis.view.myView.SignInItemView;
+import com.coursemis.view.myView.TitleView;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+
 
 public class TStartSignInActivity extends Activity {
     private String noticeInfo1 = null;
@@ -48,26 +48,25 @@ public class TStartSignInActivity extends Activity {
     private String noticeInfo3 = null;
     private Calendar dt = Calendar.getInstance();
 
-    private Button btn_3 = null;
-    private Button btn_4 = null;
-    private Button btn_5 = null;
-    private Button btn_6 = null;
+    private SignInItemView btn_3 = null;
+    private SignInItemView btn_4 = null;
+    private SignInItemView btn_5 = null;
+    private SignInItemView btn_6 = null;
     private int tid;
     private AsyncHttpClient client = null;
     private String courseInfo = null;
     private String courseWeek = null;
     private String courseTime = null;
-    private TextView textView_1 = null;
+    //private TextView textView_1 = null;
     private int signInHour = 0;
     private int signInMinute = 0;
     private int cid;
     private TitleView mTitle = null;
     private Location currentLocation;
     private String best;
-    private TextView mTv = null;
+    //private TextView mTv = null;
 
-    private Button mStartBtn;
-    private boolean mIsStart;
+    private SignInItemView mStartBtn;
     private static int count = 1;
     private Vibrator mVibrator01 = null;
     private LocationClient mLocClient;
@@ -75,121 +74,31 @@ public class TStartSignInActivity extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tstartsigninactivity);
-        LocationData.latitude = 0.0;
-        LocationData.longitude = 0.0;
-        LocationData.radius = 0.0f;
 
+        initView();
+        initLocation();
+        initTitle();
+        initData();
+        initClick();
+    }
 
-        mTitle = (TitleView) findViewById(R.id.tStart_signIn);
-        mTitle.setTitle("课堂签到");
-        mTitle.setLeftButton(R.string.back, new TitleView.OnLeftButtonClickListener() {
+    private void initData() {
+        client = new AsyncHttpClient();
+    }
 
-            public void onClick(View button) {
-                finish();
-            }
-
-        });
-        mTitle.setRightButton(R.string.signin, new TitleView.OnRightButtonClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                // TODO Auto-generated method stub
-                setLocationOption();
-                mLocClient.start();
-                mLocClient.registerLocationListener(new BDLocationListener() {
-                    @Override
-                    public void onReceiveLocation(BDLocation bdLocation) {
-                        String city = bdLocation.getCity();
-                        Log.e("测试城市",city) ;
-                    }
-
-                    @Override
-                    public void onConnectHotSpotMessage(String s, int i) {
-
-                    }
-                });
-                if (courseInfo == null || courseWeek == null || courseTime == null
-                        || (signInHour == 0 && signInMinute == 0)
-                        /*||LocationData.latitude==0.0||LocationData.longitude==0*/
-                        /*||LocationData.radius==0.0f  */) {
-                    Log.e("测试签到信息", (courseInfo == null) + "..."
-                            + (courseWeek == null) + "..."
-                            + (courseTime == null) + "..."
-                            + (signInHour == 0 && signInMinute == 0) + "..."
-                            + (LocationData.latitude == 0.0) + "..."
-                            + (LocationData.longitude == 0) + "..."
-                            + (LocationData.radius == 0.0));
-                    Log.e("测试定位信息", LocationData.latitude + "...." + LocationData.longitude + "...." + LocationData.radius);
-                    Toast.makeText(TStartSignInActivity.this, "签到信息没有设置完整!", Toast.LENGTH_SHORT).show();
-                } else {
-                    RequestParams params = new RequestParams();
-                    params.put("cid", courseInfo.substring(0, courseInfo.indexOf(" ")));
-                    params.put("signInHour", signInHour + "");
-                    params.put("signInMinute", signInMinute + "");
-                    params.put("latitude", LocationData.latitude + "");
-                    params.put("longitude", LocationData.longitude + "");
-                    //将教师Id上传上去
-                    params.put("tid", tid);
-                    client.post(HttpUtil.server_teacher_SignIn, params,
-                            new JsonHttpResponseHandler() {
-
-                                @Override
-                                public void onSuccess(int arg0, JSONObject arg1) {
-                                }
-                            });
-
-                    Toast.makeText(TStartSignInActivity.this, "签到已经开启", Toast.LENGTH_SHORT).show();
-                    finish();
-
-
-                }
-
-
-            }
-        });
-
-
-        mTv = (TextView) findViewById(R.id.TSignIn_11);
-
-        mStartBtn = (Button) findViewById(R.id.TeacherStarLoc);
+    private void initClick() {
         mStartBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mIsStart) {
-                    setLocationOption();
+                if (mLocClient.isStarted()){
+                    mStartBtn.setSignInResultName("定位中...");
+                }else {
                     mLocClient.start();
-                    Toast.makeText(TStartSignInActivity.this, "定位中请耐心等待", Toast.LENGTH_LONG).show();
-                    mStartBtn.setText("定位停止");
-                    mIsStart = true;
-
-                } else {
-                    mLocClient.stop();
-                    mIsStart = false;
-                    mStartBtn.setText("定位开始");
-                    mTv.setText("定位完成");
+                    mStartBtn.setSignInResultName("定位成功");
                 }
                 Log.d(TAG, "... mStartBtn onClick... pid=" + Process.myPid() + " count=" + count++);
             }
         });
-
-        mIsStart = false;
-
-        mLocClient = ((Location) getApplication()).mLocationClient;
-        ((Location) getApplication()).mTv = mTv;
-        mVibrator01 = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
-        ((Location) getApplication()).mVibrator01 = mVibrator01;
-
-
-        btn_3 = (Button) findViewById(R.id.TSignIn_3);
-        btn_4 = (Button) findViewById(R.id.TSignIn_4);
-        btn_5 = (Button) findViewById(R.id.TSignIn_5);
-        btn_6 = (Button) findViewById(R.id.TSignIn_6);
-
-        textView_1 = (TextView) findViewById(R.id.TSignIn_7);
-
-        client = new AsyncHttpClient();
-
-
         btn_3.setOnClickListener(new OnClickListener() {
 
                                      @Override
@@ -320,8 +229,8 @@ public class TStartSignInActivity extends Activity {
 
                                             list.add(i, object_temp.optInt("weekday") + " " + object_temp.optInt("startclass") + " " + object_temp.optInt("endclass"));
                                         }
-								/*intent.putStringArrayListExtra("courselist", list);
-								intent.putExtra("courelist1", list);*/
+                                /*intent.putStringArrayListExtra("courselist", list);
+                                intent.putExtra("courelist1", list);*/
                                         Intent intent = new Intent(TStartSignInActivity.this, TMentionNameActivity_3.class);
                                         intent.putStringArrayListExtra("cousetime_list", list);
                                         intent.putExtra("courelist1", list);
@@ -353,8 +262,109 @@ public class TStartSignInActivity extends Activity {
 
             }
         });
-
     }
+
+    private void initLocation() {
+        LocationData.latitude = 0.0;
+        LocationData.longitude = 0.0;
+        LocationData.radius = 0.0f;
+        mLocClient = ((Location) getApplication()).mLocationClient;
+        //((Location) getApplication()).mTv = mTv;
+        mVibrator01 = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
+        ((Location) getApplication()).mVibrator01 = mVibrator01;
+        mLocClient.registerLocationListener(new BDLocationListener() {
+            @Override
+            public void onReceiveLocation(BDLocation bdLocation) {
+                double latitude = bdLocation.getLatitude();    //获取纬度信息
+                double longitude = bdLocation.getLongitude();    //获取经度信息
+                float radius = bdLocation.getRadius();    //获取定位精度，默认值为0.0f
+                String coorType = bdLocation.getCoorType();
+                int errorCode = bdLocation.getLocType();
+                String city = bdLocation.getCity();
+                LocationData.latitude = latitude;
+                LocationData.longitude = longitude;
+                LocationData.radius = radius;
+                mLocClient.stop();
+            }
+
+            @Override
+            public void onReceivePoi(BDLocation bdLocation) {
+
+            }
+        });
+        LocationClientOption option = new LocationClientOption();
+        option.setCoorType("bd09ll");
+        option.setScanSpan(1000);
+        option.setOpenGps(true);
+        option.setLocationNotify(true);
+        mLocClient.setLocOption(option);
+    }
+
+    private void initTitle() {
+        mTitle.setTitle("课堂签到");
+        mTitle.setLeftButton(R.string.back, new TitleView.OnLeftButtonClickListener() {
+
+            public void onClick(View button) {
+                finish();
+            }
+
+        });
+        mTitle.setRightButton(R.string.signin, new TitleView.OnRightButtonClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                if (courseInfo == null || courseWeek == null || courseTime == null
+                        || (signInHour == 0 && signInMinute == 0)
+                        || LocationData.latitude == 0.0 || LocationData.longitude == 0
+                        || LocationData.radius == 0.0f) {
+                    Log.e("测试签到信息", (courseInfo == null) + "..."
+                            + (courseWeek == null) + "..."
+                            + (courseTime == null) + "..."
+                            + (signInHour == 0 && signInMinute == 0) + "..."
+                            + (LocationData.latitude == 0.0) + "..."
+                            + (LocationData.longitude == 0) + "..."
+                            + (LocationData.radius == 0.0));
+                    Log.e("测试定位信息", LocationData.latitude + "...." + LocationData.longitude + "...." + LocationData.radius);
+                    Toast.makeText(TStartSignInActivity.this, "签到信息没有设置完整!", Toast.LENGTH_SHORT).show();
+                } else {
+                    RequestParams params = new RequestParams();
+                    params.put("cid", courseInfo.substring(0, courseInfo.indexOf(" ")));
+                    params.put("signInHour", signInHour + "");
+                    params.put("signInMinute", signInMinute + "");
+                    params.put("latitude", LocationData.latitude + "");
+                    params.put("longitude", LocationData.longitude + "");
+                    //将教师Id上传上去
+                    params.put("tid", tid);
+                    client.post(HttpUtil.server_teacher_SignIn, params,
+                            new JsonHttpResponseHandler() {
+
+                                @Override
+                                public void onSuccess(int arg0, JSONObject arg1) {
+                                }
+                            });
+
+                    Toast.makeText(TStartSignInActivity.this, "签到已经开启", Toast.LENGTH_SHORT).show();
+                    finish();
+
+
+                }
+
+
+            }
+        });
+    }
+
+    private void initView() {
+        setContentView(R.layout.activity_tstartsigninactivity);
+        mTitle = (TitleView) findViewById(R.id.tStart_signIn);
+        //mTv = (TextView) findViewById(R.id.TSignIn_11);
+        mStartBtn = (SignInItemView) findViewById(R.id.TeacherStarLoc);
+        btn_3 = (SignInItemView) findViewById(R.id.TSignIn_3);
+        btn_4 = (SignInItemView) findViewById(R.id.TSignIn_4);
+        btn_5 = (SignInItemView) findViewById(R.id.TSignIn_5);
+        btn_6 = (SignInItemView) findViewById(R.id.TSignIn_6);
+        //textView_1 = (TextView) findViewById(R.id.TSignIn_7);
+    }
+
 
     protected Dialog onCreateDialog(int id) {
         switch (id) {
@@ -375,100 +385,18 @@ public class TStartSignInActivity extends Activity {
                             @Override
                             public void onTimeSet(TimePicker view,
                                                   int hourOfDay, int minute) {
-                                textView_1.setText(noticeInfo1 + "\r\n" + noticeInfo2 + "\r\n" + noticeInfo3 + "\r\n" + "您设置了 " + hourOfDay + " 小时" + " " + minute + " 分钟");
+                                //textView_1.setText(noticeInfo1 + "\r\n" + noticeInfo2 + "\r\n" + noticeInfo3 + "\r\n" + "您设置了 " + hourOfDay + " 小时" + " " + minute + " 分钟");
                                 signInHour = hourOfDay;
                                 signInMinute = minute;
                                 P.p("minute" + minute);
                                 P.p("hourOfDay" + hourOfDay);
-
+                                btn_6.setSignInResultName("已设置");
                             }
                         }, dt.get(Calendar.HOUR), dt.get(Calendar.MINUTE), true);
                 tDialog.setTitle("设置签到时间");
                 return tDialog;
         }
         return null;
-    }
-
-//    @Override
-//	protected void onResume() {
-//		super.onResume();
-//		// 取得最佳的定位提供者
-//		Criteria criteria = new Criteria();
-//		best = manager.getBestProvider(criteria, true);
-//		// 更新位置频率的条件
-//        int minTime = 5000; // 毫秒
-//        float minDistance = 5; // 公尺
-//		if (best != null) { // 取得快取的最后位置,如果有的话
-//	       currentLocation = manager.getLastKnownLocation(best);
-//	       manager.requestLocationUpdates(best, minTime,
-//	    		                     minDistance, listener);
-//		}
-//		else { // 取得快取的最后位置,如果有的话
-//           currentLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//           manager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-//                   minTime, minDistance, listener);
-//		}
-//	    updatePosition(); // 更新位置
-//	}
-//	@Override
-//	protected void onPause() {
-//		super.onPause();
-//		manager.removeUpdates(listener);
-//	}
-//	// 更新现在的位置
-//    private void updatePosition() {
-//    	TextView output;
-//    	output = (TextView) findViewById(R.id.TSignIn_11);
-//        if (currentLocation == null) {
-//            output.setText("取得定位信息中...");
-//        } else {
-//            output.setText(getLocationInfo(currentLocation));
-//        }
-//    }
-//    // 创建定位服务的监听者对象
-//    private LocationListener listener = new LocationListener() {
-//        @Override
-//        public void onLocationChanged(Location location) {
-//            currentLocation = location;
-//            updatePosition();
-//        }
-//        @Override
-//        public void onProviderDisabled(String provider) { }
-//        @Override
-//        public void onProviderEnabled(String provider) { }
-//        @Override
-//        public void onStatusChanged(String provider, int status, Bundle extras) { }
-//    };
-//    // 取得定位信息
-//	public String getLocationInfo(Location location) {
-//		StringBuffer str = new StringBuffer();
-//		str.append("定位提供者(Provider): "+location.getProvider());
-//		str.append("\n纬度(Latitude): " + Double.toString(location.getLatitude()));
-//		str.append("\n经度(Longitude): " + Double.toString(location.getLongitude()));
-//		str.append("\n高度(Altitude): " + Double.toString(location.getAltitude()));
-//		latitude = Double.toString(location.getLatitude())+"";
-//		longitude=Double.toString(location.getLongitude())+"";
-//		return str.toString();
-//	}
-//	// 启动Google地图
-//    public void button1_Click(View view) {
-//    	// 取得经纬度坐标
-//    	float latitude = (float) currentLocation.getLatitude();
-//    	float longitude = (float) currentLocation.getLongitude();
-//    	// 创建URI字符串
-//    	String uri = String.format("geo:%f,%f?z=18", latitude, longitude);
-//    	// 创建Intent对象
-//    	Intent geoMap = new Intent(Intent.ACTION_VIEW,Uri.parse(uri));
-//    	startActivity(geoMap);  // 启动活动
-//    }
-
-
-    //设置相关参数
-    private void setLocationOption() {
-        LocationClientOption option = new LocationClientOption();
-        //option.setPoiNumber(10);
-        option.disableCache(true);
-        mLocClient.setLocOption(option);
     }
 
     @Override
@@ -483,7 +411,8 @@ public class TStartSignInActivity extends Activity {
                     courseWeek = null;
                     courseTime = null;
                     noticeInfo1 = "选择" + uriData.toString().substring(uriData.toString().indexOf(" ") + 1, uriData.toString().length()) + "课程";
-                    textView_1.setText(noticeInfo1);
+                    //textView_1.setText(noticeInfo1);
+                    btn_3.setSignInResultName(uriData.toString().substring(uriData.toString().indexOf(" ") + 1, uriData.toString().length()));
                 }
                 break;
             case SubActivity.SUBACTIVITY_2:
@@ -493,7 +422,8 @@ public class TStartSignInActivity extends Activity {
                     courseWeek = uriData.toString();
                     courseTime = null;
                     noticeInfo2 = "选择课程第" + uriData.toString() + "周";
-                    textView_1.setText(noticeInfo1 + "\r\n" + noticeInfo2);
+                    //textView_1.setText(noticeInfo1 + "\r\n" + noticeInfo2);
+                    btn_4.setSignInResultName(uriData.toString());
                 }
                 break;
             case SubActivity.SUBACTIVITY_3:
@@ -502,7 +432,8 @@ public class TStartSignInActivity extends Activity {
                     Uri uriData = data.getData();
                     courseTime = uriData.toString();
                     noticeInfo3 = "时间" + uriData.toString().substring(2, uriData.toString().length());
-                    textView_1.setText(noticeInfo1 + "\r\n" + noticeInfo2 + "\r\n" + noticeInfo3);
+                    //textView_1.setText(noticeInfo1 + "\r\n" + noticeInfo2 + "\r\n" + noticeInfo3);
+                    btn_5.setSignInResultName(uriData.toString().substring(2, uriData.toString().length()));
                 }
                 break;
 
