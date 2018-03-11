@@ -7,8 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.BMapManager;
 import com.coursemis.view.myView.TitleView;
 import com.coursemis.R;
 import com.coursemis.model.LocationData;
@@ -92,13 +94,20 @@ public class TStartSignInActivity extends Activity {
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
-                BDLocation lastKnownLocation = mLocClient.getLastKnownLocation();
-                double latitude = lastKnownLocation.getLatitude();
-                double longitude = lastKnownLocation.getLongitude();
-                float radius = lastKnownLocation.getRadius();
-                Log.e("测试定位",latitude+"...."+longitude+"...."+radius) ;
-                String city = lastKnownLocation.getCity();
-                Log.e("测试城市",city) ;
+                setLocationOption();
+                mLocClient.start();
+                mLocClient.registerLocationListener(new BDLocationListener() {
+                    @Override
+                    public void onReceiveLocation(BDLocation bdLocation) {
+                        String city = bdLocation.getCity();
+                        Log.e("测试城市",city) ;
+                    }
+
+                    @Override
+                    public void onConnectHotSpotMessage(String s, int i) {
+
+                    }
+                });
                 if (courseInfo == null || courseWeek == null || courseTime == null
                         || (signInHour == 0 && signInMinute == 0)
                         /*||LocationData.latitude==0.0||LocationData.longitude==0*/
@@ -457,7 +466,7 @@ public class TStartSignInActivity extends Activity {
     //设置相关参数
     private void setLocationOption() {
         LocationClientOption option = new LocationClientOption();
-        option.setPoiNumber(10);
+        //option.setPoiNumber(10);
         option.disableCache(true);
         mLocClient.setLocOption(option);
     }
