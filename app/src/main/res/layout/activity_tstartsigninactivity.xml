@@ -25,7 +25,7 @@
             android:background="@drawable/select"
             android:text="开启定位" />-->
 
-        <com.coursemis.view.myView.SignInItemView
+        <com.coursemis.view.myView.SelectItemView
             android:id="@+id/TeacherStarLoc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             app:signInResultName="未定位"
             />
 
-        <com.coursemis.view.myView.SignInItemView
+        <com.coursemis.view.myView.SelectItemView
             android:id="@+id/TSignIn_3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             app:signInClassName="选择课程"
             app:signInResultName="未选择"/>
 
-        <com.coursemis.view.myView.SignInItemView
+        <com.coursemis.view.myView.SelectItemView
             android:id="@+id/TSignIn_4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
             app:signInClassName="课程周数"
             app:signInResultName="未选择"/>
 
-        <com.coursemis.view.myView.SignInItemView
+        <com.coursemis.view.myView.SelectItemView
             android:id="@+id/TSignIn_5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
             app:signInClassName="课程时间"
             app:signInResultName="未选择"/>
 
-        <com.coursemis.view.myView.SignInItemView
+        <com.coursemis.view.myView.SelectItemView
             android:id="@+id/TSignIn_6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

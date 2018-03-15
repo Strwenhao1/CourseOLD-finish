@@ -1,12 +1,14 @@
 package com.coursemis.view.activity;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.coursemis.R;
+import com.coursemis.model.Teacher;
 import com.coursemis.util.HttpUtil;
 import com.coursemis.util.P;
 import com.coursemis.util.SubActivity;
@@ -84,6 +86,7 @@ public class WelcomeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        test() ;
         this.context = this;
         client = new AsyncHttpClient();
 
@@ -147,7 +150,7 @@ public class WelcomeActivity extends Activity {
                                                     final Intent serviceIntent = new Intent(WelcomeActivity.this, TSignInService.class);
                                                     bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
                                                     courseInfo = list.get(which);
-                                                    P.p("1212121");
+                                                    P.p("1212121"+courseInfo);
                                                     RequestParams params = new RequestParams();
                                                     params.put("courseInfo", courseInfo);
                                                     client.post(HttpUtil.server_teacher_StudentCourse, params,
@@ -344,6 +347,20 @@ public class WelcomeActivity extends Activity {
                 WelcomeActivity.this.startActivity(intent);
             }
         });
+    }
+    //TODO 删除
+    private void test() {
+        Teacher teacher = (Teacher) getIntent().getSerializableExtra("teacher");
+        String type = getIntent().getStringExtra("type");
+        Intent intent = new Intent(this, NewWelcomeActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("teacher", teacher);
+        bundle.putInt("teacherid", teacher.getTId());
+        bundle.putString("type", type);
+        intent.putExtras(bundle);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP) ;
+        startActivity(intent);
+        finish();
     }
 
     public void ButtonOnclick_ShareMedia(View view) {

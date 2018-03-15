@@ -39,7 +39,7 @@ import com.coursemis.R;
  * Created by zhxchao on 2018/3/11.
  */
 
-public class SignInItemView extends FrameLayout {
+public class SelectItemView extends FrameLayout {
 
     private final String NAMESPACE = "http://schemas.android.com/apk/res-auto";
 
@@ -49,15 +49,15 @@ public class SignInItemView extends FrameLayout {
     private TextView mSignInClass;
     private TextView mSignInResult;
 
-    public SignInItemView(@NonNull Context context) {
+    public SelectItemView(@NonNull Context context) {
         this(context,null) ;
     }
 
-    public SignInItemView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public SelectItemView(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs,0);
     }
 
-    public SignInItemView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public SelectItemView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initParameter(context, attrs, defStyleAttr) ;
         initView() ;
@@ -65,7 +65,7 @@ public class SignInItemView extends FrameLayout {
     }
 
     private void initData() {
-        TypedArray s = mContext.obtainStyledAttributes(mDefStyleAttr, R.styleable.SignInItemView);
+        TypedArray s = mContext.obtainStyledAttributes(mDefStyleAttr, R.styleable.SelectItemView);
         /*String signInClassName = s.getString(R.styleable.SignInItemView_signInClassName) ;*/
         String signInClassName = mAttributeSet.getAttributeValue(NAMESPACE,"signInClassName") ;
         String signInResultName = mAttributeSet.getAttributeValue(NAMESPACE,"signInResultName") ;
@@ -94,7 +94,7 @@ public class SignInItemView extends FrameLayout {
     private void initView() {
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.signin_item_view, this, true);
+        inflater.inflate(R.layout.view_select_item, this, true);
         mSignInClass = (TextView) findViewById(R.id.signin_class);
         mSignInResult = (TextView) findViewById(R.id.signin_result);
     }

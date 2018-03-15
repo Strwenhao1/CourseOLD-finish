@@ -35,9 +35,9 @@
         android:normalScreens="true"
         android:resizeable="true"
         android:smallScreens="true" />
-    <uses-sdk
+   <!-- <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="17" />-->
 
     <application
         android:name="com.coursemis.view.activity.Location"
@@ -253,6 +253,10 @@
         <activity android:name=".view.activity.PieChartActivity"/>
         <!--教师的资源共享界面-->
         <activity android:name=".view.activity.TUploadAudioActivity"/>
+        <!--测试的Activity-->
+        <activity android:name=".view.activity.NewWelcomeActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:supportsRtl="true"/>
     </application>
 
 </manifest>

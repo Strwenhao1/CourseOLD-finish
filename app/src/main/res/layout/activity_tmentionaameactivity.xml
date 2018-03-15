@@ -17,7 +17,7 @@
             android:layout_height="wrap_content" >
         </com.coursemis.view.myView.TitleView>
 
-        <com.coursemis.view.myView.SignInItemView
+        <com.coursemis.view.myView.SelectItemView
             android:id="@+id/SelectCourse_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
             app:signInClassName="选择课程"
             app:signInResultName="未选择"/>
 
-        <com.coursemis.view.myView.SignInItemView
+        <com.coursemis.view.myView.SelectItemView
             android:id="@+id/MentionNameWeeks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             app:signInClassName="提问周数"
             app:signInResultName="未选择"/>
 
-        <com.coursemis.view.myView.SignInItemView
+        <com.coursemis.view.myView.SelectItemView
             android:id="@+id/MentionNameTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

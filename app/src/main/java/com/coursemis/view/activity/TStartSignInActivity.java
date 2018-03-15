@@ -14,9 +14,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -29,7 +27,7 @@ import com.coursemis.model.LocationData;
 import com.coursemis.util.HttpUtil;
 import com.coursemis.util.P;
 import com.coursemis.util.SubActivity;
-import com.coursemis.view.myView.SignInItemView;
+import com.coursemis.view.myView.SelectItemView;
 import com.coursemis.view.myView.TitleView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -48,10 +46,10 @@ public class TStartSignInActivity extends Activity {
     private String noticeInfo3 = null;
     private Calendar dt = Calendar.getInstance();
 
-    private SignInItemView btn_3 = null;
-    private SignInItemView btn_4 = null;
-    private SignInItemView btn_5 = null;
-    private SignInItemView btn_6 = null;
+    private SelectItemView btn_3 = null;
+    private SelectItemView btn_4 = null;
+    private SelectItemView btn_5 = null;
+    private SelectItemView btn_6 = null;
     private int tid;
     private AsyncHttpClient client = null;
     private String courseInfo = null;
@@ -66,7 +64,7 @@ public class TStartSignInActivity extends Activity {
     private String best;
     //private TextView mTv = null;
 
-    private SignInItemView mStartBtn;
+    private SelectItemView mStartBtn;
     private static int count = 1;
     private Vibrator mVibrator01 = null;
     private LocationClient mLocClient;
@@ -357,11 +355,11 @@ public class TStartSignInActivity extends Activity {
         setContentView(R.layout.activity_tstartsigninactivity);
         mTitle = (TitleView) findViewById(R.id.tStart_signIn);
         //mTv = (TextView) findViewById(R.id.TSignIn_11);
-        mStartBtn = (SignInItemView) findViewById(R.id.TeacherStarLoc);
-        btn_3 = (SignInItemView) findViewById(R.id.TSignIn_3);
-        btn_4 = (SignInItemView) findViewById(R.id.TSignIn_4);
-        btn_5 = (SignInItemView) findViewById(R.id.TSignIn_5);
-        btn_6 = (SignInItemView) findViewById(R.id.TSignIn_6);
+        mStartBtn = (SelectItemView) findViewById(R.id.TeacherStarLoc);
+        btn_3 = (SelectItemView) findViewById(R.id.TSignIn_3);
+        btn_4 = (SelectItemView) findViewById(R.id.TSignIn_4);
+        btn_5 = (SelectItemView) findViewById(R.id.TSignIn_5);
+        btn_6 = (SelectItemView) findViewById(R.id.TSignIn_6);
         //textView_1 = (TextView) findViewById(R.id.TSignIn_7);
     }
 

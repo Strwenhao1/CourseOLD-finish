@@ -24,7 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.coursemis.view.myView.SignInItemView;
+import com.coursemis.view.myView.SelectItemView;
 import com.coursemis.view.myView.TitleView;
 import com.coursemis.R;
 import com.coursemis.util.*;
@@ -38,9 +38,9 @@ public class TMentionNameActivity extends Activity {
     private String course = null;
     private String week = null;
     private String time = null;
-    private SignInItemView SelectCourse = null;
-    private SignInItemView selectWeek = null;
-    private SignInItemView selectTime = null;
+    private SelectItemView SelectCourse = null;
+    private SelectItemView selectWeek = null;
+    private SelectItemView selectTime = null;
     private Button class_Mention = null;
     private AsyncHttpClient client = null;
     private Context context;
@@ -138,9 +138,9 @@ public class TMentionNameActivity extends Activity {
         });
 
 
-        SelectCourse = (SignInItemView) findViewById(R.id.SelectCourse_1);
-        selectWeek = (SignInItemView) findViewById(R.id.MentionNameWeeks);
-        selectTime = (SignInItemView) findViewById(R.id.MentionNameTime);
+        SelectCourse = (SelectItemView) findViewById(R.id.SelectCourse_1);
+        selectWeek = (SelectItemView) findViewById(R.id.MentionNameWeeks);
+        selectTime = (SelectItemView) findViewById(R.id.MentionNameTime);
 
 
         client = new AsyncHttpClient();
