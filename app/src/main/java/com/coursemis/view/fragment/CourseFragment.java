@@ -25,7 +25,9 @@ import com.coursemis.model.Course;
 import com.coursemis.model.Coursetime;
 import com.coursemis.util.HttpUtil;
 import com.coursemis.util.P;
+import com.coursemis.view.activity.EvaluateGetActivity;
 import com.coursemis.view.activity.TAskQuestionActivity;
+import com.coursemis.view.activity.TFeedBackActivity;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -35,6 +37,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * _oo0oo_
@@ -269,15 +273,36 @@ public class CourseFragment extends BaseFragment
                 getActivity().startActivity(ran);*/
                 break;
             case R.id.feedBack :
-                /*View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.text_list_item_2, null);
-                TextView text1 = (TextView) inflate.findViewById(R.id.text1);
-                TextView text2 = (TextView) inflate.findViewById(R.id.text2);
-                RecyclerView recyclerView = new RecyclerView(getActivity()) ;
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                recyclerView.setAdapter();
-                AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                        .setView(inflate)
-                        .create() ;*/
+                String[] items = new String[]{"显示柱状图","显示曲线图","显示饼状图","显示学生建议"} ;
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_list_item_1,items) ;
+                AlertDialog d = new AlertDialog.Builder(getActivity())
+                        .setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent() ;
+                                intent.putExtra("teacher",mTeacher) ;
+                                intent.putExtra("course",mCourse) ;
+                                intent.setClass(getActivity(),TFeedBackActivity.class) ;
+                                switch (which){
+                                    case 0:
+                                        intent.putExtra(TFeedBackActivity.TAG,TFeedBackActivity.Histogram) ;
+                                        startActivity(intent);
+                                        break;
+                                    case 1:
+                                        intent.putExtra(TFeedBackActivity.TAG,TFeedBackActivity.LineChart) ;
+                                        startActivity(intent);
+                                        break;
+                                    case 2:
+                                        intent.putExtra(TFeedBackActivity.TAG,TFeedBackActivity.SectorChart) ;
+                                        startActivity(intent);
+                                        break;
+                                    case 3:
+                                        break;
+                                }
+                            }
+                        }).create() ;
+                d.show();
                 Toast.makeText(getActivity(),"反馈",Toast.LENGTH_SHORT).show();
                 break;
         }

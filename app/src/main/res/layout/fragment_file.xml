@@ -2,18 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v4.widget.SwipeRefreshLayout
+    <!--<android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/function">
-
-    <TextView
+-->
+    <!--<TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="文件"
         android:textColor="#000"
         android:textSize="30sp"
-        android:layout_gravity="center"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_gravity="center"/>-->
+        <Button
+            android:id="@+id/test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="跳转"/>
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 </LinearLayout>

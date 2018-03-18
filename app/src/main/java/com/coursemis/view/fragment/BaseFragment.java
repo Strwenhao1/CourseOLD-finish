@@ -8,6 +8,8 @@ import android.view.View;
 import com.coursemis.model.Course;
 import com.coursemis.model.Teacher;
 
+import java.io.Serializable;
+
 /**
  * _oo0oo_
  * o8888888o
@@ -42,5 +44,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void setArguments(Bundle args) {
         mTeacher = (Teacher) args.getSerializable("teacher");
+        Serializable course = args.getSerializable("course");
+        if (course!=null){
+            mCourse = (Course) course;
+        }
     }
 }
