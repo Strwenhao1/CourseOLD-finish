@@ -3,14 +3,14 @@ package com.coursemis.view.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.coursemis.R;
 import com.coursemis.model.Course;
-import com.coursemis.view.activity.TestActivity;
+import com.coursemis.view.activity.TFileActivity;
 
 /**
  * _oo0oo_
@@ -37,23 +37,55 @@ import com.coursemis.view.activity.TestActivity;
  * Created by zhxchao on 2018/3/13.
  */
 
-public class FileFragment extends BaseFragment {
+public class FileFragment extends BaseFragment
+        implements View.OnClickListener {
+
+    private View mHomework;
+    private View mResource;
+
     @Override
     public void refresh(Course course) {
-
+        Log.e("测试","刷新"+course.getCName()) ;
+        mCourse = course ;
+        mHomework.setOnClickListener(this);
+        mResource.setOnClickListener(this);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_file, null);
-        Button test = (Button) mView.findViewById(R.id.test);
-        test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().startActivity(new Intent(getActivity(),TestActivity.class));
-            }
-        });
+        initView();
+        initData();
         return mView;
+    }
+
+    private void initView() {
+        mHomework = mView.findViewById(R.id.homework);
+        mResource = mView.findViewById(R.id.resource);
+    }
+
+    private void initData() {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent();
+        intent.putExtra("teacher", mTeacher);
+        intent.putExtra("course", mCourse);
+        intent.setClass(getActivity(), TFileActivity.class);
+        switch (v.getId()) {
+            case R.id.homework:
+                Log.e("测试", "作业");
+                intent.putExtra(TFileActivity.TYPE, TFileActivity.HOMEWORK);
+                getActivity().startActivity(intent);
+                break;
+            case R.id.resource:
+                Log.e("测试", "资源共享");
+                intent.putExtra(TFileActivity.TYPE, TFileActivity.RESOURCE);
+                getActivity().startActivity(intent);
+                break;
+        }
     }
 }

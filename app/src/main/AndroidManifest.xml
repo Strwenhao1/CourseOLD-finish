@@ -263,6 +263,14 @@
         <activity android:name=".view.activity.TFeedBackActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:supportsRtl="true"/>
+        <!--显示作业或资源共享的Activity-->
+        <activity android:name=".view.activity.TFileActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:supportsRtl="true"/>
+        <!--显示设置的Activity-->
+        <activity android:name=".view.activity.TSettingActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:supportsRtl="true"/>
     </application>
 
 </manifest>

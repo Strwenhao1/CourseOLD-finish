@@ -123,6 +123,12 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             public void onPageSelected(int position) {
                 View childAt = mRadioGroup.getChildAt(position);
                 onClick(childAt);
+                //调用refresh 方法
+                if (mCourse!=null){
+                    BaseFragment baseFragment = mFragments.get(position);
+                    baseFragment.refresh(mCourse);
+                }
+
             }
 
             @Override

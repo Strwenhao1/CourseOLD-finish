@@ -14,7 +14,7 @@ public class HttpUtil {
 	//本地服务器真机调试
 	//public static String server = "http://192.168.137.62:8080/CourseMis";
 	//云服务器
-	//public static String server = "http://120.78.52.196:8080/CourseMis";
+	//public static String server = "http://39.108.112.190:8080/CourseMis";
 	//
 	public static String server_evaluate_suggest=server+"/evaluate_suggest.action";
 	public static String server_login = server + "/loginCheck.action";
