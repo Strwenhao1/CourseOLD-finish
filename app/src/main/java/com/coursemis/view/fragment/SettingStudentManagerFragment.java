@@ -70,6 +70,7 @@ public class SettingStudentManagerFragment extends BaseFragment {
     @Override
     public void refresh(Course course) {
         mCourse = course ;
+        initInternetData();
     }
 
     @Nullable

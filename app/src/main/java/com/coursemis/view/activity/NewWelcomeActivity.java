@@ -1,42 +1,36 @@
 package com.coursemis.view.activity;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.coursemis.R;
 import com.coursemis.model.Course;
 import com.coursemis.model.Teacher;
 import com.coursemis.util.HttpUtil;
-import com.coursemis.util.P;
-import com.coursemis.util.SubActivity;
 import com.coursemis.view.fragment.ContentFragment;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -103,6 +97,7 @@ public class NewWelcomeActivity extends AppCompatActivity
     }
 
     private void initData() {
+        EventBus.getDefault().register(this);
         getDataFromInternet();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -129,13 +124,14 @@ public class NewWelcomeActivity extends AppCompatActivity
                             Toast.makeText(NewWelcomeActivity.this, "您还没教授任何课程!", Toast.LENGTH_SHORT).show();
                         } else {
                             Menu menu = mNavView.getMenu();
+                            menu.clear();
+                            mCourseList.clear();
                             for (int i = 0; i < arg1.optJSONArray("result").length(); i++) {
                                 JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i);
                                 Gson gson = new Gson();
                                 Course course = gson.fromJson(object_temp.toString(), Course.class);
                                 mCourseList.add(course);
-
-                                Log.e("测试", course.getCName());
+                                //Log.e("测试", course.getCName());
                                 //menu.add(course.getCName());
                                 menu.add(1,i,0,course.getCName()) ;
                             }
@@ -179,11 +175,16 @@ public class NewWelcomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         if (item.getItemId()>mCourseList.size()){
             //添加课程
-            Intent i = new Intent(this,CourseAddActivity.class);
+            /*Intent i = new Intent(this,CourseAddActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt("teacherid", mTeacher.getTId());
             i.putExtras(bundle);
-            startActivityForResult(i, SubActivity.SUCCESS);
+            startActivityForResult(i, SubActivity.SUCCESS);*/
+            Intent i = new Intent() ;
+            i.putExtra("teacher",mTeacher) ;
+            i.putExtra(TSecondActivity.TYPE,TSecondActivity.ADDCOURSE) ;
+            i.setClass(this,TSecondActivity.class) ;
+            startActivity(i);
         }else {
             String title = item.getTitle().toString();
             mTitle.setText(title);
@@ -194,5 +195,17 @@ public class NewWelcomeActivity extends AppCompatActivity
             mContentFragment.setCourse(course);
         }
         return true;
+    }
+
+    /**
+     * 刷新课程列表的方法
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(String event) {
+        if (event.equals("addCourse")){
+            //刷新
+            Toast.makeText(this,"刷新",Toast.LENGTH_SHORT).show();
+            getDataFromInternet();
+        }
     }
 }

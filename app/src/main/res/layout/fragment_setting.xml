@@ -47,12 +47,17 @@
         android:textSize="20sp"
         android:gravity="left"/>
 
-    <!--<Button
-        android:id="@+id/addCourse"
+    <Button
+        android:id="@+id/changePassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:background="@drawable/button_shape"
-        android:text="添加课程"
-        android:textSize="20sp" />-->
+        android:background="@drawable/button_setting"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="修改密码"
+        android:textSize="20sp"
+        android:gravity="left" />
 </LinearLayout>

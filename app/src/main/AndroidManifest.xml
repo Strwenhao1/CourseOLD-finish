@@ -259,16 +259,19 @@
             android:supportsRtl="true"/>
         <!--测试的Activity-->
         <activity android:name=".view.activity.TestActivity"/>
-        <!--学生反馈-->
+        <!--&lt;!&ndash;学生反馈&ndash;&gt;
         <activity android:name=".view.activity.TFeedBackActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:supportsRtl="true"/>
-        <!--显示作业或资源共享的Activity-->
+            android:supportsRtl="true"/>-->
+        <!--&lt;!&ndash;显示作业或资源共享的Activity&ndash;&gt;
         <activity android:name=".view.activity.TFileActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:supportsRtl="true"/>
-        <!--显示设置的Activity-->
+            android:supportsRtl="true"/>-->
+        <!--&lt;!&ndash;显示设置的Activity&ndash;&gt;
         <activity android:name=".view.activity.TSettingActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:supportsRtl="true"/>-->
+        <activity android:name=".view.activity.TSecondActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:supportsRtl="true"/>
     </application>

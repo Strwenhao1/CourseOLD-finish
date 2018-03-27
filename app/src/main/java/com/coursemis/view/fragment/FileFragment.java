@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.coursemis.R;
 import com.coursemis.model.Course;
-import com.coursemis.view.activity.TFileActivity;
+import com.coursemis.view.activity.TSecondActivity;
 
 /**
  * _oo0oo_
@@ -74,16 +74,16 @@ public class FileFragment extends BaseFragment
         Intent intent = new Intent();
         intent.putExtra("teacher", mTeacher);
         intent.putExtra("course", mCourse);
-        intent.setClass(getActivity(), TFileActivity.class);
+        intent.setClass(getActivity(), TSecondActivity.class);
         switch (v.getId()) {
             case R.id.homework:
                 Log.e("测试", "作业");
-                intent.putExtra(TFileActivity.TYPE, TFileActivity.HOMEWORK);
+                intent.putExtra(TSecondActivity.TYPE, TSecondActivity.HOMEWORK);
                 getActivity().startActivity(intent);
                 break;
             case R.id.resource:
                 Log.e("测试", "资源共享");
-                intent.putExtra(TFileActivity.TYPE, TFileActivity.RESOURCE);
+                intent.putExtra(TSecondActivity.TYPE, TSecondActivity.RESOURCE);
                 getActivity().startActivity(intent);
                 break;
         }

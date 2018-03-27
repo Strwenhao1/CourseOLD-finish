@@ -6,15 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +22,8 @@ import com.coursemis.model.Course;
 import com.coursemis.model.Coursetime;
 import com.coursemis.util.HttpUtil;
 import com.coursemis.util.P;
-import com.coursemis.view.activity.EvaluateGetActivity;
 import com.coursemis.view.activity.TAskQuestionActivity;
-import com.coursemis.view.activity.TFeedBackActivity;
+import com.coursemis.view.activity.TSecondActivity;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -37,8 +33,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * _oo0oo_
@@ -283,18 +277,18 @@ public class CourseFragment extends BaseFragment
                                 Intent intent = new Intent() ;
                                 intent.putExtra("teacher",mTeacher) ;
                                 intent.putExtra("course",mCourse) ;
-                                intent.setClass(getActivity(),TFeedBackActivity.class) ;
+                                intent.setClass(getActivity(),TSecondActivity.class) ;
                                 switch (which){
                                     case 0:
-                                        intent.putExtra(TFeedBackActivity.TAG,TFeedBackActivity.Histogram) ;
+                                        intent.putExtra(TSecondActivity.TYPE,TSecondActivity.Histogram) ;
                                         startActivity(intent);
                                         break;
                                     case 1:
-                                        intent.putExtra(TFeedBackActivity.TAG,TFeedBackActivity.LineChart) ;
+                                        intent.putExtra(TSecondActivity.TYPE,TSecondActivity.LineChart) ;
                                         startActivity(intent);
                                         break;
                                     case 2:
-                                        intent.putExtra(TFeedBackActivity.TAG,TFeedBackActivity.SectorChart) ;
+                                        intent.putExtra(TSecondActivity.TYPE,TSecondActivity.SectorChart) ;
                                         startActivity(intent);
                                         break;
                                     case 3:

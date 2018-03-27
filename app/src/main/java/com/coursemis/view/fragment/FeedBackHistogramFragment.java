@@ -59,7 +59,7 @@ public class FeedBackHistogramFragment extends BaseFragment {
 
     private BarChart mHistogram;
     private Chart mChart;
-    private int mShowCount = 0 ;
+    private int mShowCount = 0;
     private ViewPager mViewPager;
 
     @Override
@@ -97,13 +97,13 @@ public class FeedBackHistogramFragment extends BaseFragment {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("courseid", mCourse.getCId() + "");
-        Log.e("测试",mCourse.getCId()+"") ;
+        Log.e("测试", mCourse.getCId() + "");
         params.put("action", "course_teacher");// /
         client.post(HttpUtil.server_evaluate_zhu_get, params,
                 new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int arg0, JSONObject arg1) {
-                        Log.e("测试","返回了结果") ;
+                        Log.e("测试", "返回了结果");
                         // TODO Auto-generated method stub
                         int[] year_zhuxing = new int[arg1.optJSONArray(
                                 "result").length()];
@@ -129,9 +129,9 @@ public class FeedBackHistogramFragment extends BaseFragment {
                         mChart = new Chart();
                         mChart.setGrade(grade_zhuxing);
                         mChart.setYear(year_zhuxing);
-                        final ArrayList<BarChart> barCharts = new ArrayList<BarChart>() ;
-                        for (int i = 0 ;i<mChart.getYear().length;i++){
-                            BarChart barChart = new BarChart(getActivity()) ;
+                        final ArrayList<BarChart> barCharts = new ArrayList<BarChart>();
+                        for (int i = 0; i < mChart.getYear().length; i++) {
+                            BarChart barChart = new BarChart(getActivity());
                             barCharts.add(barChart);
                         }
                         mViewPager.setAdapter(new PagerAdapter() {
@@ -142,13 +142,13 @@ public class FeedBackHistogramFragment extends BaseFragment {
 
                             @Override
                             public boolean isViewFromObject(View view, Object object) {
-                                return view==object;
+                                return view == object;
                             }
 
                             @Override
                             public Object instantiateItem(ViewGroup container, int position) {
 
-                                BarChart barChart = barCharts.get(position) ;
+                                BarChart barChart = barCharts.get(position);
                                 barChart.setDrawGridBackground(false);
                                 barChart.setDrawBorders(false);  //是否在折线图上添加边框
                                 barChart.setNoDataTextDescription("no data to display"); // 如果没有数据，显示
@@ -159,7 +159,7 @@ public class FeedBackHistogramFragment extends BaseFragment {
                                 barChart.setScaleEnabled(false);// 是否可以缩放
                                 barChart.setPinchZoom(true);//
                                 barChart.setDrawBarShadow(true);
-                                barChart.setDescription(""+mChart.getYear()[position]);// 数据描述
+                                barChart.setDescription("" + mChart.getYear()[position]);// 数据描述
                                 updateBar(barChart);
                                 mViewPager.addView(barChart);
 
@@ -168,18 +168,18 @@ public class FeedBackHistogramFragment extends BaseFragment {
 
                             @Override
                             public void destroyItem(ViewGroup container, int position, Object object) {
-                                BarChart barChart = barCharts.get(position) ;
+                                BarChart barChart = barCharts.get(position);
                                 mViewPager.removeView(barChart);
                             }
                         });
-                        super.onSuccess(arg0,arg1);
+                        super.onSuccess(arg0, arg1);
                     }
 
                     @Override
                     public void onSuccess(JSONObject response) {
                         super.onSuccess(response);
                     }
-                }) ;
+                });
     }
 
     public void updateBar() {
@@ -196,6 +196,7 @@ public class FeedBackHistogramFragment extends BaseFragment {
         mHistogram.animateY(3000);
         mHistogram.invalidate();
     }
+
     public void updateBar(BarChart barChart) {
         // 设置数据
         BarData mBarData = getBarData();

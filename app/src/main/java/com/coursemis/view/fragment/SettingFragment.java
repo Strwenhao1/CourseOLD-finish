@@ -10,7 +10,7 @@ import android.widget.Button;
 
 import com.coursemis.R;
 import com.coursemis.model.Course;
-import com.coursemis.view.activity.TSettingActivity;
+import com.coursemis.view.activity.TSecondActivity;
 
 /**
  * _oo0oo_
@@ -43,12 +43,13 @@ public class SettingFragment extends BaseFragment
     private Button mCourseSetting;
     //private Button mAddCourse;
     private Button mStudentManager;
+    private Button mChangePassword;
 
     @Override
     public void refresh(Course course) {
         mCourse = course ;
         mCourseSetting.setOnClickListener(this);
-        //mAddCourse.setOnClickListener(this);
+        mChangePassword.setOnClickListener(this);
         mStudentManager.setOnClickListener(this);
     }
 
@@ -67,7 +68,7 @@ public class SettingFragment extends BaseFragment
 
     private void initView() {
         mCourseSetting = (Button) mView.findViewById(R.id.courseSetting);
-        //mAddCourse = (Button) mView.findViewById(R.id.addCourse);
+        mChangePassword = (Button) mView.findViewById(R.id.changePassword);
         mStudentManager = (Button) mView.findViewById(R.id.studentManager);
     }
 
@@ -76,18 +77,18 @@ public class SettingFragment extends BaseFragment
         Intent intent = new Intent() ;
         intent.putExtra("teacher",mTeacher) ;
         intent.putExtra("course",mCourse) ;
-        intent.setClass(getActivity(), TSettingActivity.class) ;
+        intent.setClass(getActivity(), TSecondActivity.class) ;
         switch (v.getId()){
             case R.id.courseSetting:
-                intent.putExtra(TSettingActivity.TYPE, TSettingActivity.COURSESETTING) ;
+                intent.putExtra(TSecondActivity.TYPE, TSecondActivity.COURSESETTING) ;
                 startActivity(intent);
                 break;
-            /*case R.id.addCourse :
-                intent.putExtra(TSettingActivity.TYPE, TSettingActivity.ADDCOURSE) ;
+            case R.id.changePassword :
+                intent.putExtra(TSecondActivity.TYPE, TSecondActivity.CHANGEPASSWORD) ;
                 startActivity(intent);
-                break;*/
+                break;
             case R.id.studentManager:
-                intent.putExtra(TSettingActivity.TYPE, TSettingActivity.STUDENTMANAGER) ;
+                intent.putExtra(TSecondActivity.TYPE, TSecondActivity.STUDENTMANAGER) ;
                 startActivity(intent);
                 break;
         }
