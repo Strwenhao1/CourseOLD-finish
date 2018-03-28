@@ -3,16 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    android:orientation="vertical">
+    android:orientation="vertical"
 
-    <com.coursemis.view.myView.TitleView
-        android:id="@+id/course_signin_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.coursemis.view.myView.TitleView>
+    >
+
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/t_coursesignListview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+
+        />
 
 </LinearLayout>

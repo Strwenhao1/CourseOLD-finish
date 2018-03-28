@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main2"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@id/asdasd"
+    >
 
     <!--
         <RelativeLayout
@@ -67,10 +69,6 @@
 
     </LinearLayout>
     -->
-    <com.coursemis.view.myView.TitleView
-        android:id="@+id/upload_audio_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.coursemis.view.myView.TitleView>
 
 
     <ListView
@@ -138,20 +136,9 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/uploadaudio__upload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/selectable_item_background"
-            android:onClick="ButtonOnclick_uploadaudio__upload"
-            android:text="上传"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
-
-        <Button
             android:id="@+id/uploadaudio__down"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="59dp"
             android:layout_weight="1"
             android:background="@drawable/selectable_item_background"
             android:onClick="ButtonOnclick_uploadaudio__down"
@@ -162,31 +149,11 @@
         <Button
             android:id="@+id/uploadaudio__broadcast"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="59dp"
             android:layout_weight="1"
             android:background="@drawable/selectable_item_background"
             android:onClick="ButtonOnclick_uploadaudio_broadcast"
             android:text="播放"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/selectable_item_background"
-            android:onClick="ButtonOnclick_recordUpload"
-            android:text="录音"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/selectable_item_background"
-            android:onClick="ButtonOnclick_Luzhishipin"
-            android:text="录像"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
 

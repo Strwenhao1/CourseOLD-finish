@@ -1,55 +1,42 @@
 package com.coursemis.view.activity;
 
-import java.io.File;
-import java.lang.reflect.Field;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import java.util.Map;
-
-
-
-
-import com.coursemis.R;
-
-import com.coursemis.util.HttpUtil;
-import com.coursemis.view.myView.TitleView;
-import com.loopj.android.http.AsyncHttpClient;
-import com.coursemis.util.HttpDownloader;
-import com.coursemis.thread.FormFile;
-import com.coursemis.thread.UploadThread;
-
-import android.media.MediaRecorder;
-import android.net.Uri;
-import android.os.Bundle;
-
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-
-import android.text.format.DateFormat;
+import android.media.MediaRecorder;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
+import com.coursemis.R;
+import com.coursemis.thread.FormFile;
+import com.coursemis.thread.UploadThread;
+import com.coursemis.util.HttpDownloader;
+import com.coursemis.util.HttpUtil;
+import com.coursemis.view.myView.TitleView;
+import com.loopj.android.http.AsyncHttpClient;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class UploadAudioActivity extends Activity {
 	String TAG = "UploadAudioActivity";
@@ -79,22 +66,25 @@ public class UploadAudioActivity extends Activity {
 		 
 		};
 	private TitleView mTitleView;
-
+	private Button btn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_upload_audio);	
+		setContentView(R.layout.activity_upload_audio);
 		intent = getIntent();
 		mediainfolist = intent.getStringArrayListExtra("mediainfolist");
 		upa=(ListView)findViewById(R.id.uploadaudio_listview);
+		 btn= (Button) findViewById(R.id.uploadaudio__down);
 		LinearLayout ll=(LinearLayout)findViewById(R.id.ua_add);
 		ArrayList<String> mediainfolist_temp= new ArrayList<String>();
+
 		for(int i=0;i<mediainfolist.size();i++)
 		{
 			String temp=mediainfolist.get(i);
 			String temp1= temp.substring(temp.indexOf(" ")+1, temp.length());
 			mediainfolist_temp.add(temp1);
+
 		}
 		
 		
@@ -109,7 +99,21 @@ public class UploadAudioActivity extends Activity {
 					long arg3) {
 				// TODO Auto-generated method stub
 				String temp_string = mediainfolist.get(arg2);
-				sminfo = (String)temp_string.substring(0,temp_string.lastIndexOf(" "));
+
+				sminfo = temp_string;
+				int end = sminfo.lastIndexOf(":");
+				String str = sminfo.substring(end+1,sminfo.length());
+				if(!filesExists(str)){
+					btn.setText("下载");
+					btn.setEnabled(true);
+
+				}else{
+
+					btn.setText("已下载");
+					btn.setEnabled(false);
+				}
+
+//				Log.e(TAG, str+" ",null );
 				
 			}
 			
@@ -119,7 +123,20 @@ public class UploadAudioActivity extends Activity {
 		initTitle() ;
 
 	}
+	public boolean filesExists(String str){
+		try{
+			File file = new File("/storage/emulated/legacy/CourseMisMedia/"+str);
+			if(!file.exists()){
+//				Log.e(TAG, "false: ",null );
+				return false;
+			}
 
+		}catch (Exception e){
+			return false;
+		}
+		Log.e(TAG, "true: ",null );
+		return true;
+	}
 	private void initTitle() {
 		mTitleView = (TitleView) findViewById(R.id.upload_audio_title);
 		mTitleView.setTitle("资源共享");
@@ -140,52 +157,50 @@ public class UploadAudioActivity extends Activity {
 	
 	public void ButtonOnclick_uploadaudio__down(View view)
 	{
-	
+		final String smname = sminfo.substring(sminfo.indexOf(":")+1,sminfo.length());
 		if(sminfo==null)
 		{
 			Toast.makeText(UploadAudioActivity.this,"您没有选择哪份作业", Toast.LENGTH_SHORT).show();
 		}else
 		{
-			final String smname = sminfo.substring(sminfo.indexOf(":")+1,sminfo.length());
-			Log.v("看下媒体文件的名字",smname);
-			
-			
-			
-			final String address=HttpUtil.server+"/mediaShared"+"/"+smname;
-			
+
+			final String address= HttpUtil.server+"/mediaShared"+"/"+smname;
+
 			try {
-				new Thread(){ 
-					 
-					@Override 
-					 
+				new Thread(){
+
+					@Override
+
 					public void run(){
-					String url = HttpUtil.server+"/mediaShared/"+smname;	
+					String url = HttpUtil.server+"/mediaShared/"+smname;
 					 HttpDownloader downloader = new HttpDownloader();
 					 String result = downloader.download(url, "CourseMisMedia/");
-				 
-					 
-					//执行完毕后给handler发送一个空消息 
-					 
-					handler.sendEmptyMessage(0); 
-					 
-					} 
-					 
+
+
+					//执行完毕后给handler发送一个空消息
+
+					handler.sendEmptyMessage(0);
+
+
+					}
+
 					}.start();
-		
-//				
+
+				btn.setText("已下载");
+				btn.setEnabled(false);
 //				//二进制数据生成位图
-				
-//				
-				 
+
+//
+
 			} catch (Exception e) {
 			    Log.e("NetActivity", e.toString());
-				
+
 				Toast.makeText(UploadAudioActivity.this, "下载出错", Toast.LENGTH_SHORT).show();
 			}
-			
+
 		}
 	}
-	
+
 	
 	public void ButtonOnclick_uploadaudio_broadcast(View view)
 	{
@@ -196,107 +211,107 @@ public class UploadAudioActivity extends Activity {
 	}
 	
 
-	public void ButtonOnclick_Luzhishipin(View view)
-	{
-		Intent intent = new Intent(UploadAudioActivity.this,AudioUploadOperationActivity.class);// intent可以过滤音频文件
-		
-		startActivity(intent);
-	}
-	
-	
+//	public void ButtonOnclick_Luzhishipin(View view)
+//	{
+//		Intent intent = new Intent(UploadAudioActivity.this,AudioUploadOperationActivity.class);// intent可以过滤音频文件
+//
+//		startActivity(intent);
+//	}
+
+
 	public void ButtonOnclick_uploadaudio__back(View view)
 	{
 		finish();
 	}
 	
-	public void ButtonOnclick_recordUpload(View view)
-	{
-		Dialog dialog = new AlertDialog.Builder(this).setTitle("录音")
-				.setMessage("录音并上传..")
-				.setPositiveButton("开始录音", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						try {
-							Field field = dialog.getClass().getSuperclass().getDeclaredField("mShowing");
-							field.setAccessible(true);
-							field.set(dialog, false);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						 File sdPath = Environment.getExternalStorageDirectory();
-			              String path = sdPath.getPath()+"/CourseMisRecord";
-			              File dir = new File(path);
-			              if(!dir.exists()){
-			             dir.mkdirs();
-			             }
-						
-						
-						SharedPreferences  sharedata=getSharedPreferences("data", 0);
-						//Toast.makeText(UploadAudioActivity.this, ""+sharedata.getString("userID",null), 1000);
-						String temp = sharedata.getString("userID",null);
-						Log.v("2121", temp);
-						id = Integer.parseInt(sharedata.getString("userID",null));
-						File file = new File("/sdcard/CourseMisRecord/"+ "id"+ new DateFormat().format("yyyyMMdd_HHmmss",Calendar.getInstance(Locale.CHINA)) + ".mp3");
-
-						Toast.makeText(getApplicationContext(), "正在录音，录音文件在"+file.getAbsolutePath(), Toast.LENGTH_LONG)
-								.show();
-						setTitle("正在录音");
-						soundPath = file.getAbsolutePath();
-						mr = new MediaRecorder();
-
-						// 从麦克风源进行录音
-						mr.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-
-						// 设置输出格式
-						mr.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-
-						// 设置编码格式
-						mr.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-
-						// 设置输出文件
-						mr.setOutputFile(file.getAbsolutePath());
-
-						try {
-							// 创建文件
-							file.createNewFile();
-							// 准备录制
-							mr.prepare();
-						} catch (Exception e) {
-							e.printStackTrace();
-						} 
-						// 开始录制
-						mr.start();
-						
-						
-					}
-				}).setNegativeButton("停止录音", new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						try {
-							Field field = dialog.getClass().getSuperclass().getDeclaredField("mShowing");
-							field.setAccessible(true);
-							field.set(dialog, true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						} 
-						// TODO Auto-generated method stub
-						if (mr != null) {
-							mr.stop();
-							mr.release();
-							mr = null;
-							SharedPreferences  sharedata=getSharedPreferences("data", 0);
-							id = Integer.parseInt(sharedata.getString("userID",null));
-							File file = new File(soundPath);
-							
-							
-							Toast.makeText(getApplicationContext(), "录音完毕,请等待上传...", Toast.LENGTH_LONG).show();
-							uploadFile(file);
-						}
-					}
-				}).create();
-		
-		dialog.show();
-	}
+//	public void ButtonOnclick_recordUpload(View view)
+//	{
+//		Dialog dialog = new AlertDialog.Builder(this).setTitle("录音")
+//				.setMessage("录音并上传..")
+//				.setPositiveButton("开始录音", new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int which) {
+//						try {
+//							Field field = dialog.getClass().getSuperclass().getDeclaredField("mShowing");
+//							field.setAccessible(true);
+//							field.set(dialog, false);
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//						 File sdPath = Environment.getExternalStorageDirectory();
+//			              String path = sdPath.getPath()+"/CourseMisRecord";
+//			              File dir = new File(path);
+//			              if(!dir.exists()){
+//			             dir.mkdirs();
+//			             }
+//
+//
+//						SharedPreferences  sharedata=getSharedPreferences("data", 0);
+//						//Toast.makeText(UploadAudioActivity.this, ""+sharedata.getString("userID",null), 1000);
+//						String temp = sharedata.getString("userID",null);
+//						Log.v("2121", temp);
+//						id = Integer.parseInt(sharedata.getString("userID",null));
+//						File file = new File("/sdcard/CourseMisRecord/"+ "id"+ new DateFormat().format("yyyyMMdd_HHmmss",Calendar.getInstance(Locale.CHINA)) + ".mp3");
+//
+//						Toast.makeText(getApplicationContext(), "正在录音，录音文件在"+file.getAbsolutePath(), Toast.LENGTH_LONG)
+//								.show();
+//						setTitle("正在录音");
+//						soundPath = file.getAbsolutePath();
+//						mr = new MediaRecorder();
+//
+//						// 从麦克风源进行录音
+//						mr.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+//
+//						// 设置输出格式
+//						mr.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+//
+//						// 设置编码格式
+//						mr.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+//
+//						// 设置输出文件
+//						mr.setOutputFile(file.getAbsolutePath());
+//
+//						try {
+//							// 创建文件
+//							file.createNewFile();
+//							// 准备录制
+//							mr.prepare();
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//						// 开始录制
+//						mr.start();
+//
+//
+//					}
+//				}).setNegativeButton("停止录音", new DialogInterface.OnClickListener() {
+//
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						try {
+//							Field field = dialog.getClass().getSuperclass().getDeclaredField("mShowing");
+//							field.setAccessible(true);
+//							field.set(dialog, true);
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//						// TODO Auto-generated method stub
+//						if (mr != null) {
+//							mr.stop();
+//							mr.release();
+//							mr = null;
+//							SharedPreferences  sharedata=getSharedPreferences("data", 0);
+//							id = Integer.parseInt(sharedata.getString("userID",null));
+//							File file = new File(soundPath);
+//
+//
+//							Toast.makeText(getApplicationContext(), "录音完毕,请等待上传...", Toast.LENGTH_LONG).show();
+//							uploadFile(file);
+//						}
+//					}
+//				}).create();
+//
+//		dialog.show();
+//	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
@@ -363,15 +378,15 @@ public class UploadAudioActivity extends Activity {
 				
 		}
 	}// onActivityResult结束
-	
-	public void ButtonOnclick_uploadaudio__upload(View view)
-	{
-		Intent intent = new Intent();// intent可以过滤音频文件	
-		intent.setType("audio/*");//获取音频文件
-		intent.setAction(Intent.ACTION_GET_CONTENT);
-		startActivityForResult(intent, 22);
-	}
-	
+
+//	public void ButtonOnclick_uploadaudio__upload(View view)
+//	{
+//		Intent intent = new Intent();// intent可以过滤音频文件
+//		intent.setType("audio/*");//获取音频文件
+//		intent.setAction(Intent.ACTION_GET_CONTENT);
+//		startActivityForResult(intent, 22);
+//	}
+
 	public void uploadFile(File soundFile ) {
         Log.i(TAG, "upload start");
         try {
@@ -428,5 +443,5 @@ public class UploadAudioActivity extends Activity {
 				e.printStackTrace();
 			} 
 		}
-		
+
 }

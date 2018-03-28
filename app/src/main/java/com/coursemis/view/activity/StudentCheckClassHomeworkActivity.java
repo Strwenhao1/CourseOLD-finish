@@ -1,10 +1,18 @@
 package com.coursemis.view.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.coursemis.R;
 import com.coursemis.util.HttpUtil;
@@ -13,19 +21,11 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import android.os.Bundle;
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentCheckClassHomeworkActivity extends Activity {
 
@@ -41,7 +41,7 @@ public class StudentCheckClassHomeworkActivity extends Activity {
 		SharedPreferences  sharedata=getSharedPreferences("courseMis", 0);
 		sid = Integer.parseInt(sharedata.getString("userID",null));
 		setContentView(R.layout.activity_student_check_class_homework);
-		back=(Button)findViewById(R.id.studentcheckclasshomework_back);
+//		back=(Button)findViewById(R.id.studentcheckclasshomework_back);
 		scch=(ListView)findViewById(R.id.studentcheckclasshomework_listview);
 		
 		final List<String>  courseinfol= intent1.getStringArrayListExtra("studentCourseInfo1");

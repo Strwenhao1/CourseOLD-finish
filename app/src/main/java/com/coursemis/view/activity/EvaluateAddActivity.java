@@ -1,21 +1,12 @@
 package com.coursemis.view.activity;
 
-import org.json.JSONObject;
-
-import com.coursemis.R;
-import com.coursemis.util.DialogUtil;
-import com.coursemis.util.HttpUtil;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
@@ -24,6 +15,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.coursemis.R;
+import com.coursemis.util.DialogUtil;
+import com.coursemis.util.HttpUtil;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONObject;
 
 public class EvaluateAddActivity extends Activity {
 	public Context context;
@@ -65,7 +65,7 @@ public class EvaluateAddActivity extends Activity {
 		courseid = intent.getExtras().getInt("courseid");
 		
 		back = (Button) findViewById(R.id.reback_btn);
-		top_title = (TextView)findViewById(R.id.tv_title);
+//		top_title = (TextView)findViewById(R.id.tv_title);
 		top_title.setText("课程评分");
 		button_finish = (Button) findViewById(R.id.evaluatefinish_btn);
 		rg_option1 = (RadioGroup) findViewById(R.id.option1);
@@ -180,9 +180,9 @@ public class EvaluateAddActivity extends Activity {
 									// TODO Auto-generated method stub
 									
 									String addEvaluate_msg = arg1.optString("result");
-									DialogUtil.showDialog(context, addEvaluate_msg, false);
+//									DialogUtil.showDialog(context, addEvaluate_msg, true);
 									
-									AlertDialog.Builder builder=new AlertDialog.Builder(EvaluateAddActivity.this);
+									final AlertDialog.Builder builder=new AlertDialog.Builder(EvaluateAddActivity.this);
 									builder.setTitle("温馨提示");
 									if(addEvaluate_msg.equals("添加评分到该课程成功")){
 										builder.setMessage(addEvaluate_msg);
@@ -190,22 +190,24 @@ public class EvaluateAddActivity extends Activity {
 
 											@Override
 											public void onClick(DialogInterface arg0,int arg1) {
-												Intent intent = new Intent(EvaluateAddActivity.this, StudentMainActivity.class);
-												Bundle bundle = new Bundle(); 
-												bundle.putInt("studentid", studentid);
-												bundle.putString("type", "学生");
-												intent.putExtras(bundle);
+												Intent intent = new Intent(EvaluateAddActivity.this, StudentMainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//												Bundle bundle = new Bundle();
+//												bundle.putInt("studentid", studentid);
+//												bundle.putString("type", "学生");
+//												intent.putExtras(bundle);
+//												Log.e("tag", "onClick: ",null );
 												EvaluateAddActivity.this.startActivity(intent);
 												EvaluateAddActivity.this.finish();
+
 											}
 										});
-										builder.setNegativeButton("继续评教", new DialogInterface.OnClickListener () {
-											
-											@Override
-											public void onClick(DialogInterface dialog, int which) {
-												EvaluateAddActivity.this.finish();
-											}
-										});
+//										builder.setNegativeButton("继续评教", new DialogInterface.OnClickListener () {
+//
+//											@Override
+//											public void onClick(DialogInterface dialog, int which) {
+//												EvaluateAddActivity.this.finish();
+//											}
+//										});
 									}else{
 										builder.setMessage(addEvaluate_msg+",请稍后再来");
 										builder.setPositiveButton("确定", new DialogInterface.OnClickListener (){
@@ -223,6 +225,7 @@ public class EvaluateAddActivity extends Activity {
 										});
 									}
 									builder.create().show();
+
 									super.onSuccess(arg0, arg1);
 								
 								}
@@ -237,7 +240,7 @@ public class EvaluateAddActivity extends Activity {
 	// 对学生输入的评分情况进行校验
 	private boolean validate(){
 		feekback_idea=feekback_edit.getText().toString().trim();
-		if (option1==-1&&option2==-1&&option3==-1)
+		if (option1==-1||option2==-1||option3==-1)
 		{
 			DialogUtil.showDialog(this, "请评分完毕再点击完成！", false);
 			return false;
@@ -256,4 +259,9 @@ public class EvaluateAddActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+	}
 }

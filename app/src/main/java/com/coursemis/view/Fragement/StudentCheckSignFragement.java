@@ -1,8 +1,8 @@
-package com.coursemis.view.activity;
+package com.coursemis.view.Fragement;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,50 +16,58 @@ import com.coursemis.view.myView.TitleView;
 
 import java.util.ArrayList;
 
+/**
+ * Created by 74000 on 2018/3/26.
+ */
 
-public class TCourseSignInActivity extends Activity {
 
-    private Intent intent = null;
+
+
+public class StudentCheckSignFragement extends Fragment {
+
+
+
     ArrayList<String> list = null;
     private RecyclerView lv = null;
     private TitleView mTitleView;
 
-    public void ButtonOnclick_tcoursesignin__back(View view) {
-        finish();
+    private View mRootView;
+    @Override
+    public void setArguments(Bundle args) {
+        list = args.getStringArrayList("studentCourseSignInInfo");
     }
 
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mRootView = inflater.inflate(R.layout.activity_tcoursesigninactivity,container,false);
+
         initView() ;
         initData() ;
+
+        return mRootView;
     }
 
     private void initData() {
-        intent = getIntent();
-        list = intent.getStringArrayListExtra("studentCourseSignInInfo");
-        lv.setLayoutManager(new LinearLayoutManager(TCourseSignInActivity.this)) ;
+
+
+        lv.setLayoutManager(new LinearLayoutManager(getActivity())) ;
         lv.setAdapter(new MyAdapter());
-        mTitleView.setTitle("课堂签到");
-        mTitleView.setLeftButton("返回", new TitleView.OnLeftButtonClickListener() {
-            @Override
-            public void onClick(View button) {
-                TCourseSignInActivity.this.finish();
-            }
-        });
+
     }
 
     private void initView() {
-        setContentView(R.layout.activity_tcoursesigninactivity);
-        lv = (RecyclerView) findViewById(R.id.t_coursesignListview);
-//        mTitleView = (TitleView) findViewById(R.id.course_signin_title);
+
+        lv = (RecyclerView) mRootView.findViewById(R.id.t_coursesignListview);
+//        mTitleView = (TitleView) mRootView.findViewById(R.id.course_signin_title);
     }
 
-    public class MyAdapter extends RecyclerView.Adapter {
+    private class MyAdapter extends RecyclerView.Adapter {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View inflate = LayoutInflater.from(TCourseSignInActivity.this).inflate(R.layout.item_course_signin, parent, false);
-            return new MyViewHolder(inflate );
+            View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.item_course_signin, parent, false);
+            return new MyAdapter.MyViewHolder(inflate );
         }
 
         @Override
@@ -76,7 +84,7 @@ public class TCourseSignInActivity extends Activity {
             Log.e("time",time) ;
             String totaltime = temps[3] ;
             Log.e("totaltime",totaltime) ;
-            MyViewHolder myViewHolder = (MyViewHolder) holder;
+            MyAdapter.MyViewHolder myViewHolder = (MyAdapter.MyViewHolder) holder;
             myViewHolder.name.setText(name);
 
             myViewHolder.number.setText(number);
@@ -90,7 +98,7 @@ public class TCourseSignInActivity extends Activity {
             return list.size();
         }
 
-        public  class MyViewHolder extends RecyclerView.ViewHolder{
+        class MyViewHolder extends RecyclerView.ViewHolder{
             public TextView number ;
             public TextView name ;
             public TextView time ;
@@ -105,5 +113,7 @@ public class TCourseSignInActivity extends Activity {
             }
         }
     }
+
+
 
 }

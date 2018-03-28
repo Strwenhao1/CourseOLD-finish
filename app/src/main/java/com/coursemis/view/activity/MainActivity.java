@@ -1,20 +1,22 @@
 package com.coursemis.view.activity;
 
-import android.os.Bundle;
-import android.os.Handler;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.widget.TextView;
 
 import com.coursemis.R;
 
-public class MainActivity extends Activity {
 
+public class MainActivity extends Activity {
+	private static final int num = 123;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
 		//获取登录文本组件，并注册监听      
         TextView logintext=(TextView) this.findViewById(R.id.logintext);
         new Handler().postDelayed(new Runnable() {
