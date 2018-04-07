@@ -302,7 +302,7 @@ public class AddStudentFragment extends BaseFragment {
                             @Override
                             public void onSuccess(int arg0, JSONObject arg1) {
                                 Toast.makeText(getActivity(),"添加成功",Toast.LENGTH_SHORT).show();
-                                getActivity().finishActivity(TSecondActivity.ADDSUCCESS);
+                                getActivity().finishActivity(TSecondActivity.ADD_SUCCESS);
                                 getActivity().finish();
                                 super.onSuccess(arg0, arg1);
                             }

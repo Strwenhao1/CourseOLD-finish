@@ -270,6 +270,9 @@
         <activity android:name=".view.activity.TSecondActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:supportsRtl="true"/>
+
+        <!--登录服务-->
+        <service android:name=".service.LoginService"/>
     </application>
 
 </manifest>

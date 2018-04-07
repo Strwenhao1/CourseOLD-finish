@@ -23,6 +23,7 @@ import com.coursemis.view.fragment.BaseFragment;
 import com.coursemis.view.fragment.FeedBackHistogramFragment;
 import com.coursemis.view.fragment.FeedBackLineChartFragment;
 import com.coursemis.view.fragment.FeedBackSectorChartFragment;
+import com.coursemis.view.fragment.FileAddHomeworkFragment;
 import com.coursemis.view.fragment.FileHomeworkFragment;
 import com.coursemis.view.fragment.FileResourceFragment;
 import com.coursemis.view.fragment.PasswordChangeFragment;
@@ -70,17 +71,19 @@ implements Toolbar.OnMenuItemClickListener{
     public final static String StudentFeedBack = "学生反馈" ;
 
     public static final String TYPE = "type";
-    public static final String COURSESETTING = "课程管理";
-    public static final String STUDENTMANAGER = "学生管理";
-    public static final String ADDCOURSE = "添加课程";
-    public static final String ADDSTUDENT = "添加学生";
-    public static final String CHANGEPASSWORD = "修改密码";
+    public static final String COURSE_SETTING = "课程管理";
+    public static final String STUDENT_MANAGER = "学生管理";
+    public static final String ADD_COURSE = "添加课程";
+    public static final String ADD_STUDENT = "添加学生";
+    public static final String CHANGE_PASSWORD = "修改密码";
 
     public static final String HOMEWORK = "作业";
     public static final String RESOURCE = "资源管理";
 
+    public static final String ADD_HOMEWORK = "添加随堂测验" ;
 
-    public static final int ADDSUCCESS = 1;
+
+    public static final int ADD_SUCCESS = 1;
 
 
     private Toolbar mTitle;
@@ -112,14 +115,14 @@ implements Toolbar.OnMenuItemClickListener{
         bundle.putSerializable("teacher", mTeacher);
         bundle.putSerializable("course", mCourse);
         switch (mType) {
-            case COURSESETTING:
+            case COURSE_SETTING:
                 //课程设置
                 mFragment = new SettingCourseSettingFragment();
                 mFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content, mFragment);
                 fragmentTransaction.commit();
                 break;
-            case STUDENTMANAGER:
+            case STUDENT_MANAGER:
                 //学生管理
                 setSupportActionBar(mTitle);
                 mTitle.setOnMenuItemClickListener(this);
@@ -128,37 +131,43 @@ implements Toolbar.OnMenuItemClickListener{
                 fragmentTransaction.replace(R.id.content, mFragment);
                 fragmentTransaction.commit();
                 break;
-            case ADDCOURSE:
+            case ADD_COURSE:
+                //添加课程
                 mFragment = new AddCourseFragment();
                 mFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content, mFragment);
                 fragmentTransaction.commit();
                 break;
-            case ADDSTUDENT:
+            case ADD_STUDENT:
+                //添加学生
                 mFragment = new AddStudentFragment();
                 mFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content, mFragment);
                 fragmentTransaction.commit();
                 break;
-            case CHANGEPASSWORD:
+            case CHANGE_PASSWORD:
+                //修改密码
                 mFragment = new PasswordChangeFragment();
                 mFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content, mFragment);
                 fragmentTransaction.commit();
                 break;
             case Histogram :
+                //直方图
                 mFragment = new FeedBackHistogramFragment() ;
                 mFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content,mFragment) ;
                 fragmentTransaction.commit() ;
                 break;
             case LineChart :
+                //折线图
                 mFragment = new FeedBackLineChartFragment();
                 mFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content,mFragment) ;
                 fragmentTransaction.commit() ;
                 break;
             case SectorChart :
+                //饼图
                 Log.e("测试","SectorChart") ;
                 mFragment = new FeedBackSectorChartFragment();
                 mFragment.setArguments(bundle);
@@ -166,15 +175,30 @@ implements Toolbar.OnMenuItemClickListener{
                 fragmentTransaction.commit() ;
                 break;
             case StudentFeedBack :
+                //反馈建议
                 break;
             case HOMEWORK:
+                //随堂测验
+                setSupportActionBar(mTitle);
+                mTitle.setOnMenuItemClickListener(this);
                 mFragment = new FileHomeworkFragment();
                 mFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content, mFragment);
                 fragmentTransaction.commit();
                 break;
             case RESOURCE:
+                //资源管理
+                setSupportActionBar(mTitle);
+                mTitle.setOnMenuItemClickListener(this);
                 mFragment = new FileResourceFragment();
+                mFragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.content, mFragment);
+                fragmentTransaction.commit();
+                break;
+            case ADD_HOMEWORK:
+                //添加随堂测验
+                Log.e("测试","添加随堂测验") ;
+                mFragment = new FileAddHomeworkFragment();
                 mFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content, mFragment);
                 fragmentTransaction.commit();
@@ -205,15 +229,33 @@ implements Toolbar.OnMenuItemClickListener{
     public boolean onMenuItemClick(MenuItem item) {
         Toast.makeText(this, "点击了....", Toast.LENGTH_SHORT).show();
         //添加学生
-        switch (item.getItemId()) {
+        /*switch (item.getItemId()) {
             case R.id.add_course:
                 Intent intent = new Intent();
                 intent.putExtra("teacher", mTeacher);
                 intent.putExtra("course", mCourse);
-                intent.putExtra(TYPE, ADDSTUDENT);
+                intent.putExtra(TYPE, ADD_STUDENT);
                 intent.setClass(this, TSecondActivity.class);
-                startActivityForResult(intent, ADDSUCCESS);
+                startActivityForResult(intent, ADD_SUCCESS);
                 break;
+        }*/
+        Log.e("测试",""+(mFragment==null)) ;
+        if (item.getItemId() == R.id.add_course){
+            if (mFragment instanceof SettingStudentManagerFragment){
+                Intent intent = new Intent();
+                intent.putExtra("teacher", mTeacher);
+                intent.putExtra("course", mCourse);
+                intent.putExtra(TYPE, ADD_STUDENT);
+                intent.setClass(this, TSecondActivity.class);
+                startActivityForResult(intent, ADD_SUCCESS);
+            }else if (mFragment instanceof FileHomeworkFragment){
+                Intent intent = new Intent();
+                intent.putExtra("teacher", mTeacher);
+                intent.putExtra("course", mCourse);
+                intent.putExtra(TYPE, ADD_HOMEWORK);
+                intent.setClass(this, TSecondActivity.class);
+                startActivity(intent);
+            }
         }
         return false;
     }
@@ -222,7 +264,7 @@ implements Toolbar.OnMenuItemClickListener{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.e("测试", "返回》》》》" + requestCode);
         switch (requestCode) {
-            case ADDSUCCESS:
+            case ADD_SUCCESS:
                 mFragment.refresh(mCourse);
                 break;
         }

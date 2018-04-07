@@ -2,10 +2,14 @@ package com.coursemis.view.activity;
 
 import android.app.AlertDialog;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.Binder;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +31,8 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.coursemis.R;
 import com.coursemis.model.LocationData;
+import com.coursemis.model.Student;
+import com.coursemis.service.LoginService;
 import com.coursemis.util.HttpUtil;
 import com.coursemis.util.P;
 import com.coursemis.view.Fragement.ClassHomeworkFragement;
@@ -105,8 +111,29 @@ public class StudentManager extends FragmentActivity {
             }
         });
         initView();
+        //绑定服务
+        Intent mIntent ;
+        Student student = new Student() ;
+        student.setSId(sid);
+        mIntent = new Intent();
+        mIntent.setClass(this, LoginService.class) ;
+        mIntent.putExtra(LoginService.TYPE,LoginService.STUDENT) ;
+        mIntent.putExtra(LoginService.STUDENT,student) ;
+        //startService(mIntent) ;
+        bindService(mIntent, connection, BIND_AUTO_CREATE);
     }
+    private Binder myBinder ;
+    private ServiceConnection connection = new ServiceConnection() {
 
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            myBinder = (LoginService.MyBinder) service;
+        }
+    };
     private void initView()
     {
         listView=(ListView) findViewById(R.id.v4_listview);

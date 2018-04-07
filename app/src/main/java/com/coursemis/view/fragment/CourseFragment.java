@@ -20,6 +20,7 @@ import com.coursemis.listener.SignInClickListener;
 import com.coursemis.model.AskStudent;
 import com.coursemis.model.Course;
 import com.coursemis.model.Coursetime;
+import com.coursemis.model.Student;
 import com.coursemis.util.HttpUtil;
 import com.coursemis.util.P;
 import com.coursemis.view.activity.TAskQuestionActivity;
@@ -33,6 +34,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * _oo0oo_
@@ -191,27 +195,34 @@ public class CourseFragment extends BaseFragment
                                 if (object.length() == 0) {
                                     Toast.makeText(getActivity(), "您这门课没有学生选修!", Toast.LENGTH_SHORT).show();
                                 } else {
+                                    final Map<String,Integer> map = new HashMap<>() ;
                                     ArrayList<String> list = new ArrayList<String>();
+                                    Gson gson = new Gson() ;
                                     for (int i = 0; i < arg1.optJSONArray("result").length(); i++) {
                                         JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i);
                                         P.p(object_temp.toString() + 2222);
-                                        list.add(i, (object_temp.optInt("scId") + " " + object_temp.optInt("SNumber") + (object_temp.optString("SName"))));
+                                        list.add(i, (object_temp.optInt("SNumber") + (object_temp.optString("SName"))));
+                                        map.put(object_temp.optString("SName"),object_temp.optInt("SNumber")) ;
                                     }
-                                    final ArrayList<Integer> select = new ArrayList<Integer>();
-                                    final String[] strings = list.toArray(new String[list.size()]);
+                                    final ArrayList<String> select = new ArrayList<String>();
+                                    final String[] strings =  map.keySet().toArray(new String[map.keySet().size()]);
                                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                                             .setMultiChoiceItems(strings, null, new DialogInterface.OnMultiChoiceClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                                    select.add(which);
+                                                    select.add(strings[which]);
                                                 }
                                             })
                                             .setPositiveButton("点名", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     RequestParams params = new RequestParams();
+                                                    params.put("type","call");
+                                                    params.put("size",select.size()+"");
+                                                    //Log.e("测试。。",select.get(0)+"...."+map.get(select.get(0))) ;
                                                     for (int i = 0; i < select.size(); i++) {
-                                                        params.put(i + "", strings[i]);
+                                                        params.put(i + "", map.get(select.get(i))+"");
+                                                        Log.e("测试。。。",map.get(select.get(i))+"") ;
                                                     }
                                                     client.post(HttpUtil.server_teacher_courseStudentCount, params,
                                                             new JsonHttpResponseHandler() {

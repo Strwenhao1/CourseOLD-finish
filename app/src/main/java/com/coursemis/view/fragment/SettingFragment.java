@@ -80,15 +80,15 @@ public class SettingFragment extends BaseFragment
         intent.setClass(getActivity(), TSecondActivity.class) ;
         switch (v.getId()){
             case R.id.courseSetting:
-                intent.putExtra(TSecondActivity.TYPE, TSecondActivity.COURSESETTING) ;
+                intent.putExtra(TSecondActivity.TYPE, TSecondActivity.COURSE_SETTING) ;
                 startActivity(intent);
                 break;
             case R.id.changePassword :
-                intent.putExtra(TSecondActivity.TYPE, TSecondActivity.CHANGEPASSWORD) ;
+                intent.putExtra(TSecondActivity.TYPE, TSecondActivity.CHANGE_PASSWORD) ;
                 startActivity(intent);
                 break;
             case R.id.studentManager:
-                intent.putExtra(TSecondActivity.TYPE, TSecondActivity.STUDENTMANAGER) ;
+                intent.putExtra(TSecondActivity.TYPE, TSecondActivity.STUDENT_MANAGER) ;
                 startActivity(intent);
                 break;
         }

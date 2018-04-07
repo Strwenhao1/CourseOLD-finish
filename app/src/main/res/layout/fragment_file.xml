@@ -30,7 +30,7 @@
             android:alpha="0.5"
             android:background="#cdcdcd"
             android:gravity="center"
-            android:text="作业"
+            android:text="随堂测验"
             android:textColor="#000"
             android:textSize="20sp" />
     </RelativeLayout>

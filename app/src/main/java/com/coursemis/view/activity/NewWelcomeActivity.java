@@ -1,8 +1,11 @@
 package com.coursemis.view.activity;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +25,7 @@ import android.widget.Toast;
 import com.coursemis.R;
 import com.coursemis.model.Course;
 import com.coursemis.model.Teacher;
+import com.coursemis.service.LoginService;
 import com.coursemis.util.HttpUtil;
 import com.coursemis.view.fragment.ContentFragment;
 import com.google.gson.Gson;
@@ -75,11 +80,25 @@ public class NewWelcomeActivity extends AppCompatActivity
     private DrawerLayout mDrawer;
     private FrameLayout mContent;
     private ContentFragment mContentFragment;
+    LoginService.MyBinder myBinder ;
     private Calendar dt = Calendar.getInstance();
     private int signInHour = 0;
     private int signInMinute = 0;
     private boolean mSuccess = false ;
     //private TitleView mNavTitle;
+
+    private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            myBinder = (LoginService.MyBinder) service;
+        }
+    };
+    private Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +107,16 @@ public class NewWelcomeActivity extends AppCompatActivity
         initView();
         initData();
         initNav();
+        testService() ;
+    }
 
+    private void testService() {
+        mIntent = new Intent();
+        mIntent.setClass(this, LoginService.class) ;
+        mIntent.putExtra(LoginService.TYPE,LoginService.TEACHER) ;
+        mIntent.putExtra(LoginService.TEACHER,mTeacher) ;
+        //startService(mIntent) ;
+        bindService(mIntent, connection, BIND_AUTO_CREATE);
     }
 
     private void initIntent() {
@@ -182,7 +210,7 @@ public class NewWelcomeActivity extends AppCompatActivity
             startActivityForResult(i, SubActivity.SUCCESS);*/
             Intent i = new Intent() ;
             i.putExtra("teacher",mTeacher) ;
-            i.putExtra(TSecondActivity.TYPE,TSecondActivity.ADDCOURSE) ;
+            i.putExtra(TSecondActivity.TYPE,TSecondActivity.ADD_COURSE) ;
             i.setClass(this,TSecondActivity.class) ;
             startActivity(i);
         }else {
@@ -207,5 +235,24 @@ public class NewWelcomeActivity extends AppCompatActivity
             Toast.makeText(this,"刷新",Toast.LENGTH_SHORT).show();
             getDataFromInternet();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.e("测试","销毁") ;
+        unbindService(connection);
+        super.onDestroy();
+    }
+
+    @Override
+    public void finish() {
+        Log.e("测试","结束") ;
+        super.finish();
+    }
+
+    @Override
+    public void finishActivity(int requestCode) {
+        Log.e("测试","finishActivity") ;
+        super.finishActivity(requestCode);
     }
 }

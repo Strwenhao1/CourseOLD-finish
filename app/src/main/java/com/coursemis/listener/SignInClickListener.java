@@ -332,9 +332,9 @@ public class SignInClickListener implements View.OnClickListener {
                     params.put("tid", mTeacher.getTId()+"");
                     client.post(HttpUtil.server_teacher_SignIn, params,
                             new JsonHttpResponseHandler() {
-
                                 @Override
                                 public void onSuccess(int arg0, JSONObject arg1) {
+                                    Log.e("签到",arg1.toString()) ;
                                 }
                             });
 

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="15dip"
+    android:layout_marginTop="20dp"
+    android:background="@drawable/table_shape"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/table_shape"
+        android:orientation="horizontal"
+        android:padding="10dip">
+
+        <TextView
+            style="@style/TextViewText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="名字" />
+
+        <EditText
+            android:id="@+id/name_course_edit"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="10dp"></EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_class"
+        android:layout_below="@id/ll_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/table_shape"
+        android:orientation="horizontal"
+        android:padding="10dip">
+
+        <TextView
+            style="@style/TextViewText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="类型" />
+
+        <Spinner
+            android:id="@+id/s_class"
+            android:layout_width="100dip"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_answer"
+        android:layout_below="@id/ll_class"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/table_shape"
+        android:orientation="horizontal"
+        android:padding="10dip">
+
+        <TextView
+            style="@style/TextViewText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="答案" />
+
+        <EditText
+            android:id="@+id/et_answer"
+            style="@style/EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="10dp"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_below="@id/ll_answer"
+        android:id="@+id/fl_class"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:layout_below="@id/fl_class"
+        android:id="@+id/commit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_shape"
+        android:text="提交"
+        android:textSize="20sp" />
+</RelativeLayout>
