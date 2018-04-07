@@ -1,13 +1,15 @@
-package com.coursemis.view.activity;
+package com.coursemis.view.Fragement;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -28,7 +30,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CoursetableActivity extends Activity {
+/**
+ * Created by 74000 on 2018/3/25.
+ */
+
+
+public class CourseTableFragement extends Fragment {
+
     public Context context;
     private AsyncHttpClient client;
 
@@ -45,34 +53,30 @@ public class CoursetableActivity extends Activity {
     String[] courseinfo;
     private TitleView mTitle;
 
+    View mRootView;
+
+    public void setArguments(Bundle args) {
+        studentid = args.getInt("studentid");
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initView();
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mRootView = inflater.inflate(R.layout.activity_coursetable, container, false);
+     initView();
+     initData();
 
-        initData();
+        return mRootView;
     }
 
-    /**
-     * 初始化标题
-     */
-    private void initTitleInfo() {
-        mTitle.setLeftButton("返回", new TitleView.OnLeftButtonClickListener() {
-            @Override
-            public void onClick(View button) {
-                CoursetableActivity.this.finish();
-            }
-        });
-        mTitle.setTitle("课程表");
-    }
 
     /**
      * 初始化数据
      */
     private void initData() {
-        this.context = this;
+        this.context = getActivity();
         client = new AsyncHttpClient();
-        preferences = getSharedPreferences("courseMis", 0);
+        preferences = getActivity().getSharedPreferences("courseMis", 0);
         editor = preferences.edit();
         studentid = preferences.getInt("studentid", 0);//0为默认值
         RequestParams params = new RequestParams();
@@ -168,17 +172,10 @@ public class CoursetableActivity extends Activity {
      * 初始化界面
      */
     private void initView() {
-        setContentView(R.layout.activity_coursetable);
-        layout = (TableLayout) findViewById(R.id.table);
-//        mTitle = (TitleView) findViewById(R.id.courseTableTitle);
-        initTitleInfo() ;
-    }
+//        setContentView(R.layout.activity_coursetable);
+        layout = (TableLayout)mRootView.findViewById(R.id.table);
+//        mTitle = (TitleView) mRootView.findViewById(R.id.courseTableTitle);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.coursetable, menu);
-        return true;
     }
 
 }

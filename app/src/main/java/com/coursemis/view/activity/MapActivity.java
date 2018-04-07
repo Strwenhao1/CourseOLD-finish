@@ -1,18 +1,13 @@
 package com.coursemis.view.activity;
 
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.Toast;
+
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.map.LocationData;
-import com.baidu.mapapi.map.MKMapViewListener;
 import com.baidu.mapapi.map.MapController;
-import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
@@ -30,10 +25,16 @@ public class MapActivity extends Activity{
         	//去掉Activity上面的状态栏
         	getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);  
         	mBMapMan=new BMapManager(getApplication());
-        	mBMapMan.init("ZaW8BdsqcBdulRjx5F9WImAd", null);  
+        	mBMapMan.init("jpQW17lKZ16jtXrYl2IRaNl0baHBe6sk", null);
         	setContentView(R.layout.activity_map);
+
         	mMapView=(MapView)findViewById(R.id.bmapsView);
         	mMapView.setBuiltInZoomControls(true);
+
+
+
+
+
         	MapController mMapController=mMapView.getController();
         	GeoPoint point =new GeoPoint((int)(39.915* 1E6),(int)(116.404* 1E6));
         	mMapController.setCenter(point);

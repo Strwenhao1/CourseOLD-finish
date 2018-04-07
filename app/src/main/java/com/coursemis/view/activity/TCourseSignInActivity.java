@@ -1,11 +1,5 @@
 package com.coursemis.view.activity;
 
-import java.util.ArrayList;
-
-import com.coursemis.R;
-import com.coursemis.util.P;
-import com.coursemis.view.myView.TitleView;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
+
+import com.coursemis.R;
+import com.coursemis.view.myView.TitleView;
+
+import java.util.ArrayList;
 
 
 public class TCourseSignInActivity extends Activity {
@@ -54,10 +51,10 @@ public class TCourseSignInActivity extends Activity {
     private void initView() {
         setContentView(R.layout.activity_tcoursesigninactivity);
         lv = (RecyclerView) findViewById(R.id.t_coursesignListview);
-        mTitleView = (TitleView) findViewById(R.id.course_signin_title);
+//        mTitleView = (TitleView) findViewById(R.id.course_signin_title);
     }
 
-    private class MyAdapter extends RecyclerView.Adapter {
+    public class MyAdapter extends RecyclerView.Adapter {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -68,8 +65,9 @@ public class TCourseSignInActivity extends Activity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             String temp = list.get(position);
-            String[]temps = temp.split("_") ;
-            Log.e("temp",temp.split("_").length+"" ) ;
+
+            String[]temps = temp.split("\\s+") ;
+//            Log.e("temp",temp.split("\\s+").length+"" ) ;
             String number = temps[0] ;
             Log.e("number",number) ;
             String name = temps[1] ;
@@ -80,9 +78,11 @@ public class TCourseSignInActivity extends Activity {
             Log.e("totaltime",totaltime) ;
             MyViewHolder myViewHolder = (MyViewHolder) holder;
             myViewHolder.name.setText(name);
+
             myViewHolder.number.setText(number);
             myViewHolder.time.setText(time);
             myViewHolder.totalTime.setText(totaltime);
+            myViewHolder.name.setTextColor(0xFF00FFFF);
         }
 
         @Override
@@ -90,7 +90,7 @@ public class TCourseSignInActivity extends Activity {
             return list.size();
         }
 
-        class MyViewHolder extends RecyclerView.ViewHolder{
+        public  class MyViewHolder extends RecyclerView.ViewHolder{
             public TextView number ;
             public TextView name ;
             public TextView time ;

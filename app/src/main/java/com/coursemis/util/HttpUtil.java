@@ -10,12 +10,14 @@ public class HttpUtil {
 	//public static String server = "http://10.0.3.2:8080/CourseMis2";
 	//本机开发局域网访问
 	//夜神测试
-	public static String server = "http://172.17.100.2:8080/CourseMis";
+//	public static String server = "http://172.17.100.2:8080/CourseMis";
 	//本地服务器真机调试
 	//public static String server = "http://192.168.137.62:8080/CourseMis";
 	//云服务器
-	//public static String server = "http://120.78.52.196:8080/CourseMis";
+//	public static String server = "http://120.78.52.196:8080/CourseMis";
 	//
+	public static String server = "http://39.108.112.190:8080/CourseMis";
+
 	public static String server_evaluate_suggest=server+"/evaluate_suggest.action";
 	public static String server_login = server + "/loginCheck.action";
 	public static String server_course_teacher = server + "/course_teacher.action";

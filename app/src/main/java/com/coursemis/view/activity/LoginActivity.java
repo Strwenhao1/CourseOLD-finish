@@ -1,16 +1,5 @@
 package com.coursemis.view.activity;
 
-import org.json.JSONObject;
-
-import com.coursemis.R;
-import com.coursemis.model.Student;
-import com.coursemis.model.Teacher;
-import com.coursemis.util.DialogUtil;
-import com.coursemis.util.HttpUtil;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +19,17 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.coursemis.R;
+import com.coursemis.model.Student;
+import com.coursemis.model.Teacher;
+import com.coursemis.util.DialogUtil;
+import com.coursemis.util.HttpUtil;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONObject;
+
 /**
  * 登录界面
  */
@@ -38,19 +38,26 @@ public class LoginActivity extends Activity {
 	private AsyncHttpClient		client;																			// 用于客户端连接服务器端，异步网络数据
 	SQLiteDatabase				db;																				// 声明本地数据库
 	SharedPreferences			preferences;																	// 声明共享首选项
-	SharedPreferences.Editor	editor;
+	Editor	editor;
 	private EditText			username;
 	private EditText			password;
 	private Button				login;
 	private RadioGroup			rg_type;
 	private String				type			= "学生";
 	int[]						type_string_id	= { R.string.user_type_student, R.string.user_type_teacher };
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		//
 		this.context = this;
+
+
+
+
+
+
 		client = new AsyncHttpClient();
 		preferences = getSharedPreferences("courseMis", 0);
 		editor = preferences.edit();
@@ -85,9 +92,11 @@ public class LoginActivity extends Activity {
 		/**
 		 * 登录按钮的点击事件
 		 */
+
 		login.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
 				// TODO Auto-generated method stub
 				if (validate()) {
 					 //将要提交服务器端的数据包装到RequestParams中
@@ -110,7 +119,7 @@ public class LoginActivity extends Activity {
 							public void onFailure(Throwable arg0, JSONObject arg1) { // 登录失败
 								// TODO Auto-generated method stub
 								DialogUtil.showDialog(context, "用户名或密码错误", false);
-								Log.e("数据",arg0.toString()) ;
+//								Log.e("数据",arg0.toString()) ;
 								super.onFailure(arg0, arg1);
 							}
 							@Override
@@ -118,7 +127,7 @@ public class LoginActivity extends Activity {
 								// TODO Auto-generated method stub
 								//DialogUtil.showDialog(context, arg1.toString(), true);
 								login.setClickable(false);
-								System.out.println(arg1.toString());
+//								System.out.println(arg1.toString());
 								Log.e("数据",arg1.toString()) ;
 								JSONObject object = arg1.optJSONArray("result").optJSONObject(0);
 								if (type.equals("教师")) {
@@ -193,7 +202,7 @@ public class LoginActivity extends Activity {
 										Toast.makeText(context, "恭喜您" + student.getSName() + "登录成功", Toast.LENGTH_SHORT)
 												.show();
 										// 将一些基本信息通过Intent传递到下一个Activity
-										Intent intent = new Intent(LoginActivity.this, StudentMainActivity.class);
+										Intent intent = new Intent(LoginActivity.this, StudentManager.class);
 										Bundle bundle = new Bundle();
 										bundle.putSerializable("student", student);
 										bundle.putInt("studentid", student.getSId());
@@ -244,4 +253,5 @@ public class LoginActivity extends Activity {
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
+
 }
