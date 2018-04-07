@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#f1eef5"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.activity.StudentOfCourseAddActivity">
-    <!--<include layout="@layout/top"/>-->
-    <com.coursemis.view.myView.TitleView
-        android:id="@+id/student_of_course_add_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.coursemis.view.myView.TitleView>
+    android:background="#fff">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,5 +51,12 @@
                 android:layout_height="wrap_content"
                 android:childIndicator="@drawable/class_student_icon" />
         </LinearLayout>
+        <Button
+            android:id="@+id/commit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="提交"
+            android:background="@drawable/button_shape"
+            android:textSize="20sp"/>
     </LinearLayout>
 </LinearLayout>

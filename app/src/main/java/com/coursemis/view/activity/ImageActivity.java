@@ -123,7 +123,7 @@ public class ImageActivity extends Activity implements OnClickListener {
                 // ???????????????????????????
                 break;
             case R.id.uploadImage:
-                UploadImageUtil.uploadImage(this,mUriList,cid,tid);
+                UploadImageUtil.uploadImage(this,mUriList,cid,tid,"作业名称",30);
                 break;
             default:
                 break;

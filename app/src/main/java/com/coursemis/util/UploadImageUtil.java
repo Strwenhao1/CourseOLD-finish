@@ -40,12 +40,14 @@ import java.util.Map;
  */
 
 public class UploadImageUtil {
-    public static void uploadImage(Context context, List<Uri> uris, String cid, String tid) {
+    public static void uploadImage(Context context, List<Uri> uris, String cid, String tid, String homeworkName, int homeworkScore) {
         try {
             String requestUrl = HttpUtil.server_teacher_tupLoadHomework;
             Map<String, String> params = new HashMap<String, String>();
             params.put("cid", cid);
             params.put("tid", tid);
+            params.put("score",homeworkScore+"") ;
+            params.put("name",homeworkName) ;
             params.put("age", "23");
             for (Uri uri : uris) {
                 String realFilePath = FileUtil.getRealFilePath(context, uri);
