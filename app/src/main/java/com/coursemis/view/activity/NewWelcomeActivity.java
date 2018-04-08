@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.coursemis.R;
 import com.coursemis.model.Course;
+import com.coursemis.model.Message;
 import com.coursemis.model.Teacher;
 import com.coursemis.service.LoginService;
 import com.coursemis.util.HttpUtil;
@@ -96,6 +97,12 @@ public class NewWelcomeActivity extends AppCompatActivity
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             myBinder = (LoginService.MyBinder) service;
+            myBinder.onMessage(new LoginService.MessageHandler() {
+                @Override
+                public void onMessage(Message message) {
+
+                }
+            });
         }
     };
     private Intent mIntent;

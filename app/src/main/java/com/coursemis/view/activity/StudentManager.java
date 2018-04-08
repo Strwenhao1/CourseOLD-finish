@@ -2,11 +2,14 @@ package com.coursemis.view.activity;
 
 import android.app.AlertDialog;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -28,6 +31,9 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.coursemis.R;
 import com.coursemis.model.LocationData;
+import com.coursemis.model.Message;
+import com.coursemis.model.Student;
+import com.coursemis.service.LoginService;
 import com.coursemis.util.HttpUtil;
 import com.coursemis.util.P;
 import com.coursemis.view.Fragement.ClassHomeworkFragement;
@@ -45,6 +51,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.WebSocket;
 
 public class StudentManager extends FragmentActivity {
 
@@ -105,7 +113,35 @@ public class StudentManager extends FragmentActivity {
             }
         });
         initView();
+        bindService() ;
     }
+
+    private void bindService() {
+        Intent intent = new Intent() ;
+        Student student = new Student() ;
+        student.setSId(sid);
+        intent.putExtra(LoginService.TYPE,LoginService.STUDENT) ;
+        intent.putExtra(LoginService.STUDENT,student) ;
+        intent.setClass(this,LoginService.class) ;
+        bindService(intent,connection,BIND_AUTO_CREATE) ;
+    }
+    private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LoginService.MyBinder myBinder = (LoginService.MyBinder) service;
+            myBinder.onMessage(new LoginService.MessageHandler() {
+                @Override
+                public void onMessage(Message message) {
+                    Log.e("测试",message.getMessage()) ;
+                }
+            });
+        }
+    };
 
     private void initView() {
         listView = (ListView) findViewById(R.id.v4_listview);
@@ -461,6 +497,7 @@ public class StudentManager extends FragmentActivity {
     public void onDestroy() {
         mLocClient.stop();
         ((Location) getApplication()).mTv = null;
+        unbindService(connection);
         super.onDestroy();
     }
 

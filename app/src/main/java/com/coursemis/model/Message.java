@@ -28,7 +28,7 @@ public class Message {
     /**
      * 第一次进行socket连接时发送的信息
      */
-    public static String lOGIN = "login" ;
+    public static String LOGIN = "login" ;
     /**
      * 心跳包信息
      */
@@ -36,12 +36,49 @@ public class Message {
     /**
      * 点名信息
      */
-    public static String CALLTHEROLL = "calltheroll" ;
+    public static String CALL_THE_ROLL = "call the roll" ;
+    /**
+     * 提问信息
+     */
+    public static String QUIZ = "quiz" ;
+    /**
+     * 即时反馈信息
+     */
+    public static String CALL_BACK = "call back" ;
+    /**
+     * 测验信息
+     */
+    public static String TEST = "test" ;
 
+
+    /**
+     * 教师
+     */
+    public static String TEACHER = "teacher" ;
+    /**
+     * 学生
+     */
+    public static String STUDENT = "student" ;
+
+    /**
+     * 指定是教师还是学生
+     */
     private String tag;
+    /**
+     * 消息类型
+     */
     private String type;
+    /**
+     * 用户id
+     */
     private int userId;
+    /**
+     * 唯一标识用户的字符串，用用户id+"_"+用户对象的hashcode组成
+     */
     private String id ;
+    /**
+     * 消息内容
+     */
     private String message ;
 
     public String getMessage() {

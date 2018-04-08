@@ -71,6 +71,8 @@ public class LoginService extends Service {
     private OkHttpClient mOkHttpClient;
     private String mMessage;
 
+    private MessageHandler mMessageHandler;
+
 
     @Nullable
     @Override
@@ -94,7 +96,7 @@ public class LoginService extends Service {
         Gson gson = new Gson();
         Message login = new Message();
         login.setTag(stringExtra);
-        login.setType(Message.lOGIN);
+        login.setType(Message.LOGIN);
         login.setId(mMess);
         login.setUserId(id);
         mSendMess = gson.toJson(login);
@@ -128,13 +130,13 @@ public class LoginService extends Service {
 
     public class MyBinder extends Binder {
         public void onMessage(MessageHandler messageHandler) {
-            messageHandler.onMessage(mWebSocket, mMessage);
+            mMessageHandler = messageHandler;
         }
     }
 
 
     public interface MessageHandler {
-        void onMessage(WebSocket webSocket, String text);
+        void onMessage( Message message);
     }
 
 
@@ -162,9 +164,9 @@ public class LoginService extends Service {
             output("receive text:" + text);
             Gson gson = new Gson();
             Message message = gson.fromJson(text, Message.class);
-            if (message.getType().equals(Message.CALLTHEROLL)) {
-                //点名
-                showNotification();
+            if (!(message.getType().equals(Message.HEARTBEAT))) {
+                Log.e("测试","处理非心跳包消息") ;
+                mMessageHandler.onMessage(message);
             }
             mTimer.schedule(new TimerTask() {
                 @Override
@@ -172,6 +174,7 @@ public class LoginService extends Service {
                     mWebSocket.send(mHeartBeat);
                 }
             }, 2500);
+
         }
 
         @Override
