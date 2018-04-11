@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -248,34 +249,14 @@ public class CourseFragment extends BaseFragment
                 RequestParams p = new RequestParams();
                 p.put("cid", mCourse.getCId() + "");
                 p.put("tid", mTeacher.getTId() + "");
-                client.post(HttpUtil.server_teacher_course_randomAsk, p, new JsonHttpResponseHandler() {
+                Log.e("测试","提问") ;
+                client.post(HttpUtil.server_send_quiz_message, p, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int arg0, JSONObject arg1) {
-                        JSONArray object = arg1.optJSONArray("result");
-                        if (object.length() == 0) {
-                            Toast.makeText(getActivity(), "您这门课没有学生选修!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            ArrayList<String> list = new ArrayList<String>();
-                            JSONObject object_temp = null;
-                            //返回的列表只有一个对象
-                            System.out.println("=========>");
-                            Intent intent = new Intent(getActivity(), TAskQuestionActivity.class);
-                            for (int i = 0; i < arg1.optJSONArray("result").length(); i++) {
-                                object_temp = arg1.optJSONArray("result").optJSONObject(i);
-                                AskStudent askStudent = new AskStudent(object_temp.optInt("scId"), object_temp.optString("cName"), object_temp.optInt("SNumber"), object_temp.optString("SName"));
-                                intent.putExtra("askStudent", askStudent);
-                            }
-                            /*intent.putExtra("tmn_c_info", courseInfo.substring(2, courseInfo.length()) + " 第"
-                                    + courseWeek + "周" + " 上课时间" + courseTime.substring(2, courseTime.length()));*/
-                            startActivity(intent);
-                        }
-                        super.onSuccess(arg0, arg1);
+                        //弹出不可取消的对话框
+                        Toast.makeText(getActivity(),"弹出对话框",Toast.LENGTH_SHORT).show();
                     }
                 });
-                /*Intent ran = new Intent(getActivity(), TRandomAskActivity.class);//
-                Bundle bundle1 = new Bundle();
-                ran.putExtras(bundle1);
-                getActivity().startActivity(ran);*/
                 break;
             case R.id.feedBack :
                 String[] items = new String[]{"显示柱状图","显示曲线图","显示饼状图","显示学生建议"} ;

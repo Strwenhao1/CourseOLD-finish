@@ -1,11 +1,13 @@
 package com.coursemis.view.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.coursemis.R;
 import com.coursemis.model.Course;
 import com.coursemis.model.Teacher;
+import com.coursemis.util.HttpUtil;
 import com.coursemis.view.fragment.AddCourseFragment;
 import com.coursemis.view.fragment.AddStudentFragment;
 import com.coursemis.view.fragment.BaseFragment;
@@ -29,6 +32,11 @@ import com.coursemis.view.fragment.FileResourceFragment;
 import com.coursemis.view.fragment.PasswordChangeFragment;
 import com.coursemis.view.fragment.SettingCourseSettingFragment;
 import com.coursemis.view.fragment.SettingStudentManagerFragment;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONObject;
 
 /**
  * _oo0oo_
@@ -92,6 +100,7 @@ implements Toolbar.OnMenuItemClickListener{
     private Course mCourse;
     private String mType;
     private BaseFragment mFragment;
+    private AlertDialog mAlertDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -228,17 +237,6 @@ implements Toolbar.OnMenuItemClickListener{
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         Toast.makeText(this, "点击了....", Toast.LENGTH_SHORT).show();
-        //添加学生
-        /*switch (item.getItemId()) {
-            case R.id.add_course:
-                Intent intent = new Intent();
-                intent.putExtra("teacher", mTeacher);
-                intent.putExtra("course", mCourse);
-                intent.putExtra(TYPE, ADD_STUDENT);
-                intent.setClass(this, TSecondActivity.class);
-                startActivityForResult(intent, ADD_SUCCESS);
-                break;
-        }*/
         Log.e("测试",""+(mFragment==null)) ;
         if (item.getItemId() == R.id.add_course){
             if (mFragment instanceof SettingStudentManagerFragment){
@@ -249,15 +247,42 @@ implements Toolbar.OnMenuItemClickListener{
                 intent.setClass(this, TSecondActivity.class);
                 startActivityForResult(intent, ADD_SUCCESS);
             }else if (mFragment instanceof FileHomeworkFragment){
-                Intent intent = new Intent();
-                intent.putExtra("teacher", mTeacher);
-                intent.putExtra("course", mCourse);
-                intent.putExtra(TYPE, ADD_HOMEWORK);
-                intent.setClass(this, TSecondActivity.class);
-                startActivity(intent);
+                //弹出对话框
+                //发送消息
+                mAlertDialog = new AlertDialog.Builder(this)
+                        .setMessage("是否发送本次课的随堂测验信息")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //发送消息
+                                sendTestMess() ;
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAlertDialog.dismiss();
+                            }
+                        }).create();
+                mAlertDialog.show();
             }
         }
         return false;
+    }
+
+    private void sendTestMess() {
+        AsyncHttpClient client = new AsyncHttpClient() ;
+        RequestParams params = new RequestParams() ;
+        params.put("tid",mTeacher.getTId()+"");
+        params.put("cid",mCourse.getCId()+"");
+        //测试
+        //params.put("periodId","1");
+        client.post(HttpUtil.server_send_test_message,params,new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, JSONObject response) {
+                Toast.makeText(TSecondActivity.this,"发送成功",Toast.LENGTH_SHORT).show();
+            }
+        }) ;
     }
 
     @Override
