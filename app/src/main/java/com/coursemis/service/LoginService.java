@@ -77,7 +77,6 @@ public class LoginService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.e("测试", "onBind");
         String stringExtra = intent.getStringExtra(TYPE);
         Serializable serializableExtra = intent.getSerializableExtra(stringExtra);
         int id = -1;
@@ -106,9 +105,7 @@ public class LoginService extends Service {
         heard.setId(mMess);
         heard.setUserId(id);
         mHeartBeat = gson.toJson(heard);
-        Log.e("测试", mSendMess);
-        Log.e("haha", mHeartBeat);
-        String url = "ws://172.17.100.2:8080/CourseMis/socket"; //改成自已服务端的地址
+        String url = "ws://172.17.100.2:8080/CourseMis/socket";
         Request request = new Request.Builder().url(url).build();
         EchoWebSocketListener socketListener = new EchoWebSocketListener();
         mWebSocket = mOkHttpClient.newWebSocket(request, socketListener);
@@ -119,7 +116,6 @@ public class LoginService extends Service {
 
     @Override
     public void onCreate() {
-        Log.e("测试", "onCreate");
         mOkHttpClient = new OkHttpClient.Builder()
                 .readTimeout(3000, TimeUnit.SECONDS)//设置读取超时时间
                 .writeTimeout(3000, TimeUnit.SECONDS)//设置写的超时时间
@@ -147,25 +143,21 @@ public class LoginService extends Service {
             super.onOpen(webSocket, response);
             WebSocket mSocket = webSocket;
             mSocket.send(mSendMess);
-            output("连接成功！");
 
         }
 
         @Override
         public void onMessage(WebSocket webSocket, ByteString bytes) {
             super.onMessage(webSocket, bytes);
-            output("receive bytes:" + bytes.hex());
         }
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
             mMessage = text;
-            output("receive text:" + text);
             Gson gson = new Gson();
             Message message = gson.fromJson(text, Message.class);
             if (!(message.getType().equals(Message.HEARTBEAT))) {
-                Log.e("测试","处理非心跳包消息") ;
                 mMessageHandler.onMessage(message);
             }
             mTimer.schedule(new TimerTask() {
@@ -180,20 +172,17 @@ public class LoginService extends Service {
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
             super.onClosed(webSocket, code, reason);
-            output("closed:" + reason);
         }
 
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
             super.onClosing(webSocket, code, reason);
             webSocket.send(mHeartBeat);
-            output("closing:" + reason);
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
             super.onFailure(webSocket, t, response);
-            output("failure:" + t.getMessage());
         }
     }
 
@@ -216,13 +205,8 @@ public class LoginService extends Service {
         mNotificationManager.notify(NotificationManager.INTERRUPTION_FILTER_ALARMS, mBuilder.build());
     }
 
-    private void output(final String text) {
-        //Log.e("测试", text);
-    }
-
     @Override
     public void onDestroy() {
-        Log.e("测试", "关闭");
         mTimer.cancel();
         mWebSocket.close(1000, "关闭");
         super.onDestroy();

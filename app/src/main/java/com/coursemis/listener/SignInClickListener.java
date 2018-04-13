@@ -123,7 +123,6 @@ public class SignInClickListener implements View.OnClickListener {
                             Toast.makeText(mContext, "你这门课没有学生选修!", Toast.LENGTH_SHORT).show();
                         } else {
                             ArrayList<String> list = new ArrayList<String>();
-                            //Log.e("测试","list"+list);
                             signInServiceInfo(list, arg1);
                             SignInListView signInListView = new SignInListView(mContext) ;
                             signInListView.setList(list) ;
@@ -173,10 +172,8 @@ public class SignInClickListener implements View.OnClickListener {
             public void onClick(View arg0) {
 
                 if (mCourse == null) {
-                    Log.e("测试", (mCourse == null) + "");
                     Toast.makeText(mContext, "请先选择课程!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.e("测试", "mCourseWeek.setOnClickListener" + mCourse.getCId());
                     RequestParams params = new RequestParams();
                     params.put("cid", mCourse.getCId() + "");
                     client.post(HttpUtil.server_teacher_course_week, params,

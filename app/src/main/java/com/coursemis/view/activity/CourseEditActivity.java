@@ -263,7 +263,6 @@ public class CourseEditActivity extends Activity {
             weekday = bundle.getInt("weekday_1");
             System.out.println(resultTime);
             time_course_editText.setText(resultTime);
-            Log.e("测试","ceshi") ;
         }
     }
 

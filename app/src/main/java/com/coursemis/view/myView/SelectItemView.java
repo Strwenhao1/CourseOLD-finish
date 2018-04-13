@@ -73,7 +73,6 @@ public class SelectItemView extends FrameLayout {
         int signInResultColor = mAttributeSet.getAttributeIntValue(NAMESPACE,"signInResultColor",Color.GRAY) ;
         mSignInResult.setTextColor(signInResultColor);
         mSignInClass.setTextColor(signInClassColor);
-        Log.e("测试数据",signInClassName+"..."+signInResultName) ;
         if (signInClassName!=null&&!signInClassName.equals("")
                 &&signInResultName!=null&&!signInResultName.equals("")){
             mSignInClass.setText(signInClassName) ;

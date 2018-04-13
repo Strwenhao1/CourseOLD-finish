@@ -45,7 +45,6 @@ public class FileFragment extends BaseFragment
 
     @Override
     public void refresh(Course course) {
-        Log.e("测试","刷新"+course.getCName()) ;
         mCourse = course ;
         mHomework.setOnClickListener(this);
         mResource.setOnClickListener(this);
@@ -77,12 +76,10 @@ public class FileFragment extends BaseFragment
         intent.setClass(getActivity(), TSecondActivity.class);
         switch (v.getId()) {
             case R.id.homework:
-                Log.e("测试", "作业");
                 intent.putExtra(TSecondActivity.TYPE, TSecondActivity.HOMEWORK);
                 getActivity().startActivity(intent);
                 break;
             case R.id.resource:
-                Log.e("测试", "资源共享");
                 intent.putExtra(TSecondActivity.TYPE, TSecondActivity.RESOURCE);
                 getActivity().startActivity(intent);
                 break;

@@ -103,5 +103,9 @@ public class HttpUtil {
      * 学生发送测验
      */
     public static String server_send_test = server + "/sendTest.action";
+    /**
+     * 教师发送提问成绩
+     */
+    public static String server_send_quiz_score = server+"/sendQuizScore.action" ;
 
 }

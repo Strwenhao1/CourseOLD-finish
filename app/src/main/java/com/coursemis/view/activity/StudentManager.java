@@ -137,7 +137,6 @@ public class StudentManager extends FragmentActivity {
             myBinder.onMessage(new LoginService.MessageHandler() {
                 @Override
                 public void onMessage(Message message) {
-                    Log.e("测试",message.getMessage()) ;
                 }
             });
         }

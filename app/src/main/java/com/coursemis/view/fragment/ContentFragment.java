@@ -157,7 +157,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             int currentItem = mViewPager.getCurrentItem();
             BaseFragment baseFragment = mFragments.get(currentItem);
             baseFragment.refresh(mCourse);
-            Log.e("测试",mCourse.getCId()+"") ;
             //mRefreshView.setRefreshing(false);
             //请求网络
         }

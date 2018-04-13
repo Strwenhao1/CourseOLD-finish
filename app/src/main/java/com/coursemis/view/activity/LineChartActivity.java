@@ -36,7 +36,6 @@ public class LineChartActivity extends TChartActivity {
     private void initIntent() {
         Intent intent = getIntent();
         mChart = (Chart) intent.getSerializableExtra("chart");
-        Log.e("测试",(mChart==null)+"") ;
         mYears = mChart.getYears() ;
         mPoint = mChart.getPoint() ;
     }

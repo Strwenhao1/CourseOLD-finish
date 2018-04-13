@@ -112,7 +112,6 @@ public class AddStudentFragment extends BaseFragment {
                         studentId1 = new int[arg1.optJSONArray("result1").length()];
                         studentId2 = new int[arg1.optJSONArray("result2").length()];
                         studentId3 = new int[arg1.optJSONArray("result3").length()];
-                        Log.e("测试","成功") ;
                         List<Student> studentList1 = new ArrayList<Student>();
                         for (int i = 0; i < arg1.optJSONArray("result1").length(); i++) {
                             JSONObject object = arg1.optJSONArray("result1").optJSONObject(i);

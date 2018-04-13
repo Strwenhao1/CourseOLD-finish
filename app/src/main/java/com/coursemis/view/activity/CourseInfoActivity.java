@@ -418,7 +418,6 @@ public class CourseInfoActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SubActivity.COURSEEDIT){
-            Log.e("测试","回来了") ;
             initData();
         }
     }

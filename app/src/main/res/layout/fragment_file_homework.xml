@@ -6,7 +6,7 @@
     android:background="#fff"
     android:orientation="vertical">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/homeworkmanagecourseinfoListview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

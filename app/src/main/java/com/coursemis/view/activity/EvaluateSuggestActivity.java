@@ -75,7 +75,6 @@ public class EvaluateSuggestActivity extends Activity {
 			
 			@Override
 			public void onSuccess(int arg0, JSONObject arg1) {
-				Log.e("测试","成功") ;
 				for(int i=0;i<arg1.optJSONArray("result").length();i++){
 					JSONObject object = arg1.optJSONArray("result")
 							.optJSONObject(i);

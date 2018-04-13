@@ -177,7 +177,6 @@ implements Toolbar.OnMenuItemClickListener{
                 break;
             case SectorChart :
                 //饼图
-                Log.e("测试","SectorChart") ;
                 mFragment = new FeedBackSectorChartFragment();
                 mFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content,mFragment) ;
@@ -206,7 +205,6 @@ implements Toolbar.OnMenuItemClickListener{
                 break;
             case ADD_HOMEWORK:
                 //添加随堂测验
-                Log.e("测试","添加随堂测验") ;
                 mFragment = new FileAddHomeworkFragment();
                 mFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content, mFragment);
@@ -236,8 +234,6 @@ implements Toolbar.OnMenuItemClickListener{
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        Toast.makeText(this, "点击了....", Toast.LENGTH_SHORT).show();
-        Log.e("测试",""+(mFragment==null)) ;
         if (item.getItemId() == R.id.add_course){
             if (mFragment instanceof SettingStudentManagerFragment){
                 Intent intent = new Intent();
@@ -275,8 +271,6 @@ implements Toolbar.OnMenuItemClickListener{
         RequestParams params = new RequestParams() ;
         params.put("tid",mTeacher.getTId()+"");
         params.put("cid",mCourse.getCId()+"");
-        //测试
-        //params.put("periodId","1");
         client.post(HttpUtil.server_send_test_message,params,new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, JSONObject response) {
@@ -287,7 +281,6 @@ implements Toolbar.OnMenuItemClickListener{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("测试", "返回》》》》" + requestCode);
         switch (requestCode) {
             case ADD_SUCCESS:
                 mFragment.refresh(mCourse);

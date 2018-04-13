@@ -229,7 +229,6 @@ public class SettingCourseSettingFragment extends BaseFragment
                 new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int arg0, JSONObject arg1) {
-                        Toast.makeText(getActivity(), "测试", Toast.LENGTH_SHORT).show();
                         // TODO Auto-generated method stub
                         getActivity().finish();
                         //super.onSuccess(arg0, arg1);

@@ -214,7 +214,6 @@ public class EvaluateGetActivity extends Activity {
                                         context, years, points);
                                 startActivity(intent);*/
                                 Intent intent = new Intent(EvaluateGetActivity.this,LineChartActivity.class) ;
-                                Log.e("测试",(years==null)+"....."+(points==null)) ;
                                 Chart chart = new Chart() ;
                                 chart.setYears(years);
                                 chart.setPoint(points);

@@ -51,7 +51,6 @@ public class UploadImageUtil {
             params.put("age", "23");
             for (Uri uri : uris) {
                 String realFilePath = FileUtil.getRealFilePath(context, uri);
-                Log.e("测试获取到的文件地址",(realFilePath==null)+"") ;
                 File file = new File(realFilePath);
                 String name = file.getName();
                 FormFile formFile = new FormFile(name, file, "image", "application/octet-stream");

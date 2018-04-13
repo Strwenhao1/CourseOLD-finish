@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -142,7 +144,6 @@ public class CourseFragment extends BaseFragment
     }
 
     private void refresh() {
-        Log.e("测试1", mCourse.getCId() + "");
         RequestParams params = new RequestParams();
         params.put("courseid", mCourse.getCId() + "");
         params.put("action", "course_teacher");///
@@ -164,7 +165,6 @@ public class CourseFragment extends BaseFragment
                         mCoursetime.setCtEndClass(object.optInt("CtEndClass"));
                         mCoursetime.setCtStartClass(object.optInt("CtStartClass"));
                         mCoursetime.setCtAddress(object.optString("CtAddress"));
-                        Log.e("测试", mCoursetime.getCtAddress() + "");
                         name_course.setText(mCoursetime.getCourse().getCName());
                         String week_day = mWeek[mCoursetime.getCtWeekChoose() - 1] + mDay[mCoursetime.getCtWeekDay() - 1];
                         weeknum_course.setText(week_day);
@@ -223,7 +223,6 @@ public class CourseFragment extends BaseFragment
                                                     //Log.e("测试。。",select.get(0)+"...."+map.get(select.get(0))) ;
                                                     for (int i = 0; i < select.size(); i++) {
                                                         params.put(i + "", map.get(select.get(i))+"");
-                                                        Log.e("测试。。。",map.get(select.get(i))+"") ;
                                                     }
                                                     client.post(HttpUtil.server_teacher_courseStudentCount, params,
                                                             new JsonHttpResponseHandler() {
@@ -249,12 +248,40 @@ public class CourseFragment extends BaseFragment
                 RequestParams p = new RequestParams();
                 p.put("cid", mCourse.getCId() + "");
                 p.put("tid", mTeacher.getTId() + "");
-                Log.e("测试","提问") ;
                 client.post(HttpUtil.server_send_quiz_message, p, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int arg0, JSONObject arg1) {
                         //弹出不可取消的对话框
-                        Toast.makeText(getActivity(),"弹出对话框",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(),"弹出对话框",Toast.LENGTH_SHORT).show();
+                        JSONObject object = arg1.optJSONArray("result").optJSONObject(0);
+                        final int sid = object.optInt("sid");
+                        final EditText etScore = new EditText(getActivity()) ;
+                        etScore.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                                .setTitle("分数")
+                                .setView(etScore)
+                                .setPositiveButton("提交", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //获取到成绩
+                                        String trim = etScore.getText().toString().trim();
+                                        if (trim!=null){
+                                            //存在数据
+                                            //发送数据
+                                            RequestParams p = new RequestParams();
+                                            p.put("cid", mCourse.getCId() + "");
+                                            p.put("tid", mTeacher.getTId() + "");
+                                            p.put("sid",sid+"");
+                                            client.post(HttpUtil.server_send_quiz_score,new JsonHttpResponseHandler(){
+                                                @Override
+                                                public void onSuccess(int statusCode, JSONArray response) {
+                                                    Toast.makeText(getActivity(),"添加成功",Toast.LENGTH_SHORT).show();
+                                                }
+                                            }) ;
+                                        }
+                                    }
+                                }) ;
+                        builder.create().show();
                     }
                 });
                 break;
@@ -289,17 +316,7 @@ public class CourseFragment extends BaseFragment
                             }
                         }).create() ;
                 d.show();
-                Toast.makeText(getActivity(),"反馈",Toast.LENGTH_SHORT).show();
                 break;
         }
     }
-
-    /*public void signInServiceInfo(ArrayList<String> list, JSONObject arg1) {
-        list.add(0, "学号" + "_" + "姓名" + "_" + " 已到次数" + "_" + "总点到次数");
-        for (int i = 1; i <= arg1.optJSONArray("result").length(); i++) {
-            JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i - 1);
-            P.p(object_temp.toString() + 2222);
-            list.add(i, (object_temp.optInt("SNumber") + "_" + object_temp.optString("SName") + "_" + object_temp.optString("SCPointNum") + "_" + object_temp.optString("ScPointTotalNum")));
-        }
-    }*/
 }

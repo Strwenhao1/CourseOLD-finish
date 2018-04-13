@@ -166,8 +166,6 @@ public class NewWelcomeActivity extends AppCompatActivity
                                 Gson gson = new Gson();
                                 Course course = gson.fromJson(object_temp.toString(), Course.class);
                                 mCourseList.add(course);
-                                //Log.e("测试", course.getCName());
-                                //menu.add(course.getCName());
                                 menu.add(1,i,0,course.getCName()) ;
                             }
                             //menu.addSubMenu("添加课程");
@@ -246,20 +244,17 @@ public class NewWelcomeActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        Log.e("测试","销毁") ;
         unbindService(connection);
         super.onDestroy();
     }
 
     @Override
     public void finish() {
-        Log.e("测试","结束") ;
         super.finish();
     }
 
     @Override
     public void finishActivity(int requestCode) {
-        Log.e("测试","finishActivity") ;
         super.finishActivity(requestCode);
     }
 }

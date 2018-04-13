@@ -314,14 +314,6 @@ public class TStartSignInActivity extends Activity {
                         || (signInHour == 0 && signInMinute == 0)
                         || LocationData.latitude == 0.0 || LocationData.longitude == 0
                         || LocationData.radius == 0.0f) {
-                    Log.e("测试签到信息", (courseInfo == null) + "..."
-                            + (courseWeek == null) + "..."
-                            + (courseTime == null) + "..."
-                            + (signInHour == 0 && signInMinute == 0) + "..."
-                            + (LocationData.latitude == 0.0) + "..."
-                            + (LocationData.longitude == 0) + "..."
-                            + (LocationData.radius == 0.0));
-                    Log.e("测试定位信息", LocationData.latitude + "...." + LocationData.longitude + "...." + LocationData.radius);
                     Toast.makeText(TStartSignInActivity.this, "签到信息没有设置完整!", Toast.LENGTH_SHORT).show();
                 } else {
                     RequestParams params = new RequestParams();

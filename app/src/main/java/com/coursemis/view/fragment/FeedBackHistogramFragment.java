@@ -97,13 +97,11 @@ public class FeedBackHistogramFragment extends BaseFragment {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("courseid", mCourse.getCId() + "");
-        Log.e("测试", mCourse.getCId() + "");
         params.put("action", "course_teacher");// /
         client.post(HttpUtil.server_evaluate_zhu_get, params,
                 new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int arg0, JSONObject arg1) {
-                        Log.e("测试", "返回了结果");
                         // TODO Auto-generated method stub
                         int[] year_zhuxing = new int[arg1.optJSONArray(
                                 "result").length()];

@@ -95,7 +95,6 @@ public class FeedBackLineChartFragment extends BaseFragment {
         mLineChart.animateXY(3000, 3000);    //从XY轴一起进入的动画
         //设置最小的缩放
         mLineChart.setScaleMinima(0.5f, 1f);
-        Log.e("测试","即将开始访问网络") ;
         AsyncHttpClient client = new AsyncHttpClient() ;
         RequestParams params = new RequestParams();
         params.put("courseid", mCourse.getCId() + "");
@@ -104,13 +103,11 @@ public class FeedBackLineChartFragment extends BaseFragment {
                 new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                        Log.e("测试0",statusCode+"..."+headers.length+"..."+response.toString()) ;
                         super.onSuccess(statusCode, headers, response);
                     }
 
                     @Override
                     public void onSuccess(int arg0, JSONObject arg1) {
-                        Log.e("测试","哈哈哈") ;
                         super.onSuccess(arg0, arg1);
                         double[] years;
                         double[] points;
@@ -128,9 +125,7 @@ public class FeedBackLineChartFragment extends BaseFragment {
                         }
                         Chart chart = new Chart() ;
                         chart.setYears(years);
-                        chart.setPoint(points);
-                        Log.e("测试",chart.getPoint().length+"") ;
-                        // 加载数据
+                        chart.setPoint(points);// 加载数据
                         LineData data = getLineData(chart);
                         mLineChart.setData(data);
                         Legend l = mLineChart.getLegend();
@@ -146,16 +141,9 @@ public class FeedBackLineChartFragment extends BaseFragment {
                     @Override
                     public void onFailure(Throwable e, JSONObject errorResponse) {
 
-                        Log.e("测试","onFailure") ;
                         super.onFailure(e, errorResponse);
                     }
-                }/*new JsonHttpResponseHandler(){
-                    @Override
-                    public void onSuccess(int arg0, JSONObject arg1) {
-                        Log.e("测试","成功") ;
-                        super.onSuccess(arg0,arg1);
-                    }
-                }*/);
+                });
     }
 
     private LineData getLineData(Chart chart) {

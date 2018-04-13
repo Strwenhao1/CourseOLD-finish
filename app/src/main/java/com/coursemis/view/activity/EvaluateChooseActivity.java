@@ -78,10 +78,8 @@ public class EvaluateChooseActivity extends Activity {
                             courseList.add(course);
                         }
                         String [] arr = new String[courseList.size()] ;
-                        Log.e("测试",""+courseList.size()) ;
                         for (int i = 0 ; i<courseList.size();i++){
                             arr[i] = courseList.get(i).getCName() ;
-                            Log.e("测试",arr[i]) ;
                         }
                         final ArrayAdapter<String> arrayAdapter =
                                 new ArrayAdapter<String>(EvaluateChooseActivity.this,
