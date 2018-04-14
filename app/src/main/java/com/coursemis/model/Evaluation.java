@@ -9,8 +9,8 @@ public class Evaluation implements java.io.Serializable {
 	// Fields
 
 	private Integer EId;
-	private Period period;
 	private Course course;
+	private Integer EPid;
 	private String EGrades;
 
 	// Constructors
@@ -20,9 +20,9 @@ public class Evaluation implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Evaluation(Period period, Course course, String EGrades) {
-		this.period = period;
+	public Evaluation(Course course, Integer EPid, String EGrades) {
 		this.course = course;
+		this.EPid = EPid;
 		this.EGrades = EGrades;
 	}
 
@@ -36,20 +36,20 @@ public class Evaluation implements java.io.Serializable {
 		this.EId = EId;
 	}
 
-	public Period getPeriod() {
-		return this.period;
-	}
-
-	public void setPeriod(Period period) {
-		this.period = period;
-	}
-
 	public Course getCourse() {
 		return this.course;
 	}
 
 	public void setCourse(Course course) {
 		this.course = course;
+	}
+
+	public Integer getEPid() {
+		return this.EPid;
+	}
+
+	public void setEPid(Integer EPid) {
+		this.EPid = EPid;
 	}
 
 	public String getEGrades() {

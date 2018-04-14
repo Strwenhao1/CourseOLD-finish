@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <TextView
+        android:id="@+id/periodNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="课时数"
+        android:textColor="#000"
+        android:shadowColor="#aaa"
+        android:textSize="20sp"
+        android:layout_margin="10dp"/>
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:shadowColor="#aaa"
+        android:text="分数"
+        android:layout_margin="10dp"/>
+    <TextView
+        android:layout_toLeftOf="@id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="平均分"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:shadowColor="#aaa"
+        android:paddingRight="10dp"
+        android:layout_margin="10dp"/>
+</RelativeLayout>

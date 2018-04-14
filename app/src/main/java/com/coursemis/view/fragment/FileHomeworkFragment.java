@@ -11,12 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.coursemis.R;
 import com.coursemis.model.Classroomtest;
 import com.coursemis.model.Course;
 import com.coursemis.model.Score;
 import com.coursemis.util.HttpUtil;
+import com.coursemis.view.activity.TCourseSignInActivity;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -99,7 +101,11 @@ public class FileHomeworkFragment extends BaseFragment {
                         Gson gson = new Gson() ;
                         List<Score> scores = new ArrayList<>() ;
                         List<Score> list = gson.fromJson(object.toString(), scores.getClass());
-                        Log.e("hahhah",".....>>>>>"+list.size()) ;
+                        for (int i = 0;i<list.size();i++){
+                            Score score = gson.fromJson(list.toArray()[i].toString(), Score.class);
+                            scores.add(score) ;
+                        }
+                        Log.e("hahhah",".....>>>>>"+scores.get(0).getSQuiz()) ;
                         mScoreList.setAdapter(new ScoreAdapter(list));
                         super.onSuccess(arg0, arg1);
                     }
@@ -124,17 +130,31 @@ public class FileHomeworkFragment extends BaseFragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
+            View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.view_homework_list, null);
+            return new MyViewHolder(inflate);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+            MyViewHolder viewHolder = (MyViewHolder) holder;
+            viewHolder.periodNum.setText("第"+position+"学时");
+            viewHolder.score.setText(list.get(position).getSTest());
         }
 
         @Override
         public int getItemCount() {
             return 0;
+        }
+        private class MyViewHolder extends RecyclerView.ViewHolder{
+            public TextView periodNum ;
+            public TextView score ;
+            public View view ;
+            public MyViewHolder(View itemView) {
+                super(itemView);
+                view = itemView ;
+                score = (TextView) view.findViewById(R.id.score);
+                periodNum = (TextView) view.findViewById(R.id.periodNum);
+            }
         }
     }
 

@@ -7,16 +7,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.coursemis.R;
 import com.coursemis.model.Chart;
 import com.coursemis.model.Course;
+import com.coursemis.model.Evaluation;
 import com.coursemis.util.HttpUtil;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -26,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * _oo0oo_
@@ -48,7 +52,7 @@ import java.util.ArrayList;
  * `=---='
  * <p>
  * <p>
- *折线图展示
+ * 折线图展示
  * Created by zhxchao on 2018/3/17.
  */
 
@@ -65,8 +69,8 @@ public class FeedBackLineChartFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_line_chart, null);
-        initView() ;
-        initData() ;
+        initView();
+        initData();
         return mView;
     }
 
@@ -95,19 +99,36 @@ public class FeedBackLineChartFragment extends BaseFragment {
         mLineChart.animateXY(3000, 3000);    //从XY轴一起进入的动画
         //设置最小的缩放
         mLineChart.setScaleMinima(0.5f, 1f);
-        AsyncHttpClient client = new AsyncHttpClient() ;
+        AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-        params.put("courseid", mCourse.getCId() + "");
-        params.put("action", "course_teacher");// /
-        client.post(HttpUtil.server_evaluate_get, params,
+        params.put("cid", mCourse.getCId() + "");
+        params.put("tid", mTeacher.getTId() + "");// /
+        client.post(HttpUtil.server_get_callback, params,
                 new JsonHttpResponseHandler() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                        super.onSuccess(statusCode, headers, response);
+                    public void onSuccess(int statusCode, JSONArray response) {
+
+                        super.onSuccess(statusCode, response);
                     }
 
                     @Override
                     public void onSuccess(int arg0, JSONObject arg1) {
+                        Log.e("测试", "接收到反馈信息");
+                        String result = arg1.optString("result");
+                        Gson gson = new Gson() ;
+                        List<Evaluation> list = new ArrayList<>() ;
+                        List<Evaluation> evaluations = gson.fromJson(result, list.getClass());
+                        for (int i = 0;i<evaluations.size() ;i++){
+                            Evaluation evaluation = gson.fromJson(evaluations.toArray()[i].toString(), Evaluation.class);
+                            list.add(evaluation) ;
+                        }
+                        Log.e("解析",list.get(0).getEGrades());
+                        if (evaluations.size()==0){
+                            //没有数据
+                            Toast.makeText(getActivity(),"暂时还没有数据",Toast.LENGTH_SHORT).show();
+                        }else {
+                            Log.e("测试",evaluations.toArray()[0].toString());
+                        }
                         super.onSuccess(arg0, arg1);
                         double[] years;
                         double[] points;
@@ -123,7 +144,7 @@ public class FeedBackLineChartFragment extends BaseFragment {
                             years[i] = object.optDouble("year");
                             points[i] = object.optDouble("point");
                         }
-                        Chart chart = new Chart() ;
+                        Chart chart = new Chart();
                         chart.setYears(years);
                         chart.setPoint(points);// 加载数据
                         LineData data = getLineData(chart);
@@ -149,7 +170,7 @@ public class FeedBackLineChartFragment extends BaseFragment {
     private LineData getLineData(Chart chart) {
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < chart.getYears().length; i++) {
-            xVals.add(chart.getYears()[i]+"");
+            xVals.add(chart.getYears()[i] + "");
         }
 
         ArrayList<Entry> yVals = new ArrayList<Entry>();

@@ -11,10 +11,11 @@ public class Score implements java.io.Serializable {
 	private Integer SId;
 	private Course course;
 	private Student student;
-	private Period period;
+	private Integer SPid;
 	private Integer SAtten;
 	private Integer SQuiz;
 	private Integer SCall;
+	private Integer STest;
 
 	// Constructors
 
@@ -23,14 +24,15 @@ public class Score implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Score(Course course, Student student, Period period, Integer SAtten,
-			Integer SQuiz, Integer SCall) {
+	public Score(Course course, Student student, Integer SPid, Integer SAtten,
+			Integer SQuiz, Integer SCall, Integer STest) {
 		this.course = course;
 		this.student = student;
-		this.period = period;
+		this.SPid = SPid;
 		this.SAtten = SAtten;
 		this.SQuiz = SQuiz;
 		this.SCall = SCall;
+		this.STest = STest;
 	}
 
 	// Property accessors
@@ -59,12 +61,12 @@ public class Score implements java.io.Serializable {
 		this.student = student;
 	}
 
-	public Period getPeriod() {
-		return this.period;
+	public Integer getSPid() {
+		return this.SPid;
 	}
 
-	public void setPeriod(Period period) {
-		this.period = period;
+	public void setSPid(Integer SPid) {
+		this.SPid = SPid;
 	}
 
 	public Integer getSAtten() {
@@ -89,6 +91,14 @@ public class Score implements java.io.Serializable {
 
 	public void setSCall(Integer SCall) {
 		this.SCall = SCall;
+	}
+
+	public Integer getSTest() {
+		return this.STest;
+	}
+
+	public void setSTest(Integer STest) {
+		this.STest = STest;
 	}
 
 }

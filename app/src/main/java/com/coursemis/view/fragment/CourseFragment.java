@@ -1,11 +1,11 @@
 package com.coursemis.view.fragment;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +33,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -82,6 +83,10 @@ public class CourseFragment extends BaseFragment
     private Button mCallName;
     private Button mSignIn;
     private Button mFeedBack;
+    private AlertDialog mQuizAlert;
+    private Button mTest;
+    private Button mScore;
+    private AlertDialog mAlertDialog;
 
     @Override
     public void refresh(Course course) {
@@ -90,6 +95,8 @@ public class CourseFragment extends BaseFragment
         mCallName.setOnClickListener(this);
         mQuiz.setOnClickListener(this);
         mFeedBack.setOnClickListener(this);
+        mTest.setOnClickListener(this);
+        mScore.setOnClickListener(this);
         refresh();
     }
 
@@ -128,6 +135,8 @@ public class CourseFragment extends BaseFragment
         mCallName = (Button) mView.findViewById(R.id.callName);
         mSignIn = (Button) mView.findViewById(R.id.signIn);
         mFeedBack = (Button) mView.findViewById(R.id.feedBack);
+        mTest = (Button) mView.findViewById(R.id.test);
+        mScore = (Button) mView.findViewById(R.id.score);
     }
 
     @Override
@@ -196,17 +205,17 @@ public class CourseFragment extends BaseFragment
                                 if (object.length() == 0) {
                                     Toast.makeText(getActivity(), "您这门课没有学生选修!", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    final Map<String,Integer> map = new HashMap<>() ;
+                                    final Map<String, Integer> map = new HashMap<>();
                                     ArrayList<String> list = new ArrayList<String>();
-                                    Gson gson = new Gson() ;
+                                    Gson gson = new Gson();
                                     for (int i = 0; i < arg1.optJSONArray("result").length(); i++) {
                                         JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i);
                                         P.p(object_temp.toString() + 2222);
                                         list.add(i, (object_temp.optInt("SNumber") + (object_temp.optString("SName"))));
-                                        map.put(object_temp.optString("SName"),object_temp.optInt("SNumber")) ;
+                                        map.put(object_temp.optString("SName"), object_temp.optInt("SNumber"));
                                     }
                                     final ArrayList<String> select = new ArrayList<String>();
-                                    final String[] strings =  map.keySet().toArray(new String[map.keySet().size()]);
+                                    final String[] strings = map.keySet().toArray(new String[map.keySet().size()]);
                                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                                             .setMultiChoiceItems(strings, null, new DialogInterface.OnMultiChoiceClickListener() {
                                                 @Override
@@ -218,17 +227,17 @@ public class CourseFragment extends BaseFragment
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     RequestParams params = new RequestParams();
-                                                    params.put("type","call");
-                                                    params.put("size",select.size()+"");
+                                                    params.put("type", "call");
+                                                    params.put("size", select.size() + "");
                                                     //Log.e("测试。。",select.get(0)+"...."+map.get(select.get(0))) ;
                                                     for (int i = 0; i < select.size(); i++) {
-                                                        params.put(i + "", map.get(select.get(i))+"");
+                                                        params.put(i + "", map.get(select.get(i)) + "");
                                                     }
                                                     client.post(HttpUtil.server_teacher_courseStudentCount, params,
                                                             new JsonHttpResponseHandler() {
                                                                 @Override
                                                                 public void onSuccess(int arg0, JSONObject arg1) {
-                                                                    Toast.makeText(getActivity(),"设置成功",Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(getActivity(), "设置成功", Toast.LENGTH_SHORT).show();
                                                                     super.onSuccess(arg0, arg1);
                                                                 }
                                                             });
@@ -253,70 +262,116 @@ public class CourseFragment extends BaseFragment
                     public void onSuccess(int arg0, JSONObject arg1) {
                         //弹出不可取消的对话框
                         //Toast.makeText(getActivity(),"弹出对话框",Toast.LENGTH_SHORT).show();
-                        JSONObject object = arg1.optJSONArray("result").optJSONObject(0);
-                        final int sid = object.optInt("sid");
-                        final EditText etScore = new EditText(getActivity()) ;
-                        etScore.setInputType(InputType.TYPE_CLASS_NUMBER);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                                .setTitle("分数")
-                                .setView(etScore)
-                                .setPositiveButton("提交", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //获取到成绩
-                                        String trim = etScore.getText().toString().trim();
-                                        if (trim!=null){
-                                            //存在数据
-                                            //发送数据
-                                            RequestParams p = new RequestParams();
-                                            p.put("cid", mCourse.getCId() + "");
-                                            p.put("tid", mTeacher.getTId() + "");
-                                            p.put("sid",sid+"");
-                                            client.post(HttpUtil.server_send_quiz_score,new JsonHttpResponseHandler(){
-                                                @Override
-                                                public void onSuccess(int statusCode, JSONArray response) {
-                                                    Toast.makeText(getActivity(),"添加成功",Toast.LENGTH_SHORT).show();
-                                                }
-                                            }) ;
+                        //JSONArray object = arg1.optJSONArray("result");
+                        //String s = object.optString(0);
+                        try {
+                            final String result = arg1.getJSONObject("result").getString("sid");
+                            final EditText etScore = new EditText(getActivity());
+                            etScore.setInputType(InputType.TYPE_CLASS_NUMBER);
+                            //获取到成绩
+//存在数据
+//发送数据
+                            mQuizAlert = new AlertDialog.Builder(getActivity())
+                                    .setTitle("学号为" + result + "的分数")
+                                    .setView(etScore)
+                                    .setCancelable(false)
+                                    .setPositiveButton("提交", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //获取到成绩
+                                            String trim = etScore.getText().toString().trim();
+                                            if (trim != null) {
+                                                //存在数据
+                                                //发送数据
+                                                RequestParams p = new RequestParams();
+                                                p.put("tid", mTeacher.getTId() + "");
+                                                p.put("cid", mCourse.getCId() + "");
+                                                p.put("sid", result + "");
+                                                p.put("score", trim);
+                                                client.post(HttpUtil.server_send_quiz_score, p, new JsonHttpResponseHandler() {
+                                                    @Override
+                                                    public void onSuccess(int statusCode, JSONObject response) {
+                                                        Toast.makeText(getActivity(), "添加成功", Toast.LENGTH_SHORT).show();
+                                                        mQuizAlert.dismiss();
+                                                    }
+                                                });
+                                            }
                                         }
-                                    }
-                                }) ;
-                        builder.create().show();
+                                    }).create();
+                            mQuizAlert.show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 });
                 break;
-            case R.id.feedBack :
-                String[] items = new String[]{"显示柱状图","显示曲线图","显示饼状图","显示学生建议"} ;
+            case R.id.feedBack:
+                //反馈
+                String[] items = new String[]{"反馈情况", "发送消息"};
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_list_item_1,items) ;
+                        android.R.layout.simple_list_item_1, items);
                 AlertDialog d = new AlertDialog.Builder(getActivity())
                         .setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent() ;
-                                intent.putExtra("teacher",mTeacher) ;
-                                intent.putExtra("course",mCourse) ;
-                                intent.setClass(getActivity(),TSecondActivity.class) ;
-                                switch (which){
+                                Intent intent = new Intent();
+                                intent.putExtra("teacher", mTeacher);
+                                intent.putExtra("course", mCourse);
+                                intent.setClass(getActivity(), TSecondActivity.class);
+                                switch (which) {
                                     case 0:
-                                        intent.putExtra(TSecondActivity.TYPE,TSecondActivity.Histogram) ;
+                                        intent.putExtra(TSecondActivity.TYPE, TSecondActivity.LineChart);
                                         startActivity(intent);
                                         break;
                                     case 1:
-                                        intent.putExtra(TSecondActivity.TYPE,TSecondActivity.LineChart) ;
-                                        startActivity(intent);
-                                        break;
-                                    case 2:
-                                        intent.putExtra(TSecondActivity.TYPE,TSecondActivity.SectorChart) ;
-                                        startActivity(intent);
-                                        break;
-                                    case 3:
+                                        //向学生端发送一条消息
+                                        RequestParams p = new RequestParams();
+                                        p.put("cid", mCourse.getCId() + "");
+                                        p.put("tid", mTeacher.getTId() + "");
+                                        client.post(HttpUtil.server_send_callback_message, p, new JsonHttpResponseHandler() {
+                                            @Override
+                                            public void onSuccess(int statusCode, JSONObject response) {
+                                                Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                         break;
                                 }
                             }
-                        }).create() ;
+                        }).create();
                 d.show();
                 break;
+            case R.id.test:
+                //发送消息
+                mAlertDialog = new AlertDialog.Builder(getActivity())
+                        .setMessage("是否发送本次课的随堂测验信息")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //发送消息
+                                sendTestMess() ;
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAlertDialog.dismiss();
+                            }
+                        }).create();
+                mAlertDialog.show();
+                break;
         }
+    }
+    private void sendTestMess() {
+        AsyncHttpClient client = new AsyncHttpClient() ;
+        RequestParams params = new RequestParams() ;
+        params.put("tid",mTeacher.getTId()+"");
+        params.put("cid",mCourse.getCId()+"");
+        client.post(HttpUtil.server_send_test_message,params,new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, JSONObject response) {
+                Toast.makeText(getActivity(),"发送成功",Toast.LENGTH_SHORT).show();
+            }
+        }) ;
     }
 }
