@@ -159,10 +159,10 @@ public class StudentManager extends FragmentActivity {
                         Log.e(TAG, sid1+" "+cid1,null );
                         Notification.Builder builder = new Notification.Builder(StudentManager.this);
                         builder.setSmallIcon(R.drawable.icon_course_name);
-                        builder.setTicker("World");
+                        builder.setTicker("测验");
                         builder.setWhen(System.currentTimeMillis());
-                        builder.setContentTitle("标题栏");
-                        builder.setContentText("这个是显示出来的内容部分");
+                        builder.setContentTitle("随堂测试");
+                        builder.setContentText("请点击进行随堂测试");
                         Intent intent = new Intent(StudentManager.this, StudentTestActivity.class);
                         intent.putExtra("message",mes);
                         PendingIntent ma = PendingIntent.getActivity(StudentManager.this,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);

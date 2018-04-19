@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.coursemis.R;
 import com.coursemis.util.HttpUtil;
 import com.coursemis.util.P;
+import com.coursemis.view.activity.TCourseSignInActivity;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -100,7 +101,7 @@ public class StudentCheckSignFragement extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.selecter, parent, false);
+            View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.item_course_signin, parent, false);
             return new MyAdapter.MyViewHolder(inflate);
         }
 
@@ -137,7 +138,7 @@ public class StudentCheckSignFragement extends Fragment {
 
             public MyViewHolder(View itemView) {
                 super(itemView);
-                //itemView = View.inflate(TCourseSignInActivity.this,R.layout.item_course_signin,null) ;
+//                itemView = View.inflate(getActivity(),R.layout.item_course_signin,null) ;
                 number = (TextView) itemView.findViewById(R.id.student_number);
                 name = (TextView) itemView.findViewById(R.id.student_name);
                 time = (TextView) itemView.findViewById(R.id.signin_time);
