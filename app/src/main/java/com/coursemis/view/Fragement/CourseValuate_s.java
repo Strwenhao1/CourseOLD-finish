@@ -1,6 +1,7 @@
 package com.coursemis.view.Fragement;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,11 +13,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.coursemis.R;
 import com.coursemis.model.Course;
 import com.coursemis.model.Coursetime;
 import com.coursemis.util.HttpUtil;
+import com.coursemis.view.activity.EvaluateActivity;
+import com.coursemis.view.activity.EvaluateAddActivity;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -134,30 +138,13 @@ public class CourseValuate_s extends Fragment implements View.OnClickListener {
 
                 });
 
-//        // 返回按钮
-//        back.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                EvaluateActivity.this.finish();
-//            }
-//        });
+
         button_continue.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-//                // TODO Auto-generated method stub
-//                Intent i = new Intent(EvaluateActivity.this,
-//                        EvaluateAddActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("studentid", studentid);
-//                bundle.putInt("courseid", courseid_selected);
-//                Toast.makeText(context, "courseid:" + courseid_selected,
-//                        Toast.LENGTH_SHORT).show();
-//                i.putExtras(bundle);
-//                EvaluateActivity.this.startActivity(i);
 
-
+//
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 EvaluateFragement fragment = new EvaluateFragement();
                 Bundle bundle = new Bundle();
@@ -166,6 +153,16 @@ public class CourseValuate_s extends Fragment implements View.OnClickListener {
                 fragment.setArguments(bundle);
                 transaction.replace(R.id.v4_drawerlayout_frame,fragment);
                 transaction.commit();
+
+//                                Intent i = new Intent(getActivity(),
+//                        EvaluateAddActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("studentid", studentid);
+//                bundle.putInt("courseid", courseid_selected);
+//                Toast.makeText(context, "courseid:" + courseid_selected,
+//                        Toast.LENGTH_SHORT).show();
+//                i.putExtras(bundle);
+//                getActivity().startActivity(i);
 
             }
         });

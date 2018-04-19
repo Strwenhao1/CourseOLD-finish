@@ -3,21 +3,19 @@ package com.coursemis.view.Fragement;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.coursemis.R;
 import com.coursemis.util.HttpUtil;
 import com.coursemis.util.P;
-import com.coursemis.view.activity.StudentManager;
-import com.coursemis.view.myView.TitleView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -102,14 +100,13 @@ public class StudentCheckSignFragement extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.item_course_signin, parent, false);
+            View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.selecter, parent, false);
             return new MyAdapter.MyViewHolder(inflate);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             String temp = list.get(position);
-
             String[] temps = temp.split("\\s+");
 //            Log.e("temp",temp.split("\\s+").length+"" ) ;
             String number = temps[0];
@@ -122,11 +119,9 @@ public class StudentCheckSignFragement extends Fragment {
             Log.e("totaltime", totaltime);
             MyAdapter.MyViewHolder myViewHolder = (MyAdapter.MyViewHolder) holder;
             myViewHolder.name.setText(name);
-
             myViewHolder.number.setText(number);
             myViewHolder.time.setText(time);
             myViewHolder.totalTime.setText(totaltime);
-
         }
 
         @Override
@@ -147,6 +142,20 @@ public class StudentCheckSignFragement extends Fragment {
                 name = (TextView) itemView.findViewById(R.id.student_name);
                 time = (TextView) itemView.findViewById(R.id.signin_time);
                 totalTime = (TextView) itemView.findViewById(R.id.signin_total_time);
+                WindowManager wm1 = getActivity().getWindowManager();
+                int width1 = wm1.getDefaultDisplay().getWidth();
+                number.setGravity(Gravity.CENTER);
+                number.setWidth(width1/4);
+                number.setTextSize(18);
+                name.setGravity(Gravity.CENTER);
+                name.setWidth(width1/4);
+                name.setTextSize(18);
+                time.setGravity(Gravity.CENTER);
+                time.setWidth(width1/4);
+                time.setTextSize(18);
+                totalTime.setGravity(Gravity.CENTER);
+                totalTime.setWidth(width1/4);
+                totalTime.setTextSize(18);
             }
         }
     }

@@ -1,16 +1,22 @@
 package com.coursemis.view.activity;
 
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -30,6 +36,8 @@ import android.widget.Toast;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.coursemis.R;
+import com.coursemis.adapter.ContentAdapter;
+import com.coursemis.model.ContentModel;
 import com.coursemis.model.LocationData;
 import com.coursemis.model.Message;
 import com.coursemis.model.Student;
@@ -78,7 +86,12 @@ public class StudentManager extends FragmentActivity {
     private ImageView Toolbar;
     final List<String> list = new ArrayList<String>();
     private TextView title;
-
+    private List<ContentModel> list11 = new ArrayList<ContentModel>();;
+    private NotificationManager manager1;
+    private int notification_id;
+    private int sid1;
+    private int cid1;
+    private String mes;  //学号_课程号
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +118,7 @@ public class StudentManager extends FragmentActivity {
         button_evaluate = (Button) findViewById(R.id.courseevaluate_stu);
         title = (TextView) findViewById(R.id.title);
         Toolbar = (ImageView) findViewById(R.id.Toolbar);
+        manager1 = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,14 +143,40 @@ public class StudentManager extends FragmentActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+
         }
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             LoginService.MyBinder myBinder = (LoginService.MyBinder) service;
             myBinder.onMessage(new LoginService.MessageHandler() {
-                @Override
+
                 public void onMessage(Message message) {
+                    Log.e("测试1111",message.getType()) ;
+                    if(message.getType().equals(Message.TEST)){
+
+                        mes = message.getMessage();
+                        Log.e(TAG, sid1+" "+cid1,null );
+                        Notification.Builder builder = new Notification.Builder(StudentManager.this);
+                        builder.setSmallIcon(R.drawable.icon_course_name);
+                        builder.setTicker("World");
+                        builder.setWhen(System.currentTimeMillis());
+                        builder.setContentTitle("标题栏");
+                        builder.setContentText("这个是显示出来的内容部分");
+                        Intent intent = new Intent(StudentManager.this, StudentTestActivity.class);
+                        intent.putExtra("message",mes);
+                        PendingIntent ma = PendingIntent.getActivity(StudentManager.this,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+                        builder.setContentIntent(ma);//设置点击过后跳转的activity
+                        builder.setDefaults(Notification.DEFAULT_ALL);//设置全部
+                        Notification notification = null;//4.1以上用.build();
+
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                            notification = builder.build();
+                        }
+                        notification.flags |= Notification.FLAG_AUTO_CANCEL;// 点击通知的时候cancel掉
+                        manager1.notify(notification_id,notification);
+
+                    }
                 }
             });
         }
@@ -148,21 +188,30 @@ public class StudentManager extends FragmentActivity {
         initDate();
     }
 
-    private void initDate() {
 
+
+    private void initDate() {
+//
         list.add("学生签到");
         list.add("资源共享");
         list.add("课表管理");
         list.add("课程评分");
-        list.add("作业管理");
-        list.add("班级作业");
+        list.add("随堂评测");
         list.add("到课情况");
         list.add("我在哪里");
         list.add(("定位"));
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
-        listView.setAdapter(adapter);
 
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.simple_list, list);
+//        list11.add(new ContentModel(R.drawable.a,"asd",1));
+//        list11.add(new ContentModel(R.drawable.a,"asd",2));
+//        list11.add(new ContentModel(R.drawable.a,"asd",3));
+//        ContentAdapter adapter = new ContentAdapter(this,list11);
+
+
+        listView.setAdapter(adapter);
+        listView.setBackgroundColor(0xf0f);
+        adapter.notifyDataSetChanged();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -174,7 +223,6 @@ public class StudentManager extends FragmentActivity {
                     case 1:
                         title.setText("资源共享");
                         share();
-
                         break;
                     case 2:
                         title.setText("课程表");
@@ -185,27 +233,25 @@ public class StudentManager extends FragmentActivity {
                         courseValuate();
                         break;
                     case 4:
-                        title.setText("作业管理");
-                        homework_check();
-                        break;
-                    case 5:
-                        title.setText("班级作业");
+                        title.setText("随堂评测");
                         homework_class();
                         break;
-                    case 6:
+                    case 5:
                         title.setText("签到统计");
                         checkStudent();
                         break;
+                    case 6:
+                        title.setText("签到统计");
+                        student_where();
+                        break;
                     case 7:
                         title.setText("Location");
-                        student_where();
+                        loc();
                         break;
                     case 8:
                         loc();
                         break;
                 }
-
-
 //                textView.setText(list.get(position));
                 showDrawerLayout();
             }
@@ -355,76 +401,50 @@ public class StudentManager extends FragmentActivity {
 
     }
 
-    public void homework_check() {
-        RequestParams params = new RequestParams();
-        params.put("sid", sid + "");
-        client.post(HttpUtil.server_student_StudentCourse, params,
-                new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int arg0, JSONObject arg1) {
-                        JSONArray object = arg1.optJSONArray("result");
-
-                        if (object.length() == 0) {
-                            Toast.makeText(StudentManager.this, "您没有选修任何课程!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            ArrayList<String> list = new ArrayList<String>();
-
-                            for (int i = 0; i < arg1.optJSONArray("result").length(); i++) {
-                                JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i);
-                                P.p(object_temp.toString() + 2222);
-                                list.add(i, (object_temp.optInt("CNumber") + " " + object_temp.optString("CName") + "_" + object_temp.optString("CTname")));
-                            }
-                            FragmentTransaction transaction = manager.beginTransaction();
-                            HomeworkManagerFragement fragment = new HomeworkManagerFragement();
-                            Bundle bundle = new Bundle();
-                            bundle.putStringArrayList("studentCourseInfo1", list);// ("fragData",fragData);
-                            fragment.setArguments(bundle);
-                            transaction.replace(R.id.v4_drawerlayout_frame, fragment);
-                            transaction.commit();
-
-
-                        }
-                        super.onSuccess(arg0, arg1);
-                    }
-                });
-    }
-
     public void homework_class() {
-        SharedPreferences sharedata = getSharedPreferences("courseMis", 0);
-        sid = Integer.parseInt(sharedata.getString("userID", null));
+//        SharedPreferences sharedata = getSharedPreferences("courseMis", 0);
+//        sid = Integer.parseInt(sharedata.getString("userID", null));
+//
+//        RequestParams params = new RequestParams();
+//        params.put("sid", sid + "");
+//        client.post(HttpUtil.server_student_StudentCourse, params,
+//                new JsonHttpResponseHandler() {
+//                    @Override
+//                    public void onSuccess(int arg0, JSONObject arg1) {
+//                        JSONArray object = arg1.optJSONArray("result");
+//
+//                        if (object.length() == 0) {
+//                            Toast.makeText(StudentManager.this, "您没有选修任何课程!", Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            ArrayList<String> list = new ArrayList<String>();
+//
+//                            for (int i = 0; i < arg1.optJSONArray("result").length(); i++) {
+//                                JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i);
+//                                P.p(object_temp.toString() + 2222);
+//                                list.add(i, (object_temp.optInt("CNumber") + " " + object_temp.optString("CName") + "_" + object_temp.optString("CTname")));
+//                            }
+//                            FragmentTransaction transaction = manager.beginTransaction();
+//                            ClassHomeworkFragement fragment = new ClassHomeworkFragement();
+//                            Bundle bundle = new Bundle();
+//                            bundle.putStringArrayList("studentCourseInfo1", list);// ("fragData",fragData);
+//                            fragment.setArguments(bundle);
+//                            transaction.replace(R.id.v4_drawerlayout_frame, fragment);
+//                            transaction.commit();
+//                            Intent i = new Intent(StudentManager.this,StudentCheckClassHomeworkActivity.class);
+//                            i.putStringArrayListExtra("studentCourseInfo1", list);
+//                            P.p(list+"");
+//                            startActivity(i);
 
-        RequestParams params = new RequestParams();
-        params.put("sid", sid + "");
-        client.post(HttpUtil.server_student_StudentCourse, params,
-                new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int arg0, JSONObject arg1) {
-                        JSONArray object = arg1.optJSONArray("result");
+//                        }
+//
+//
+//                        super.onSuccess(arg0, arg1);
+//                    }
+//                });
+        Intent i = new Intent(StudentManager.this, StudentTestActivity.class);
+        i.putExtra("message", mes);
+        startActivity(i);
 
-                        if (object.length() == 0) {
-                            Toast.makeText(StudentManager.this, "您没有选修任何课程!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            ArrayList<String> list = new ArrayList<String>();
-
-                            for (int i = 0; i < arg1.optJSONArray("result").length(); i++) {
-                                JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i);
-                                P.p(object_temp.toString() + 2222);
-                                list.add(i, (object_temp.optInt("CNumber") + " " + object_temp.optString("CName") + "_" + object_temp.optString("CTname")));
-                            }
-                            FragmentTransaction transaction = manager.beginTransaction();
-                            ClassHomeworkFragement fragment = new ClassHomeworkFragement();
-                            Bundle bundle = new Bundle();
-                            bundle.putStringArrayList("studentCourseInfo1", list);// ("fragData",fragData);
-                            fragment.setArguments(bundle);
-                            transaction.replace(R.id.v4_drawerlayout_frame, fragment);
-                            transaction.commit();
-
-                        }
-
-
-                        super.onSuccess(arg0, arg1);
-                    }
-                });
     }
 
     public void checkStudent() {
@@ -455,8 +475,6 @@ public class StudentManager extends FragmentActivity {
         if (!mIsStart) {
             setLocationOption();
             mLocClient.start();
-
-
             Toast.makeText(getApplicationContext(), "定位开始，请耐心等待",
                     Toast.LENGTH_SHORT).show();
             mIsStart = true;

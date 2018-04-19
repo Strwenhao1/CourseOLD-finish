@@ -52,21 +52,8 @@
             android:text="播放"
             android:textColor="#000"
             android:textSize="20sp" />
-
-
     </LinearLayout>
 
-
-    <LinearLayout
-        android:id="@+id/ua_add"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/relativelayout_ua"
-        android:orientation="vertical">
-
-
-    </LinearLayout>
 
 
 </RelativeLayout>

@@ -12,9 +12,10 @@ public class HttpUtil {
     //夜神测试
     //public static String server = "http://172.17.100.2:8080/CourseMis";
     //本地服务器真机调试
+
     public static String server = "http://zhxchao.ngrok.xiaomiqiu.cn/CourseMis";
     //云服务器
-    //public static String server = "http://120.78.52.196:8080/CourseMis";
+//    public static String server = "http://39.108.112.190:8080/CourseMis";
     //
     public static String server_evaluate_suggest = server + "/evaluate_suggest.action";
     public static String server_login = server + "/loginCheck.action";

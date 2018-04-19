@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="15"
-        android:background="@drawable/content_films"
+        android:background="@drawable/content_music"
 
         >
         <RelativeLayout
@@ -23,13 +23,15 @@
 
             <ImageView
                 android:id="@+id/Toolbar"
-                android:layout_width="50dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_weight="1"
-                android:src="@drawable/ic_tool" />
+                android:src="@drawable/ic_tool"
+                android:layout_marginLeft="0dp"
+                />
 
             <TextView
                 android:id="@+id/title"
@@ -42,6 +44,7 @@
                 android:text="首页"
                 android:textAlignment="center"
                 android:textSize="20dp" />
+
         </RelativeLayout>
         <FrameLayout
             android:layout_weight="14"
@@ -77,7 +80,8 @@
             android:choiceMode="singleChoice"
 
 
-            /></LinearLayout>
+            />
+    </LinearLayout>
 
 
 

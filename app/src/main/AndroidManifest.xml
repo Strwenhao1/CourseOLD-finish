@@ -61,6 +61,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.activity.StudentTestActivity"
+            android:label="StudentTest"
+            ></activity>
         <activity
             android:name="com.coursemis.view.activity.LoginActivity"
             android:label="@string/title_activity_login"></activity>
@@ -176,6 +179,7 @@
             android:label="@string/title_activity_image"
             android:allowBackup="true"
             android:supportsRtl="true"
+
             android:theme="@style/AppTheme">
             ></activity>
         <activity

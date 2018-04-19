@@ -105,7 +105,7 @@ public class LoginService extends Service {
         heard.setId(mMess);
         heard.setUserId(id);
         mHeartBeat = gson.toJson(heard);
-        String url = "ws://172.17.100.2:8080/CourseMis/socket";
+        String url = "ws://zhxchao.ngrok.xiaomiqiu.cn/CourseMis/socket";
         Request request = new Request.Builder().url(url).build();
         EchoWebSocketListener socketListener = new EchoWebSocketListener();
         mWebSocket = mOkHttpClient.newWebSocket(request, socketListener);

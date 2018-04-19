@@ -44,14 +44,7 @@ public class CourseTableFragement extends Fragment {
     SharedPreferences.Editor editor;
 
     private int studentid;
-
     private TableLayout layout;
-    private Button back;
-    private TextView top_title;
-
-    private String[][] title;
-    String[] courseinfo;
-    private TitleView mTitle;
 
     View mRootView;
 
@@ -63,8 +56,8 @@ public class CourseTableFragement extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.activity_coursetable, container, false);
-     initView();
-     initData();
+        initView();
+        initData();
 
         return mRootView;
     }
@@ -125,7 +118,7 @@ public class CourseTableFragement extends Fragment {
                 textView.setGravity(Gravity.CENTER);      //居中
                 textView.getPaint().setFakeBoldText(true);//加粗
                 textView.setTextColor(0xFFFFB6C1);
-                textView.setTextSize(18);
+                textView.setTextSize(20);
                 textView.setBackgroundResource(R.drawable.table_shape);
                 rowfirst.addView(textView);
             }
@@ -158,8 +151,12 @@ public class CourseTableFragement extends Fragment {
             ctime.setBackgroundResource(R.drawable.table_shape);
             caddress.setBackgroundResource(R.drawable.table_shape);
             cname.setTextColor(0xff9932CC);
+            cname.setTextSize(18);
+
             ctime.setTextColor(0xff9932CC);
+            ctime.setTextSize(18);
             caddress.setTextColor(0xff9932CC);
+            caddress.setTextSize(18);
             row.addView(cname);
             row.addView(ctime);
             row.addView(caddress);

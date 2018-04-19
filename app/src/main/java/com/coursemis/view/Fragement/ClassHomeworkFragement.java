@@ -34,9 +34,8 @@ import java.util.List;
 
 public class ClassHomeworkFragement extends Fragment {
 
-    private View mRootView;
-    Intent intent1 =null;
-    Button back = null;
+       private View mRootView;
+
     private ListView scch=null;
     int sid;
     private AsyncHttpClient client = new AsyncHttpClient();
@@ -63,7 +62,7 @@ public class ClassHomeworkFragement extends Fragment {
             String temp = courseinfol.get(i);
             String cname = temp.substring(temp.indexOf(" ")+1,temp.indexOf("_"));
             String tname = temp.substring(temp.indexOf("_")+1,temp.length());
-            courseinfol_temp.add(cname+"       "+tname+" 老师");
+            courseinfol_temp.add(cname+"              "+tname+" 老师");
         }
         ArrayAdapter<String> aaRadioButtonAdapter = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_list_item_checked, courseinfol_temp);
@@ -95,11 +94,11 @@ public class ClassHomeworkFragement extends Fragment {
                                         list.add(i, object_temp.optInt("smid")+"");
                                     }
 
-                                    Intent intent = new Intent(getActivity(),StudentCheckClassHomeworkInfoActivity.class);
-                                    intent.putExtra("courseinfo", courseinfol.get(arg2)+"");
-                                    intent.putStringArrayListExtra("studentCourseHomeworkInfo", list);
-
-                                    startActivity(intent);
+//                                    Intent intent = new Intent(getActivity(),StudentCheckClassHomeworkInfoActivity.class);
+//                                    intent.putExtra("courseinfo", courseinfol.get(arg2)+"");
+//                                    intent.putStringArrayListExtra("studentCourseHomeworkInfo", list);
+//
+//                                    startActivity(intent);
                                 }
 
 

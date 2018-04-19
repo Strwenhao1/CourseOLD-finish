@@ -11,9 +11,9 @@ public class Questionbank implements java.io.Serializable {
 	private Integer qbId;
 	private Course course;
 	private Period period;
-	private String qbQ;
-	private String qbA;
-	private String qbO;
+	private String qbQ;	//问题
+	private String qbA; //答案
+	private String qbO; //选项
 
 	// Constructors
 
