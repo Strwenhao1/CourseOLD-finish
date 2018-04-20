@@ -174,7 +174,6 @@ public class StudentTestActivity extends Activity {
 
                     switch (CheckedId){
                         case R.id.quesA:
-//                            an.add(position,10);
                             if (temp.getQbA().equals("A")){
                                 an.add(position,10);
                             }else {
