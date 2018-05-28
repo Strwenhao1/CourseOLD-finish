@@ -27,7 +27,6 @@ public class MapActivity extends Activity{
         	mBMapMan=new BMapManager(getApplication());
         	mBMapMan.init("jpQW17lKZ16jtXrYl2IRaNl0baHBe6sk", null);
         	setContentView(R.layout.activity_map);
-
         	mMapView=(MapView)findViewById(R.id.bmapsView);
         	mMapView.setBuiltInZoomControls(true);
 

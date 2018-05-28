@@ -49,8 +49,8 @@ public class Location extends Application {
 			mData = str;
 			if ( mTv != null )
 				mTv.setText(mData);
-				Toast.makeText(getApplicationContext(), "定位结束，请再次点击已关闭定位功能。",
-					     Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getApplicationContext(), "定位结束，请再次点击已关闭定位功能。",
+//					     Toast.LENGTH_SHORT).show();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,6 +94,7 @@ public class Location extends Application {
 
 			logMsg(sb.toString());
 			Log.i(TAG, sb.toString());
+			Toast.makeText(Location.this,sb.toString(),Toast.LENGTH_LONG);
 		}
 
 		public void onReceivePoi(BDLocation poiLocation) {

@@ -72,7 +72,7 @@ public class StudentTestActivity extends Activity {
         Log.e(TAG, sid + "   " + cid, null);
         RequestParams params = new RequestParams();
         params.put("sid", sid+"");
-        params.put("cid", sid+"");
+        params.put("cid", cid+"");
 
         client.post(HttpUtil.server_get_test, params, new JsonHttpResponseHandler() {
 
@@ -113,8 +113,8 @@ public class StudentTestActivity extends Activity {
                 Log.e(TAG, cou+"",null);
                 RequestParams params = new RequestParams();
                 params.put("sid", sid+"");
-                params.put("cid", sid+"");
-                params.put("result",cou);
+                params.put("cid", cid+"");
+                params.put("result",cou+"");
                 client.post(HttpUtil.server_send_test, params, new JsonHttpResponseHandler() {
 
                     @Override
@@ -232,22 +232,6 @@ public class StudentTestActivity extends Activity {
                 quesC = (RadioButton) itemView.findViewById(R.id.quesC);
                 quesD = (RadioButton) itemView.findViewById(R.id.quesD);
 
-
-
-//                WindowManager wm1 = StudentTestActivity.this.getWindowManager();
-//                int width1 = wm1.getDefaultDisplay().getWidth();
-//                number.setGravity(Gravity.CENTER);
-//                number.setWidth(width1/4);
-//                number.setTextSize(18);
-//                name.setGravity(Gravity.CENTER);
-//                name.setWidth(width1/4);
-//                name.setTextSize(18);
-//                time.setGravity(Gravity.CENTER);
-//                time.setWidth(width1/4);
-//                time.setTextSize(18);
-//                totalTime.setGravity(Gravity.CENTER);
-//                totalTime.setWidth(width1/4);
-//                totalTime.setTextSize(18);
             }
         }
     }

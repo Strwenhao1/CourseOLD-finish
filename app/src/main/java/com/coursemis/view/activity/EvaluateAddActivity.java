@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import com.coursemis.R;
 import com.coursemis.util.DialogUtil;
 import com.coursemis.util.HttpUtil;
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -43,13 +45,18 @@ public class EvaluateAddActivity extends Activity {
     private RadioGroup rg_option1;
     private RadioGroup rg_option2;
     private RadioGroup rg_option3;
+    private RadioGroup rg_option7;
+    private RadioGroup rg_option4;
+    private RadioGroup rg_option5;
+    private RadioGroup rg_option6;
+    private RadioGroup rg_option8;
     private EditText feekback_edit;
     private List<Double> options = new ArrayList<>() ;
-    private int studentid;
-    private int courseid;
+    private String studentid;
+    private String courseid;
     private String feekback_idea;
     private TextView text_criteria;
-
+    private String message;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +69,16 @@ public class EvaluateAddActivity extends Activity {
         preferences = getSharedPreferences("courseMis", 0);
         editor = preferences.edit();
 
-        studentid = preferences.getInt("studentid", 0);//0为默认值
+        for(int i =0;i<8;i++){
+            options.add(i,0.0)  ;
+        }
+
 
         Intent intent = getIntent();
+        message = intent.getStringExtra("message");
+        studentid = message.substring(0, message.indexOf("_"));
         //studentid = intent.getExtras().getInt("studentid");
-        courseid = intent.getExtras().getInt("courseid");
+        courseid = message.substring(message.indexOf("_")+1, message.length());
 
         back = (Button) findViewById(R.id.reback_btn);
 //		top_title = (TextView)findViewById(R.id.tv_title);
@@ -75,6 +87,12 @@ public class EvaluateAddActivity extends Activity {
         rg_option1 = (RadioGroup) findViewById(R.id.option1);
         rg_option2 = (RadioGroup) findViewById(R.id.option2);
         rg_option3 = (RadioGroup) findViewById(R.id.option3);
+        rg_option4 = (RadioGroup)  findViewById(R.id.option4);
+        rg_option5 = (RadioGroup)  findViewById(R.id.option5);
+        rg_option6 = (RadioGroup)  findViewById(R.id.option6);
+        rg_option7 = (RadioGroup)  findViewById(R.id.option7);
+        rg_option8 = (RadioGroup)  findViewById(R.id.option8);
+
 //        feekback_edit = (EditText) findViewById(R.id.feekback_edit);
         text_criteria.setOnClickListener(new OnClickListener() {
             @Override
@@ -93,67 +111,60 @@ public class EvaluateAddActivity extends Activity {
             }
         });
 
-        for(int i = 0;i<8;i++){
-            options.add(i,i+0.0);
-        }
+//        for(int i = 0;i<8;i++){
+//            options.add(i,i+0.0);
+//        }
 
-//        rg_option1.setOnCheckedChangeListener(new My());
-//        rg_option2.setOnCheckedChangeListener(new My());
-//        rg_option3.setOnCheckedChangeListener(new My());
-//        rg_option4.setOnCheckedChangeListener(new My());
-//        rg_option5.setOnCheckedChangeListener(new My());
-//        rg_option6.setOnCheckedChangeListener(new My());
-//        rg_option7.setOnCheckedChangeListener(new My());
-//        rg_option8.setOnCheckedChangeListener(new My());
+        rg_option1.setOnCheckedChangeListener(new My());
+        rg_option2.setOnCheckedChangeListener(new My());
+        rg_option3.setOnCheckedChangeListener(new My());
+        rg_option4.setOnCheckedChangeListener(new My());
+        rg_option5.setOnCheckedChangeListener(new My());
+        rg_option6.setOnCheckedChangeListener(new My());
+        rg_option7.setOnCheckedChangeListener(new My());
+        rg_option8.setOnCheckedChangeListener(new My());
 
-        //返回按钮
-        back.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                EvaluateAddActivity.this.finish();
-            }
-        });
-        button_finish.setOnClickListener(new OnClickListener() {
+        button_finish.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
+
+                for(int i = 0;i<8;i++){
+                    Log.e("sd",options.get(i)+" " );
+                }
+
                 // TODO Auto-generated method stub
-                if (validate()) {
+                if(validate()){
                     RequestParams params = new RequestParams();
-                    params.put("sid", studentid + "");
-                    params.put("cid", courseid + "");
-                    params.put("evaluation", options);
+                    params.put("sid", studentid+"");
+                    params.put("cid", courseid+"");
+                    Gson gson = new Gson();
+                    params.put("evaluation",  gson.toJson(options));
 
-                    client.post(HttpUtil.server_evaluate, params,
+
+                    client.post(HttpUtil.server_send_callback, params,
                             new JsonHttpResponseHandler() {
 
                                 @Override
                                 public void onSuccess(int arg0, JSONObject arg1) {
                                     // TODO Auto-generated method stub
 
-                                    String addEvaluate_msg = arg1.optString("result");
+//                                    String addEvaluate_msg = arg1.optString("result");
 //									DialogUtil.showDialog(context, addEvaluate_msg, true);
 
-                                    final AlertDialog.Builder builder = new AlertDialog.Builder(EvaluateAddActivity.this);
+                                    final AlertDialog.Builder builder=new AlertDialog.Builder(EvaluateAddActivity.this);
                                     builder.setTitle("温馨提示");
-                                    if (addEvaluate_msg.equals("添加评分到该课程成功")) {
-                                        builder.setMessage(addEvaluate_msg);
-                                        builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+//                                    if(addEvaluate_msg.equals("添加评分到该课程成功")){
+                                    builder.setMessage("添加评分到该课程成功");
+                                    builder.setPositiveButton("退出", new DialogInterface.OnClickListener (){
 
-                                            @Override
-                                            public void onClick(DialogInterface arg0, int arg1) {
-                                                Intent intent = new Intent(EvaluateAddActivity.this, StudentManager.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//												Bundle bundle = new Bundle();
-//												bundle.putInt("studentid", studentid);
-//												bundle.putString("type", "学生");
-//												intent.putExtras(bundle);
-//												Log.e("tag", "onClick: ",null );
-                                                EvaluateAddActivity.this.startActivity(intent);
-                                                EvaluateAddActivity.this.finish();
+                                        @Override
+                                        public void onClick(DialogInterface arg0,int arg1) {
+                                          EvaluateAddActivity.this.finish();
 
-                                            }
-                                        });
+
+                                        }
+                                    });
 //										builder.setNegativeButton("继续评教", new DialogInterface.OnClickListener () {
 //
 //											@Override
@@ -161,28 +172,36 @@ public class EvaluateAddActivity extends Activity {
 //												EvaluateAddActivity.this.finish();
 //											}
 //										});
-                                    } else {
-                                        builder.setMessage(addEvaluate_msg + ",请稍后再来");
-                                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                Intent intent = new Intent(EvaluateAddActivity.this, StudentMainActivity.class);
-                                                Bundle bundle = new Bundle();
-                                                bundle.putInt("studentid", studentid);
-                                                bundle.putString("type", "学生");
-                                                intent.putExtras(bundle);
-                                                EvaluateAddActivity.this.startActivity(intent);
-                                                EvaluateAddActivity.this.finish();
-                                            }
-                                        });
-                                    }
+//                                    }else{
+//                                        builder.setMessage(addEvaluate_msg+",请稍后再来");
+//                                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener (){
+//
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog,int which) {
+//                                                Intent intent = new Intent(   getActivity(), StudentManager.class);
+//                                                Bundle bundle = new Bundle();
+//                                                bundle.putInt("studentid", studentid);
+//                                                bundle.putString("type", "学生");
+//                                                intent.putExtras(bundle);
+//                                                getActivity().startActivity(intent);
+//                                                getActivity().finish();
+//                                            }
+//                                        });
+//                                    }
                                     builder.create().show();
 
                                     super.onSuccess(arg0, arg1);
 
                                 }
 
+                                @Override
+                                public void onFailure(String responseBody, Throwable error) {
+
+                                    EvaluateAddActivity.this.finish();
+
+                                    super.onFailure(responseBody, error);
+
+                                }
                             });
                 }
             }
@@ -253,19 +272,19 @@ public class EvaluateAddActivity extends Activity {
             }
             switch (content) {
                 case "A":
-                    options.add(index,12.5);
+                    options.set(index,12.5);
                     break;
                 case "B":
-                    options.add(index,10.0);
+                    options.set(index,10.0);
                     break;
                 case "C":
-                    options.add(index,7.5);
+                    options.set(index,7.5);
                     break;
                 case "D":
-                    options.add(index,5.0);
+                    options.set(index,5.0);
                     break;
                 case "E":
-                    options.add(index,2.5);
+                    options.set(index,2.5);
                     break;
                 default:
                     break;
@@ -273,4 +292,5 @@ public class EvaluateAddActivity extends Activity {
 
         }
     }
+
 }

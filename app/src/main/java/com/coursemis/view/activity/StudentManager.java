@@ -47,6 +47,7 @@ import com.coursemis.util.P;
 import com.coursemis.view.Fragement.ClassHomeworkFragement;
 import com.coursemis.view.Fragement.CourseTableFragement;
 import com.coursemis.view.Fragement.CourseValuate_s;
+import com.coursemis.view.Fragement.EvaluateFragement;
 import com.coursemis.view.Fragement.HomeworkManagerFragement;
 import com.coursemis.view.Fragement.StudentCheckSignFragement;
 import com.coursemis.view.Fragement.StudentShareFragement;
@@ -153,9 +154,10 @@ public class StudentManager extends FragmentActivity {
 
                 public void onMessage(Message message) {
                     Log.e("测试1111",message.getType()) ;
+
                     if(message.getType().equals(Message.TEST)){
 
-                        mes = message.getMessage();
+                        mes = sid+"_"+message.getMessage().substring(0, message.getMessage().indexOf("_"));
                         Log.e(TAG, sid1+" "+cid1,null );
                         Notification.Builder builder = new Notification.Builder(StudentManager.this);
                         builder.setSmallIcon(R.drawable.icon_course_name);
@@ -176,6 +178,75 @@ public class StudentManager extends FragmentActivity {
                         notification.flags |= Notification.FLAG_AUTO_CANCEL;// 点击通知的时候cancel掉
                         manager1.notify(notification_id,notification);
 
+                    }else if(message.getType().equals(Message.QUIZ)){
+                        mes = message.getMessage();
+                        Log.e(TAG, "onMessage: "+mes );
+                        Notification.Builder builder = new Notification.Builder(StudentManager.this);
+                        builder.setSmallIcon(R.drawable.icon_course_name);
+                        builder.setTicker("提问");
+                        builder.setWhen(System.currentTimeMillis());
+                        builder.setContentTitle("提问");
+                        builder.setContentText("请起立，回答老师提问");
+                        builder.setDefaults(Notification.DEFAULT_ALL);//设置全部
+                        Notification notification = null;//4.1以上用.build();
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                            notification = builder.build();
+                        }
+                        notification.flags |= Notification.FLAG_AUTO_CANCEL;// 点击通知的时候cancel掉
+                        manager1.notify(notification_id,notification);
+                    }else if(message.getType().equals(Message.CALL_BACK)){
+
+                        mes = sid+"_"+message.getMessage().substring(0, message.getMessage().indexOf("_"));
+                        Log.e(TAG, mes,null );
+                        Notification.Builder builder = new Notification.Builder(StudentManager.this);
+                        builder.setSmallIcon(R.drawable.icon_course_name);
+                        builder.setTicker("反馈");
+                        builder.setWhen(System.currentTimeMillis());
+                        builder.setContentTitle("反馈");
+                        builder.setContentText("请对这节课进行评教");
+                        Intent intent = new Intent(StudentManager.this, EvaluateAddActivity.class);
+                        intent.putExtra("message",mes);
+                        PendingIntent ma = PendingIntent.getActivity(StudentManager.this,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+                        builder.setContentIntent(ma);//设置点击过后跳转的activity
+                        builder.setDefaults(Notification.DEFAULT_ALL);//设置全部
+                        Notification notification = null;//4.1以上用.build();
+
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                            notification = builder.build();
+                        }
+                        notification.flags |= Notification.FLAG_AUTO_CANCEL;// 点击通知的时候cancel掉
+                        manager1.notify(notification_id,notification);
+
+                    }else if(message.getType().equals(Message.CALL_THE_ROLL)){
+
+                        Notification.Builder builder = new Notification.Builder(StudentManager.this);
+                        builder.setSmallIcon(R.drawable.icon_course_name);
+                        builder.setTicker("点名");
+                        builder.setWhen(System.currentTimeMillis());
+                        builder.setContentTitle("点名");
+                        builder.setContentText("已被点名");
+                        builder.setDefaults(Notification.DEFAULT_ALL);//设置全部
+                        Notification notification = null;//4.1以上用.build();
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                            notification = builder.build();
+                        }
+                        notification.flags |= Notification.FLAG_AUTO_CANCEL;// 点击通知的时候cancel掉
+                        manager1.notify(notification_id,notification);
+                    }else if(message.getType().equals(Message.SIGN_IN)){
+
+                        Notification.Builder builder = new Notification.Builder(StudentManager.this);
+                        builder.setSmallIcon(R.drawable.icon_course_name);
+                        builder.setTicker("签到信息");
+                        builder.setWhen(System.currentTimeMillis());
+                        builder.setContentTitle("请立即签到");
+                        builder.setContentText("签到正在进行");
+                        builder.setDefaults(Notification.DEFAULT_ALL);//设置全部
+                        Notification notification = null;//4.1以上用.build();
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                            notification = builder.build();
+                        }
+                        notification.flags |= Notification.FLAG_AUTO_CANCEL;// 点击通知的时候cancel掉
+                        manager1.notify(notification_id,notification);
                     }
                 }
             });
@@ -195,7 +266,7 @@ public class StudentManager extends FragmentActivity {
         list.add("学生签到");
         list.add("资源共享");
         list.add("课表管理");
-        list.add("课程评分");
+
         list.add("随堂评测");
         list.add("到课情况");
         list.add("我在哪里");
@@ -229,26 +300,22 @@ public class StudentManager extends FragmentActivity {
                         courseTable();
                         break;
                     case 3:
-                        title.setText("评教系统");
-                        courseValuate();
-                        break;
-                    case 4:
                         title.setText("随堂评测");
                         homework_class();
                         break;
-                    case 5:
+                    case 4:
                         title.setText("签到统计");
                         checkStudent();
                         break;
-                    case 6:
+                    case 5:
                         title.setText("签到统计");
                         student_where();
                         break;
-                    case 7:
+                    case 6:
                         title.setText("Location");
                         loc();
                         break;
-                    case 8:
+                    case 7:
                         loc();
                         break;
                 }
@@ -265,7 +332,7 @@ public class StudentManager extends FragmentActivity {
         mLocClient.start();
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                mLocClient.stop();
+
                 if (LocationData.latitude == 0.0 || LocationData.longitude == 0.0) {
                     Toast.makeText(StudentManager.this, "请先获取您的位置信息之后再尝试签到。", Toast.LENGTH_SHORT).show();
                 } else {
@@ -284,88 +351,97 @@ public class StudentManager extends FragmentActivity {
                                     if (object.length() == 0) {
                                         Toast.makeText(StudentManager.this, "暂时没有需要课程需要签到!", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        final ArrayList<String> list = new ArrayList<String>();
-
-                                        for (int i = 0; i <= arg1.optJSONArray("result").length(); i++) {
-                                            JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i);
-                                            if (object_temp != null && object_temp.optString("SCId") != null) {
-                                                list.add(i, object_temp.optString("SCId"));
-                                            }
-                                        }
-
-
-                                        if (list.size() == 0) {
-                                            AlertDialog dialog = new AlertDialog.Builder(StudentManager.this)
-                                                    .setTitle("消息").setMessage("您当前没有课程需要点到！").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-                                                        @Override
-                                                        public void onClick(DialogInterface arg0, int arg1) {
-                                                            // TODO Auto-generated method stub
-
-                                                        }
-                                                    })//在这里把写好的这个listview的布局加载dialog中
-                                                    .create();
-                                            P.p("执行到磁珠了吗");
-                                            dialog.show();
-                                        } else {
-                                            if (LocationData.latitude == 0.0 || LocationData.longitude == 0.0) {
-                                                Toast.makeText(StudentManager.this, "请先获取您的位置信息之后再尝试签到。", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                AlertDialog dialog = new AlertDialog.Builder(StudentManager.this)
-                                                        .setTitle("消息").setMessage("当前有课程需要签到，您需要立即签到吗！").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-                                                            @Override
-                                                            public void onClick(DialogInterface arg0, int arg1) {
-                                                                // TODO Auto-generated method stub
-                                                                RequestParams params = new RequestParams();
-                                                                P.p("这里2    " + list.size());
-                                                                for (int i = 0; i < list.size(); i++) {
-                                                                    params.put(i + "", list.get(i));
-                                                                    P.p("i is " + i + "   " + list.get(i));
-                                                                }
-                                                                params.put("size", list.size() + "");
-                                                                params.put("latitude", LocationData.latitude + "");
-                                                                params.put("longitude", LocationData.longitude + "");
-                                                                P.p("这里1");
-                                                                client.post(HttpUtil.server_student_SignInComfirm, params,
-                                                                        new JsonHttpResponseHandler() {
-                                                                            @Override
-                                                                            public void onSuccess(int arg0, JSONObject arg1) {
-                                                                                JSONObject object = arg1.optJSONObject("result");
-                                                                                String success = object.optString("success");
-                                                                                if (success == "您没有在课堂附近签到") {
-                                                                                    Toast.makeText(StudentManager.this, "您没有在课堂附近签到!", Toast.LENGTH_SHORT).show();
-                                                                                } else {
-                                                                                    if (success != null) {
-                                                                                        Toast.makeText(StudentManager.this, "签到成功!", Toast.LENGTH_SHORT).show();
-                                                                                    } else {
-                                                                                        Toast.makeText(StudentManager.this, "签到失败!", Toast.LENGTH_SHORT).show();
-                                                                                    }
-                                                                                }
-                                                                                super.onSuccess(arg0, arg1);
-                                                                            }
-                                                                        });
-                                                            }
-                                                        })//在这里把写好的这个listview的布局加载dialog中
-                                                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-                                                            @Override
-                                                            public void onClick(DialogInterface arg0, int arg1) {
-                                                                // TODO Auto-generated method stub
-
-                                                            }
-                                                        }).create();
-                                                dialog.show();
-
-                                            }
-                                        }
+                                        Toast.makeText(StudentManager.this, "签到成功", Toast.LENGTH_SHORT).show();
+//                                        final ArrayList<String> list = new ArrayList<String>();
+//
+//                                        for (int i = 0; i <= arg1.optJSONArray("result").length(); i++) {
+//                                            JSONObject object_temp = arg1.optJSONArray("result").optJSONObject(i);
+//                                            if (object_temp != null && object_temp.optString("SCId") != null) {
+//                                                list.add(i, object_temp.optString("SCId"));
+//                                            }
+//                                        }
+//
+//
+//                                        if (list.size() == 0) {
+//                                            AlertDialog dialog = new AlertDialog.Builder(StudentManager.this)
+//                                                    .setTitle("消息").setMessage("您当前没有课程需要点到！").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//
+//                                                        @Override
+//                                                        public void onClick(DialogInterface arg0, int arg1) {
+//                                                            // TODO Auto-generated method stub
+//
+//                                                        }
+//                                                    })//在这里把写好的这个listview的布局加载dialog中
+//                                                    .create();
+//                                            P.p("执行到磁珠了吗");
+//                                            dialog.show();
+//                                        } else {
+//                                            if (LocationData.latitude == 0.0 || LocationData.longitude == 0.0) {
+//                                                Toast.makeText(StudentManager.this, "请先获取您的位置信息之后再尝试签到。", Toast.LENGTH_SHORT).show();
+//                                            } else {
+//                                                AlertDialog dialog = new AlertDialog.Builder(StudentManager.this)
+//                                                        .setTitle("消息").setMessage("当前有课程需要签到，您需要立即签到吗！").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//
+//                                                            @Override
+//                                                            public void onClick(DialogInterface arg0, int arg1) {
+//                                                                // TODO Auto-generated method stub
+//                                                                RequestParams params = new RequestParams();
+//                                                                P.p("这里2    " + list.size());
+//                                                                for (int i = 0; i < list.size(); i++) {
+//                                                                    params.put(i + "", list.get(i));
+//                                                                    P.p("i is " + i + "   " + list.get(i));
+//                                                                }
+//                                                                params.put("size", list.size() + "");
+//                                                                params.put("latitude", LocationData.latitude + "");
+//                                                                params.put("longitude", LocationData.longitude + "");
+//                                                                P.p("这里1");
+//                                                                client.post(HttpUtil.server_student_SignInComfirm, params,
+//                                                                        new JsonHttpResponseHandler() {
+//                                                                            @Override
+//                                                                            public void onSuccess(int arg0, JSONObject arg1) {
+//                                                                                JSONObject object = arg1.optJSONObject("result");
+//                                                                                String success = object.optString("success");
+//                                                                                if (success == "您没有在课堂附近签到") {
+//                                                                                    Toast.makeText(StudentManager.this, "您没有在课堂附近签到!", Toast.LENGTH_SHORT).show();
+//                                                                                } else {
+//                                                                                    if (success != null) {
+//                                                                                        Toast.makeText(StudentManager.this, "签到成功!", Toast.LENGTH_SHORT).show();
+//                                                                                    } else {
+//                                                                                        Toast.makeText(StudentManager.this, "签到失败!", Toast.LENGTH_SHORT).show();
+//                                                                                    }
+//                                                                                }
+//                                                                                super.onSuccess(arg0, arg1);
+//                                                                            }
+//                                                                        });
+//                                                            }
+//                                                        })//在这里把写好的这个listview的布局加载dialog中
+//                                                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//
+//                                                            @Override
+//                                                            public void onClick(DialogInterface arg0, int arg1) {
+//                                                                // TODO Auto-generated method stub
+//
+//                                                            }
+//                                                        }).create();
+//                                                dialog.show();
+//
+//                                            }
+//                                        }
                                     }
                                     super.onSuccess(arg0, arg1);
                                 }
+
+                                @Override
+                                public void onFailure(int statusCode, Throwable e, JSONObject errorResponse) {
+                                    Toast.makeText(StudentManager.this, "签到失败", Toast.LENGTH_SHORT).show();
+                                    super.onFailure(statusCode, e, errorResponse);
+                                }
                             });
                 }
+                mLocClient.stop();
 
             }
+
         }, 2000);
 
     }
@@ -491,11 +567,10 @@ public class StudentManager extends FragmentActivity {
     //设置相关参数
     private void setLocationOption() {
         LocationClientOption option = new LocationClientOption();
-
-
+        option.disableCache(true);
         option.setCoorType("bd09ll");
         option.setPoiNumber(10);
-        option.disableCache(false);
+//        option.disableCache(false);
         option.setPriority(LocationClientOption.NetWorkFirst);
         mLocClient.setLocOption(option);
 

@@ -62,13 +62,13 @@
         android:orientation="vertical"
         android:layout_gravity="left"
         android:weightSum="5"
-        android:background="@drawable/ic_laun"
+        android:background="#fff"
         >
         <ImageView
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:background="@drawable/admin_photo"
+            android:background="#0a0"
             />
 
         <ListView

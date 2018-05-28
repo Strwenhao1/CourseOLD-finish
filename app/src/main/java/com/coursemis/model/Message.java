@@ -34,6 +34,10 @@ public class Message {
      */
     public static String HEARTBEAT = "heartbeat" ;
     /**
+     * 登录
+     */
+    public static String SIGN_IN = "sign in" ;
+    /**
      * 点名信息
      */
     public static String CALL_THE_ROLL = "call the roll" ;
