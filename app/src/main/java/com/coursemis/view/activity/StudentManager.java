@@ -258,7 +258,7 @@ public class StudentManager extends FragmentActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.v4_drawerlayout);
         initDate();
     }
-
+//阿斯顿
 
 
     private void initDate() {
